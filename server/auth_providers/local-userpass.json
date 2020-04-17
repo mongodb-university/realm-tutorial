@@ -1,0 +1,12 @@
+{
+    "name": "local-userpass",
+    "type": "local-userpass",
+    "config": {
+        "autoConfirm": true,
+        "resetPasswordSubject": "Reset Your Password",
+        "resetPasswordUrl": "http://localhost:3000/admin/resetPassword",
+        "runConfirmationFunction": false,
+        "runResetFunction": ""
+    },
+    "disabled": false
+}
