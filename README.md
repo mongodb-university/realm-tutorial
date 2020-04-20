@@ -1,13 +1,20 @@
 # Task Tracker Tutorial
 
-## Open Questions
-
+## Answered Questions
+ 
 - Do we need to emphasize MDBRealm first in tutorials or can we make it a later step?
+  - Drew: We should emphasize Realm from the start
+  - Drew: It's okay to emphasize Realm Schema (vs ROM + Dev Mode) for all tutorials
+  - Drew: Dev mode as an aside, e.g. "if you already have a Realm model, check out dev mode..."
 - What is the status of embedded objects in Realm DB?
+  - Drew: May be ready soon, should be ready by release
 - Sample data generation scripts/functions
+  - Drew: Probably want to avoid these, may conflict with the upcoming Template Apps project
+ 
+ ## Open Questions
+ 
 - Do sync rules allow `%function` in Apply When expressions?
 - Do sync rules allow `%%root` in Apply When expressions? (probably not)
-
 
 ## Frontend Tutorial Flow
 
