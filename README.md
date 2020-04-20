@@ -114,7 +114,7 @@ type User = {
   id: UserID;
   name: String;
   image: String;
-  projects: String[];
+  projects: ProjectID[];
 }
 ```
 
