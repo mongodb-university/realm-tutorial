@@ -11,7 +11,7 @@ import RealmSwift
 
 // This flag is for tutorial-purposes only. It determines if the app should go the Projects
 // list page after login or directly into the Tasks page for a placeholder project. 
-let USE_PROJECTS_PAGE = false
+let USE_PROJECTS_PAGE = true
 
 // The WelcomeViewController handles login and account creation.
 class WelcomeViewController: UIViewController {
