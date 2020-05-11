@@ -20,7 +20,7 @@
 
 /* Begin PBXFileReference section */
 		480BEB6D24648D72008819D9 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		4811570324606894004D0683 /* ProjectsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProjectsViewController.swift; path = "/Users/bush/realm/realm-tutorial/swift-ios/Task Tracker/ProjectsViewController.swift"; sourceTree = "<absolute>"; };
+		4811570324606894004D0683 /* ProjectsViewController.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = ProjectsViewController.swift; sourceTree = "<group>"; };
 		4843E867245B5D0E0044669C /* Task Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Task Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4843E86A245B5D0E0044669C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4843E86C245B5D0E0044669C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
