@@ -11,7 +11,7 @@ import RealmSwift
 
 // This flag is for tutorial-purposes only. It determines if the app should go the Projects
 // list page after login or directly into the Tasks page for a placeholder project. 
-let USE_PROJECTS_PAGE = true
+let USE_PROJECTS_PAGE = false
 
 // The WelcomeViewController handles login and account creation.
 class WelcomeViewController: UIViewController {
@@ -110,10 +110,6 @@ class WelcomeViewController: UIViewController {
         signUpButton.isEnabled = !loading
     }
 
-    @objc func signIn() {
-        logIn(username: username!, password: password!, register: false)
-    }
-
     @objc func signUp() {
         setLoading(true);
         app.usernamePasswordProviderClient().registerEmail(username!, password: password!, completion: {[weak self](error) in
@@ -132,17 +128,16 @@ class WelcomeViewController: UIViewController {
                 
                 // Registering just registers. Now we need to sign in, but we can reuse the existing username and password. 
                 self!.errorLabel.text = "Signup successful! Signing in..."
-                self!.logIn(username: self!.username!, password: self!.password!, register: false);
+                self!.signIn()
             }
         })
     }
 
-    // Log in with the username and password, optionally registering a user.
-    func logIn(username: String, password: String, register: Bool) {
-        print("Log in as user: \(username) with register: \(register)");
+    @objc func signIn() {
+        print("Log in as user: \(username!)");
         setLoading(true);
         
-        app.login(withCredential: AppCredentials(username: username, password: password)) { [weak self](user, error) in
+        app.login(withCredential: AppCredentials(username: username!, password: password!)) { [weak self](user, error) in
             // Completion handlers are not necessarily called on the UI thread.
             // This call to DispatchQueue.main.sync ensures that any changes to the UI,
             // namely disabling the loading indicator and navigating to the next page,

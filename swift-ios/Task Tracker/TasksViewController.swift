@@ -1,5 +1,5 @@
 //
-//  ProjectViewController.swift
+//  TasksViewController.swift
 //  Task Tracker
 //
 //  Created by MongoDB on 2020-05-07.
@@ -39,7 +39,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
         super.init(nibName: nil, bundle: nil)
 
-        // Observe the projects for changes.
+        // Observe the tasks for changes.
         notificationToken = tasks.observe { [weak self] (changes) in
             guard let tableView = self?.tableView else { return }
             switch changes {
