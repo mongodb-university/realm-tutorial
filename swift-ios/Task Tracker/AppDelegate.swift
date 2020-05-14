@@ -9,6 +9,14 @@
 import UIKit
 import RealmSwift
 
+struct Constants {
+    // Set this to your Realm App ID found in the Realm UI.
+    static let REALM_APP_ID = "myrealmapp-vjmee"
+    
+    // The base URL points to the server hosting MongoDB Realm.
+    static let REALM_BASE_URL = "https://realm-dev.mongodb.com"
+}
+
 let app = RealmApp(Constants.REALM_APP_ID, configuration: AppConfiguration(baseURL: Constants.REALM_BASE_URL,
     transport: nil,
     localAppName: nil,
