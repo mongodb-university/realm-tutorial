@@ -1,80 +1,51 @@
 import React, {useState, useEffect} from 'react';
 import Realm from 'realm';
-import {Text, Button, View} from 'react-native';
-import {ListItem, Overlay} from 'react-native-elements';
+import {Text, Button} from 'react-native';
 import {useAuth} from './AuthProvider';
 import {Task} from './schemas';
+import {TaskItem} from './TaskItem';
+import {ActionSheet} from './ActionSheet';
+import {Overlay, Input} from 'react-native-elements';
+import {styles} from './App';
 
 // Should never have two TasksViews open
 let gRealm = null;
 
-const ActionSheet = ({actions, visible, closeOverlay}) => {
-  console.log('Actions:', actions);
+function AddTaskView({realm, partition}) {
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [newTaskName, setNewTaskName] = useState('');
+
   return (
-    <Overlay
-      overlayStyle={{width: '90%'}}
-      isVisible={visible}
-      onBackdropPress={closeOverlay}>
-      <>
-        {actions.map(({title, action}) => (
-          <ListItem
-            key={title}
-            title={title}
+    <>
+      <Overlay isVisible={overlayVisible} overlayStyle={{width: '90%'}}>
+        <>
+          <Input
+            placeholder="New Task Name"
+            style={styles.forminput}
+            onChangeText={(text) => setNewTaskName(text)}
+            autoFocus={true}
+          />
+          <Button
+            title="Create"
             onPress={() => {
-              closeOverlay();
-              action();
+              setOverlayVisible(false);
+              realm.write(() => {
+                realm.create(
+                  'Task',
+                  new Task({name: newTaskName || 'New Task', partition}),
+                );
+              });
             }}
           />
-        ))}
-      </>
-    </Overlay>
-  );
-};
-
-function TaskItem({task, realm, setActionSheetVisible, setActionSheetActions}) {
-  const actions = [
-    {
-      title: 'Delete',
-      action: () => {
-        realm.write(() => {
-          realm.delete(task);
-        });
-      },
-    },
-  ];
-
-  if (task.status !== Task.STATUS_OPEN) {
-    actions.push({
-      title: 'Mark Open',
-      action: () => {
-        realm.write(() => {
-          task.status = Task.STATUS_OPEN;
-        });
-      },
-    });
-  }
-
-  if (task.status !== Task.STATUS_COMPLETE) {
-    actions.push({
-      title: 'Mark Complete',
-      action: () => {
-        realm.write(() => {
-          task.status = Task.STATUS_COMPLETE;
-        });
-      },
-    });
-  }
-
-  return (
-    <ListItem
-      key={task.id}
-      onPress={() => {
-        setActionSheetVisible(true);
-        setActionSheetActions(actions);
-      }}
-      title={task.name}
-      bottomDivider
-    />
+        </>
+      </Overlay>
+      <Button
+        title="Add Task"
+        onPress={() => {
+          setOverlayVisible(true);
+        }}
+      />
+    </>
   );
 }
 
@@ -100,7 +71,9 @@ export function TasksView({projectId}) {
     };
 
     console.log(
-      `Attempting to open Realm ${projectId} for user ${user.identity}...`,
+      `Attempting to open Realm ${projectId} for user ${
+        user.identity
+      } with config: ${JSON.stringify(config)}...`,
     );
     Realm.open(config)
       .then((realm) => {
@@ -138,6 +111,7 @@ export function TasksView({projectId}) {
         actions={actionSheetActions}
       />
       <Button title="Log Out" onPress={logOut} />
+      <AddTaskView realm={gRealm} partition={projectId} />
       <Text>Tasks View</Text>
       {tasks.map((task) => (
         <TaskItem
