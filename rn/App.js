@@ -95,7 +95,6 @@ const App = () => {
   console.log('Length:', tasks.length);
   return (
     <AuthProvider>
-      <AuthTest />
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView
