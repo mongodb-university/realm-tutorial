@@ -11,24 +11,13 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  Text,
   StatusBar,
-  Button,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import {AuthProvider, useAuth} from './AuthProvider';
 import {LogInView} from './LogInView';
-
-const TasksView = () => {
-  const {logOut} = useAuth();
-  return (
-    <>
-      <Text>Tasks View</Text>
-      <Button title="Log Out" onPress={logOut} />
-    </>
-  );
-};
+import {TasksView} from './TasksView';
 
 const AppBody = () => {
   const {user} = useAuth();
@@ -46,7 +35,11 @@ const AppBody = () => {
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
           <View style={styles.body}>
-            {user == null ? <LogInView /> : <TasksView />}
+            {user == null ? (
+              <LogInView />
+            ) : (
+              <TasksView projectId="My Project" />
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
