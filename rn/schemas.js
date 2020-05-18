@@ -19,8 +19,8 @@ class Task {
     this.status = status;
   }
 
-  STATUS_OPEN = 'Open';
-  STATUS_CLOSED = 'Closed';
+  static STATUS_OPEN = 'Open';
+  static STATUS_COMPLETE = 'Complete';
   static schema = {
     name: 'Task',
     properties: {
