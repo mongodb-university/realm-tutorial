@@ -47,6 +47,7 @@ export function TaskItem({
       }}
       title={task.name}
       bottomDivider
+      checkmark={task.status === Task.STATUS_COMPLETE}
     />
   );
 }

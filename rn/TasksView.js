@@ -5,49 +5,10 @@ import {useAuth} from './AuthProvider';
 import {Task} from './schemas';
 import {TaskItem} from './TaskItem';
 import {ActionSheet} from './ActionSheet';
-import {Overlay, Input} from 'react-native-elements';
-import {styles} from './App';
+import {AddTaskView} from './AddTaskView';
 
 // Should never have two TasksViews open
 let gRealm = null;
-
-function AddTaskView({realm, partition}) {
-  const [overlayVisible, setOverlayVisible] = useState(false);
-  const [newTaskName, setNewTaskName] = useState('');
-
-  return (
-    <>
-      <Overlay isVisible={overlayVisible} overlayStyle={{width: '90%'}}>
-        <>
-          <Input
-            placeholder="New Task Name"
-            style={styles.forminput}
-            onChangeText={(text) => setNewTaskName(text)}
-            autoFocus={true}
-          />
-          <Button
-            title="Create"
-            onPress={() => {
-              setOverlayVisible(false);
-              realm.write(() => {
-                realm.create(
-                  'Task',
-                  new Task({name: newTaskName || 'New Task', partition}),
-                );
-              });
-            }}
-          />
-        </>
-      </Overlay>
-      <Button
-        title="Add Task"
-        onPress={() => {
-          setOverlayVisible(true);
-        }}
-      />
-    </>
-  );
-}
 
 export function TasksView({projectId}) {
   const {user, logOut} = useAuth();
@@ -75,6 +36,7 @@ export function TasksView({projectId}) {
         user.identity
       } with config: ${JSON.stringify(config)}...`,
     );
+
     Realm.open(config)
       .then((realm) => {
         console.log('realm open called');
