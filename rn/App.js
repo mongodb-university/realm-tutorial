@@ -22,6 +22,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 const ObjectId = require('bson').ObjectId;
+import Realm from 'realm';
+import {AuthProvider, useAuth} from './AuthProvider';
 
 function getApp() {
   const appId = 'myrealmapp-vjmee';
@@ -36,7 +38,7 @@ function getApp() {
   };
   return new Realm.App(appConfig);
 }
-import Realm from 'realm';
+
 const partition = 'My Project';
 export const TaskSchema = {
   name: 'Task',
@@ -49,8 +51,8 @@ export const TaskSchema = {
   primaryKey: '_id',
 };
 const rApp = getApp();
-let listener;
-const App: () => React$Node = () => {
+
+const App = () => {
   const [user, setUser] = useState();
   useEffect(() => {
     console.log('effect called');
@@ -92,7 +94,8 @@ const App: () => React$Node = () => {
   }, [user]);
   console.log('Length:', tasks.length);
   return (
-    <>
+    <AuthProvider>
+      <AuthTest />
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView
@@ -115,7 +118,7 @@ const App: () => React$Node = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </>
+    </AuthProvider>
   );
 };
 const styles = StyleSheet.create({
