@@ -25,18 +25,20 @@ const AuthProvider = ({children}) => {
 
   const logIn = async (email, password) => {
     try {
-      const user = await app.logIn(
-        Realm.Credentials.emailPassword(email, password),
-      );
-      setUser(user);
+      const creds = Realm.Credentials.emailPassword(email, password);
+      const newUser = await app.logIn(creds);
+      console.log('Logged in with user', newUser.identity);
+      console.log('Is logged in?', newUser.isLoggedIn);
+      setUser(newUser);
     } catch (error) {
       console.error(error);
     }
   };
 
   const logOut = () => {
+    console.log('Logging out');
     user.logOut();
-    setUser(null);
+    setUser(app.currentUser());
   };
 
   return (
