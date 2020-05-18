@@ -34,10 +34,10 @@ const AppBody = () => {
   const {user} = useAuth();
   console.log(
     'Rendering AppBody with user',
-    Object.keys(user),
-    user.identity,
-    user.isLoggedIn,
+    user && user.identity,
+    user && user.isLoggedIn,
   );
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -46,7 +46,7 @@ const AppBody = () => {
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
           <View style={styles.body}>
-            {user.isLoggedIn ? <TasksView /> : <LogInView />}
+            {user == null ? <LogInView /> : <TasksView />}
           </View>
         </ScrollView>
       </SafeAreaView>

@@ -21,7 +21,7 @@ function getApp() {
 const app = getApp();
 
 const AuthProvider = ({children}) => {
-  const [user, setUser] = useState(app.currentUser());
+  const [user, setUser] = useState(null);
 
   const logIn = async (email, password) => {
     try {
@@ -38,7 +38,7 @@ const AuthProvider = ({children}) => {
   const logOut = () => {
     console.log('Logging out');
     user.logOut();
-    setUser(app.currentUser());
+    setUser(null);
   };
 
   return (
