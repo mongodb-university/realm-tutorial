@@ -3,8 +3,8 @@ import {SafeAreaView, ScrollView, View, StatusBar} from 'react-native';
 import {useAuth} from './AuthProvider';
 import {LogInView} from './LogInView';
 import {TasksView} from './TasksView';
-import {styles} from './App';
 import {TasksProvider} from './TasksProvider';
+import {styles} from './styles';
 
 // The AppBody is the main view within the App. If a user is not logged in, it
 // renders the login view. Otherwise, it renders the tasks view. It must be

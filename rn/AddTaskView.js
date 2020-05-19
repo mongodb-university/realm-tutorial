@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {Button} from 'react-native';
 import {Overlay, Input} from 'react-native-elements';
-import {styles} from './App';
 import {useTasks} from './TasksProvider';
+import {styles} from './styles';
 
 // The AddTaskView is a button for adding tasks. When the button is pressed, an
 // overlay shows up to request user input for the new task name. When the
