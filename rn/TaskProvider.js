@@ -17,11 +17,11 @@ const TaskProvider = ({children}) => {
   );
 };
 
-const useTask = () => {
+const useTasks = () => {
   const _task = useContext(TaskContext);
   if (_task == null) {
-    throw new Error('useTask() called outside of a TaskProvider?');
+    throw new Error('useTasks() called outside of a TaskProvider?');
   }
   return _task;
 };
-export {TaskProvider, useTask};
+export {TaskProvider, useTasks};
