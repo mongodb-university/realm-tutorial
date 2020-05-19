@@ -3,6 +3,7 @@ import {Text} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {Task} from './schemas';
 
+// The TaskItem represents a Task in a list.
 export function TaskItem({
   task,
   realm,

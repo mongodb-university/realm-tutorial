@@ -5,47 +5,12 @@
  * @format
  * @flow strict-local
  */
-import React, {useState, useEffect} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  StatusBar,
-} from 'react-native';
+import React from 'react';
+import {StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import {AuthProvider, useAuth} from './AuthProvider';
-import {LogInView} from './LogInView';
-import {TasksView} from './TasksView';
-
-const AppBody = () => {
-  const {user} = useAuth();
-  console.log(
-    'Rendering AppBody with user',
-    user && user.identity,
-    user && user.isLoggedIn,
-  );
-
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <View style={styles.body}>
-            {user == null ? (
-              <LogInView />
-            ) : (
-              <TasksView projectId="My Project" />
-            )}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+import {AuthProvider} from './AuthProvider';
+import {AppBody} from './AppBody';
 
 const App = () => {
   return (

@@ -1,42 +1,40 @@
 import React, {useContext, useState} from 'react';
 import Realm from 'realm';
+import {getApp} from './getApp';
 
+// Create a new Context object that will be provided to descendents of the AuthProvider.
 const AuthContext = React.createContext(null);
 
-// FIXME: move to its own file
-function getApp() {
-  const appId = 'myrealmapp-vjmee';
-  const appConfig = {
-    id: appId,
-    url: 'https://realm-dev.mongodb.com', //'http://localhost:8080',
-    timeout: 1000,
-    app: {
-      name: 'default',
-      version: '0',
-    },
-  };
-  return new Realm.App(appConfig);
-}
-
+// Access the Realm App.
 const app = getApp();
 
+// The AuthProvider is responsible for user management and provides the
+// AuthContext value to its descendents. Components under an AuthProvider can
+// use the useAuth() hook to access the auth value.
 const AuthProvider = ({children}) => {
   const [user, setUser] = useState(null);
 
+  // The log in function takes an email and password and uses the emailPassword
+  // authentication provider to log in.
   const logIn = async (email, password) => {
+    console.log(`Logging in as ${email} with password ${password}...`);
     try {
       const creds = Realm.Credentials.emailPassword(email, password);
       const newUser = await app.logIn(creds);
-      console.log('Logged in with user', newUser.identity);
-      console.log('Is logged in?', newUser.isLoggedIn);
       setUser(newUser);
+      console.log(`Logged in as ${newUser.identity}`);
     } catch (error) {
-      console.error(error);
+      console.error(`Login failed: ${error}`);
     }
   };
 
+  // Log out the current user.
   const logOut = () => {
-    console.log('Logging out');
+    if (user == null) {
+      console.error("Not logged in -- can't log out!");
+      return;
+    }
+    console.log('Logging out...');
     user.logOut();
     setUser(null);
   };
@@ -53,6 +51,8 @@ const AuthProvider = ({children}) => {
   );
 };
 
+// The useAuth hook can be used by components under an AuthProvider to access
+// the auth context value.
 const useAuth = () => {
   const auth = useContext(AuthContext);
   if (auth == null) {
