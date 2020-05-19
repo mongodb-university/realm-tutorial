@@ -1,5 +1,6 @@
 import React from 'react';
-import {Text, Button} from 'react-native';
+import {View, ScrollView} from 'react-native';
+import {Text, Button} from 'react-native-elements';
 import {useAuth} from './AuthProvider';
 import {useTasks} from './TasksProvider';
 import {TaskItem} from './TaskItem';
@@ -15,12 +16,16 @@ export function TasksView() {
   const {tasks, projectId} = useTasks();
   return (
     <>
-      <Button title="Log Out" onPress={logOut} />
-      <AddTaskView />
-      <Text>{projectId}</Text>
-      {tasks.map((task) => (
-        <TaskItem key={`${task._id}`} task={task} />
-      ))}
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Button type="outline" title="Log Out" onPress={logOut} />
+        <AddTaskView />
+      </View>
+      <Text h2>{projectId}</Text>
+      <ScrollView>
+        {tasks.map((task) => (
+          <TaskItem key={`${task._id}`} task={task} />
+        ))}
+      </ScrollView>
     </>
   );
 }

@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
-import {Button} from 'react-native';
-import {Overlay, Input} from 'react-native-elements';
+import {Overlay, Input, Button} from 'react-native-elements';
 import {useTasks} from './TasksProvider';
-import {styles} from './styles';
 
 // The AddTaskView is a button for adding tasks. When the button is pressed, an
 // overlay shows up to request user input for the new task name. When the
@@ -14,11 +12,13 @@ export function AddTaskView() {
   const {createTask} = useTasks();
   return (
     <>
-      <Overlay isVisible={overlayVisible} overlayStyle={{width: '90%'}}>
+      <Overlay
+        isVisible={overlayVisible}
+        overlayStyle={{width: '90%'}}
+        onBackdropPress={() => setOverlayVisible(false)}>
         <>
           <Input
             placeholder="New Task Name"
-            style={styles.forminput}
             onChangeText={(text) => setNewTaskName(text)}
             autoFocus={true}
           />
@@ -32,6 +32,7 @@ export function AddTaskView() {
         </>
       </Overlay>
       <Button
+        type="outline"
         title="Add Task"
         onPress={() => {
           setOverlayVisible(true);

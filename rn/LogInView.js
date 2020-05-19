@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Text, TextInput, View} from 'react-native';
-import {styles} from './styles';
+import {Button, Text, Input} from 'react-native-elements';
 import {useAuth} from './AuthProvider';
 
 // This view has an input for email and password and logs in the user when the
@@ -12,22 +11,17 @@ export function LogInView() {
   const {logIn} = useAuth();
   return (
     <>
-      <Text style={styles.header}>Login</Text>
-      <View style={styles.forminput}>
-        <TextInput
-          autoCapitalize="none"
-          placeholder="email"
-          style={styles.forminput}
-          onChangeText={setEmail}
-        />
-      </View>
-      <View style={styles.forminput}>
-        <TextInput
-          secureTextEntry={true}
-          placeholder="password"
-          onChangeText={setPassword}
-        />
-      </View>
+      <Text h3>Log In</Text>
+      <Input
+        autoCapitalize="none"
+        placeholder="email"
+        onChangeText={setEmail}
+      />
+      <Input
+        secureTextEntry={true}
+        placeholder="password"
+        onChangeText={setPassword}
+      />
       <Button
         onPress={async () => {
           console.log(
@@ -41,7 +35,6 @@ export function LogInView() {
           }
         }}
         title="Login"
-        color="#841584"
       />
       <Text>{error}</Text>
     </>

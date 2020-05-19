@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {Text} from 'react-native';
-import {ListItem} from 'react-native-elements';
+import {Text, ListItem} from 'react-native-elements';
 import {Task} from './schemas';
 import {useTasks} from './TasksProvider';
 import {ActionSheet} from './ActionSheet';
