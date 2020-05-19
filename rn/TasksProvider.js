@@ -1,14 +1,15 @@
-import React, {useContext, useState, useEffect} from 'react';
-import Realm from 'realm';
+import React, {useContext, useState, useEffect, useRef} from 'react';
+import Realm, {exists} from 'realm';
 import {useAuth} from './AuthProvider';
 import {Task} from './schemas';
 
-let gRealm = null;
 const TaskContext = React.createContext(null);
 
 const TasksProvider = ({children, projectId}) => {
   const [tasks, setTasks] = useState([]);
+  const realmRef = useRef();
   const {user} = useAuth();
+
   useEffect(() => {
     if (!user) {
       console.error('TasksView must be authenticated!');
@@ -29,39 +30,42 @@ const TasksProvider = ({children, projectId}) => {
       } with config: ${JSON.stringify(config)}...`,
     );
 
-    Realm.open(config)
-      .then((realm) => {
-        console.log('realm open called');
-        gRealm = realm;
+    if (realmRef.current != null) {
+      realmRef.current.removeAllListeners();
+      realmRef.current.close();
+      realmRef.current = null;
+    }
 
-        // realm.syncSession.downloadAllServerChanges();
-        const syncTasks = realm.objects('Task');
-        console.log('syncTasks', syncTasks);
-        realm.addListener('change', () => {
-          console.log('Changed');
+    Realm.open(config)
+      .then((openedRealm) => {
+        const syncTasks = openedRealm.objects('Task');
+        openedRealm.addListener('change', () => {
           setTasks([...syncTasks]);
         });
-
         setTasks([...syncTasks]);
+        realmRef.current = openedRealm;
       })
-      .catch(console.dir);
+      .catch(console.error);
 
     return () => {
-      if (gRealm != null) {
-        gRealm.removeAllListeners();
-        gRealm.close();
-        gRealm = null;
+      const realm = realmRef.current;
+      if (realm != null) {
+        realm.removeAllListeners();
+        realm.close();
+        realmRef.current = null;
       }
     };
   }, [user, projectId]);
 
   const deleteTask = (task) => {
-    gRealm.write(() => {
-      gRealm.delete(task);
+    const realm = realmRef.current;
+    realm.write(() => {
+      realm.delete(task);
     });
   };
 
   const setTaskStatus = (task, status) => {
+    const realm = realmRef.current;
     if (
       ![
         Task.STATUS_OPEN,
@@ -71,14 +75,15 @@ const TasksProvider = ({children, projectId}) => {
     ) {
       throw new Error(`Invalid Status ${status}`);
     }
-    gRealm.write(() => {
+    realm.write(() => {
       task.status = status;
     });
   };
 
   const createTask = (newTaskName) => {
-    gRealm.write(() => {
-      gRealm.create(
+    const realm = realmRef.current;
+    realm.write(() => {
+      realm.create(
         'Task',
         new Task({name: newTaskName || 'New Task', partition: projectId}),
       );
