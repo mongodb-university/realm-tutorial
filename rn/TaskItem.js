@@ -2,6 +2,7 @@ import React from 'react';
 import {Text} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {Task} from './schemas';
+import {useTask} from './TaskProvider';
 
 // The TaskItem represents a Task in a list.
 export function TaskItem({
@@ -10,6 +11,7 @@ export function TaskItem({
   setActionSheetVisible,
   setActionSheetActions,
 }) {
+  const {createTask} = useTask();
   // Specify the list of available actions in the action list when the item is
   // pressed in the list.
   const actions = [
