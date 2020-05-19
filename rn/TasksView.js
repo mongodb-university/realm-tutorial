@@ -1,34 +1,25 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Text, Button} from 'react-native';
 import {useAuth} from './AuthProvider';
 import {useTasks} from './TasksProvider';
 import {TaskItem} from './TaskItem';
-import {ActionSheet} from './ActionSheet';
 import {AddTaskView} from './AddTaskView';
 
-export function TasksView({projectId}) {
-  const {tasks} = useTasks();
+// The Tasks View displays the list of tasks of the parent TasksProvider.
+// It has a button to log out and a button to add a new task.
+export function TasksView() {
+  // Get the logOut function from the useAuth hook.
   const {logOut} = useAuth();
 
-  const [actionSheetVisible, setActionSheetVisible] = useState(false);
-  const [actionSheetActions, setActionSheetActions] = useState([]);
-
+  // Get the list of tasks and the projectId from the useTasks hook.
+  const {tasks, projectId} = useTasks();
   return (
     <>
-      <ActionSheet
-        visible={actionSheetVisible}
-        closeOverlay={() => setActionSheetVisible(false)}
-        actions={actionSheetActions}
-      />
       <Button title="Log Out" onPress={logOut} />
       <AddTaskView />
-      <Text>Tasks View</Text>
+      <Text>{projectId}</Text>
       {tasks.map((task) => (
-        <TaskItem
-          task={task}
-          setActionSheetVisible={setActionSheetVisible}
-          setActionSheetActions={setActionSheetActions}
-        />
+        <TaskItem key={`${task._id}`} task={task} />
       ))}
     </>
   );

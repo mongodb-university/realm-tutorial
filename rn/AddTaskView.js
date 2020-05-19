@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Button} from 'react-native';
-import {Task} from './schemas';
 import {Overlay, Input} from 'react-native-elements';
 import {styles} from './App';
 import {useTasks} from './TasksProvider';

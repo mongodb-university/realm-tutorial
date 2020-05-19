@@ -1,19 +1,22 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {Task} from './schemas';
 import {useTasks} from './TasksProvider';
+import {ActionSheet} from './ActionSheet';
 
-// The TaskItem represents a Task in a list.
-export function TaskItem({
-  task,
-  realm,
-  setActionSheetVisible,
-  setActionSheetActions,
-}) {
+// The TaskItem represents a Task in a list. When you click an item in the list,
+// an action sheet appears. The action sheet contains a list of actions the user
+// can perform on the task, namely deleting and changing its status.
+export function TaskItem({task}) {
+  // Pull the task actions from the TasksProvider.
   const {deleteTask, setTaskStatus} = useTasks();
-  // Specify the list of available actions in the action list when the item is
-  // pressed in the list.
+
+  // The action sheet appears when the user presses an item in the list.
+  const [actionSheetVisible, setActionSheetVisible] = useState(false);
+
+  // Specify the list of available actions in the action list when the user
+  // presses an item in the list.
   const actions = [
     {
       title: 'Delete',
@@ -23,8 +26,8 @@ export function TaskItem({
     },
   ];
 
-  // Make an action to move the task into any other status other than the
-  // current status.
+  // For each possible status other than the current status, make an action to
+  // move the task into that status. This could be refactored numerous ways.
   if (task.status !== Task.STATUS_OPEN) {
     actions.push({
       title: 'Mark Open',
@@ -49,22 +52,31 @@ export function TaskItem({
       },
     });
   }
+
+  // TODO: Add "rename" task action.
+
   return (
-    <ListItem
-      key={task.id}
-      onPress={() => {
-        setActionSheetVisible(true);
-        setActionSheetActions(actions);
-      }}
-      title={task.name}
-      bottomDivider
-      checkmark={
-        task.status === Task.STATUS_COMPLETE ? (
-          <Text>&#10004;</Text>
-        ) : task.status === Task.STATUS_IN_PROGRESS ? (
-          <Text>In Progress</Text>
-        ) : null
-      }
-    />
+    <>
+      <ActionSheet
+        visible={actionSheetVisible}
+        closeOverlay={() => setActionSheetVisible(false)}
+        actions={actions}
+      />
+      <ListItem
+        key={task.id}
+        onPress={() => {
+          setActionSheetVisible(true);
+        }}
+        title={task.name}
+        bottomDivider
+        checkmark={
+          task.status === Task.STATUS_COMPLETE ? (
+            <Text>&#10004;</Text>
+          ) : task.status === Task.STATUS_IN_PROGRESS ? (
+            <Text>In Progress</Text>
+          ) : null
+        }
+      />
+    </>
   );
 }

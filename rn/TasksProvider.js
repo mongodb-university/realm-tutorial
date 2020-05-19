@@ -1,21 +1,45 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
-import Realm, {exists} from 'realm';
+import Realm from 'realm';
 import {useAuth} from './AuthProvider';
 import {Task} from './schemas';
 
-const TaskContext = React.createContext(null);
+// Create the context that will be provided to descendents of TasksProvider via
+// the useTasks hook.
+const TasksContext = React.createContext(null);
 
 const TasksProvider = ({children, projectId}) => {
-  const [tasks, setTasks] = useState([]);
-  const realmRef = useRef();
+  // Get the user from the AuthProvider context.
   const {user} = useAuth();
 
+  // The tasks list will contain the tasks in the realm when opened.
+  const [tasks, setTasks] = useState([]);
+
+  // This realm does not need to be a state variable, because we don't re-render
+  // on changing the realm.
+  const realmRef = useRef(null);
+
+  // The effect hook replaces lifecycle methods such as componentDidMount. In
+  // this effect hook, we open the realm that contains the tasks and fetch a
+  // collection of tasks.
   useEffect(() => {
-    if (!user) {
+    // Check that the user is logged in. You must authenticate to open a synced
+    // realm.
+    if (user == null) {
       console.error('TasksView must be authenticated!');
       return;
     }
 
+    // If there is already an open realm, close it.
+    if (realmRef.current != null) {
+      realmRef.current.removeAllListeners();
+      realmRef.current.close();
+      realmRef.current = null;
+    }
+
+    // Define the configuration for the realm to use the Task schema. Base the
+    // sync configuration on the user settings and use the project ID as the
+    // partition value. This will open a realm that contains all objects where
+    // object._partition == projectId.
     const config = {
       schema: [Task.schema],
       sync: {
@@ -30,24 +54,31 @@ const TasksProvider = ({children, projectId}) => {
       } with config: ${JSON.stringify(config)}...`,
     );
 
-    if (realmRef.current != null) {
-      realmRef.current.removeAllListeners();
-      realmRef.current.close();
-      realmRef.current = null;
-    }
-
+    // Now open the realm asynchronously with the given configuration.
     Realm.open(config)
       .then((openedRealm) => {
+        // Update the realmRef so we can use this opened realm for writing.
+        realmRef.current = openedRealm;
+
+        // Read the collection of all Tasks in the realm. Again, thanks to our
+        // configuration above, the realm only contains tasks where
+        // task._partition == projectId.
         const syncTasks = openedRealm.objects('Task');
+
+        // Watch for changes to the tasks collection.
         openedRealm.addListener('change', () => {
+          // On change, update the tasks state variable and re-render.
           setTasks([...syncTasks]);
         });
+
+        // Set the tasks state variable and re-render.
         setTasks([...syncTasks]);
-        realmRef.current = openedRealm;
       })
       .catch(console.error);
 
+    // Return the cleanup function to be called when the component is unmounted.
     return () => {
+      // If there is an open realm, we must close it.
       const realm = realmRef.current;
       if (realm != null) {
         realm.removeAllListeners();
@@ -55,17 +86,28 @@ const TasksProvider = ({children, projectId}) => {
         realmRef.current = null;
       }
     };
-  }, [user, projectId]);
+  }, [user, projectId]); // Declare dependencies list in the second parameter to useEffect().
 
-  const deleteTask = (task) => {
+  // Define our create, update, and delete functions that users of the
+  // useTasks() hook can call.
+  const createTask = (newTaskName) => {
     const realm = realmRef.current;
+    // TODO: Check that realm != null. If the realm is null, it isn't opened yet.
+
+    // Open a write transaction.
     realm.write(() => {
-      realm.delete(task);
+      // Create a new task in the same partition -- that is, in the same project.
+      realm.create(
+        'Task',
+        new Task({name: newTaskName || 'New Task', partition: projectId}),
+      );
     });
   };
 
+  // Define the function for updating a task's status.
   const setTaskStatus = (task, status) => {
-    const realm = realmRef.current;
+    // One advantage of centralizing the realm functionality in this provider is
+    // that we can check to make sure a valid status was passed in here.
     if (
       ![
         Task.STATUS_OPEN,
@@ -75,39 +117,47 @@ const TasksProvider = ({children, projectId}) => {
     ) {
       throw new Error(`Invalid Status ${status}`);
     }
+    const realm = realmRef.current;
+
     realm.write(() => {
       task.status = status;
     });
   };
 
-  const createTask = (newTaskName) => {
+  // Define the function for deleting a task.
+  const deleteTask = (task) => {
     const realm = realmRef.current;
     realm.write(() => {
-      realm.create(
-        'Task',
-        new Task({name: newTaskName || 'New Task', partition: projectId}),
-      );
+      realm.delete(task);
     });
   };
 
+  // Render the children within the TaskContext's provider. The value contains
+  // everything that should be made available to descendents that use the
+  // useTasks hook.
   return (
-    <TaskContext.Provider
+    <TasksContext.Provider
       value={{
         createTask,
         deleteTask,
         setTaskStatus,
         tasks,
+        projectId,
       }}>
       {children}
-    </TaskContext.Provider>
+    </TasksContext.Provider>
   );
 };
 
+// The useTasks hook can be used by any descendent of the TasksProvider. It
+// provides the tasks of the TasksProvider's project and various functions to
+// create, update, and delete the tasks in that project.
 const useTasks = () => {
-  const _task = useContext(TaskContext);
-  if (_task == null) {
+  const task = useContext(TasksContext);
+  if (task == null) {
     throw new Error('useTasks() called outside of a TasksProvider?');
   }
-  return _task;
+  return task;
 };
+
 export {TasksProvider, useTasks};
