@@ -2,6 +2,7 @@ import React from 'react';
 import {Text} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {Task} from './schemas';
+import {useTask} from './TaskProvider';
 
 // The TaskItem represents a Task in a list.
 export function TaskItem({
@@ -10,6 +11,7 @@ export function TaskItem({
   setActionSheetVisible,
   setActionSheetActions,
 }) {
+  const {createTask} = useTask();
   const actions = [
     {
       title: 'Delete',
@@ -54,6 +56,8 @@ export function TaskItem({
     <ListItem
       key={task.id}
       onPress={() => {
+        console.log('\n\n\nuseTask', createTask());
+        console.log('\n\n\n');
         setActionSheetVisible(true);
         setActionSheetActions(actions);
       }}
