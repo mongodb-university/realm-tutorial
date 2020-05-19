@@ -10,6 +10,8 @@ export function TaskItem({
   setActionSheetVisible,
   setActionSheetActions,
 }) {
+  // Specify the list of available actions in the action list when the item is
+  // pressed in the list.
   const actions = [
     {
       title: 'Delete',
@@ -20,6 +22,9 @@ export function TaskItem({
       },
     },
   ];
+
+  // Make an action to move the task into any other status other than the
+  // current status.
   if (task.status !== Task.STATUS_OPEN) {
     actions.push({
       title: 'Mark Open',

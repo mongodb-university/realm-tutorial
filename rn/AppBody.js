@@ -6,7 +6,8 @@ import {TasksView} from './TasksView';
 import {styles} from './App';
 
 // The AppBody is the main view within the App. If a user is not logged in, it
-// renders the login view. Otherwise, it renders the tasks view.
+// renders the login view. Otherwise, it renders the tasks view. It must be
+// within an AuthProvider.
 export function AppBody() {
   const {user} = useAuth();
   return (
