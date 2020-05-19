@@ -52,7 +52,7 @@ export function TaskItem({task}) {
     });
   }
 
-  // TODO: Add "rename" task action.
+  // EXERCISE: Add "rename" task action.
 
   return (
     <>

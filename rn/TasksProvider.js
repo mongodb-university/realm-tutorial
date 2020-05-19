@@ -92,7 +92,7 @@ const TasksProvider = ({children, projectId}) => {
   // useTasks() hook can call.
   const createTask = (newTaskName) => {
     const realm = realmRef.current;
-    // TODO: Check that realm != null. If the realm is null, it isn't opened yet.
+    // EXERCISE: Check that realm != null. If the realm is null, it isn't opened yet.
 
     // Open a write transaction.
     realm.write(() => {
