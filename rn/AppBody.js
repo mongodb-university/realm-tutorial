@@ -4,7 +4,7 @@ import {useAuth} from './AuthProvider';
 import {LogInView} from './LogInView';
 import {TasksView} from './TasksView';
 import {styles} from './App';
-import {TaskProvider} from './TaskProvider';
+import {TasksProvider} from './TasksProvider';
 
 // The AppBody is the main view within the App. If a user is not logged in, it
 // renders the login view. Otherwise, it renders the tasks view. It must be
@@ -22,9 +22,9 @@ export function AppBody() {
             {user == null ? (
               <LogInView />
             ) : (
-              <TaskProvider>
+              <TasksProvider>
                 <TasksView projectId="My Project" />
-              </TaskProvider>
+              </TasksProvider>
             )}
           </View>
         </ScrollView>
