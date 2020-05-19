@@ -62,6 +62,15 @@ const TasksProvider = ({children, projectId}) => {
   };
 
   const setTaskStatus = (task, status) => {
+    if (
+      ![
+        Task.STATUS_OPEN,
+        Task.STATUS_IN_PROGRESS,
+        Task.STATUS_COMPLETE,
+      ].includes(status)
+    ) {
+      throw new Error(`Invalid Status ${status}`);
+    }
     gRealm.write(() => {
       task.status = status;
     });
