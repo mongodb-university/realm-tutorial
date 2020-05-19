@@ -1,20 +1,17 @@
-import React, {useState, useEffect} from 'react';
-import Realm from 'realm';
+import React, {useState} from 'react';
 import {Text, Button} from 'react-native';
 import {useAuth} from './AuthProvider';
-import {Task} from './schemas';
+import {useTasks} from './TasksProvider';
 import {TaskItem} from './TaskItem';
 import {ActionSheet} from './ActionSheet';
 import {AddTaskView} from './AddTaskView';
 
 export function TasksView({projectId}) {
+  const {tasks} = useTasks();
   const {logOut} = useAuth();
 
-  const [tasks, setTasks] = useState([]);
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
   const [actionSheetActions, setActionSheetActions] = useState([]);
-
-  console.log('Got tasks', tasks);
 
   return (
     <>

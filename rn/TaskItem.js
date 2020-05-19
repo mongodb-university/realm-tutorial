@@ -11,16 +11,14 @@ export function TaskItem({
   setActionSheetVisible,
   setActionSheetActions,
 }) {
-  const {createTask} = useTasks();
+  const {deleteTask, setTaskStatus} = useTasks();
   // Specify the list of available actions in the action list when the item is
   // pressed in the list.
   const actions = [
     {
       title: 'Delete',
       action: () => {
-        realm.write(() => {
-          realm.delete(task);
-        });
+        deleteTask(task);
       },
     },
   ];
@@ -31,9 +29,7 @@ export function TaskItem({
     actions.push({
       title: 'Mark Open',
       action: () => {
-        realm.write(() => {
-          task.status = Task.STATUS_OPEN;
-        });
+        setTaskStatus(task, Task.STATUS_OPEN);
       },
     });
   }
@@ -41,9 +37,7 @@ export function TaskItem({
     actions.push({
       title: 'Mark In Progress',
       action: () => {
-        realm.write(() => {
-          task.status = Task.STATUS_IN_PROGRESS;
-        });
+        setTaskStatus(task, Task.STATUS_IN_PROGRESS);
       },
     });
   }
@@ -51,9 +45,7 @@ export function TaskItem({
     actions.push({
       title: 'Mark Complete',
       action: () => {
-        realm.write(() => {
-          task.status = Task.STATUS_COMPLETE;
-        });
+        setTaskStatus(task, Task.STATUS_COMPLETE);
       },
     });
   }

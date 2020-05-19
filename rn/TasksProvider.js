@@ -1,11 +1,13 @@
 import React, {useContext, useState, useEffect} from 'react';
 import Realm from 'realm';
 import {useAuth} from './AuthProvider';
+import {Task} from './schemas';
 
 let gRealm = null;
 const TaskContext = React.createContext(null);
 
-const TasksProvider = ({children}) => {
+const TasksProvider = ({children, projectId}) => {
+  const [tasks, setTasks] = useState([]);
   const {user} = useAuth();
   useEffect(() => {
     if (!user) {
@@ -52,19 +54,35 @@ const TasksProvider = ({children}) => {
       }
     };
   }, [user, projectId]);
-  const createTask = async () => {
-    // return await setTimeout(() => console.log('ran createTask'), 1000);
-    realm.write(() => {
-      realm.create(
+
+  const deleteTask = (task) => {
+    gRealm.write(() => {
+      gRealm.delete(task);
+    });
+  };
+
+  const setTaskStatus = (task, status) => {
+    gRealm.write(() => {
+      task.status = status;
+    });
+  };
+
+  const createTask = (newTaskName) => {
+    gRealm.write(() => {
+      gRealm.create(
         'Task',
-        new Task({name: newTaskName || 'New Task', partition}),
+        new Task({name: newTaskName || 'New Task', partition: projectId}),
       );
     });
   };
+
   return (
     <TaskContext.Provider
       value={{
         createTask,
+        deleteTask,
+        setTaskStatus,
+        tasks,
       }}>
       {children}
     </TaskContext.Provider>

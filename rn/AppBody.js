@@ -22,8 +22,8 @@ export function AppBody() {
             {user == null ? (
               <LogInView />
             ) : (
-              <TasksProvider>
-                <TasksView projectId="My Project" />
+              <TasksProvider projectId="My Project">
+                <TasksView />
               </TasksProvider>
             )}
           </View>
