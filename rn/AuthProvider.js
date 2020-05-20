@@ -18,14 +18,10 @@ const AuthProvider = ({children}) => {
   // authentication provider to log in.
   const logIn = async (email, password) => {
     console.log(`Logging in as ${email} with password ${password}...`);
-    try {
-      const creds = Realm.Credentials.emailPassword(email, password);
-      const newUser = await app.logIn(creds);
-      setUser(newUser);
-      console.log(`Logged in as ${newUser.identity}`);
-    } catch (error) {
-      console.error(`Login failed: ${error}`);
-    }
+    const creds = Realm.Credentials.emailPassword(email, password);
+    const newUser = await app.logIn(creds);
+    setUser(newUser);
+    console.log(`Logged in as ${newUser.identity}`);
   };
 
   // Log out the current user.

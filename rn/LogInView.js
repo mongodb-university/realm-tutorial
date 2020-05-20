@@ -31,7 +31,7 @@ export function LogInView() {
           try {
             await logIn(email, password);
           } catch (e) {
-            setError(e);
+            setError(`Login failed: ${e.message}`);
           }
         }}
         title="Login"
