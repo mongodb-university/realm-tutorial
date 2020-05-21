@@ -1,6 +1,6 @@
 # To Run:
 
-1. Be using Node <10
+1. Use Node <10 (if you want to switch to node 10 and have "nvm" installed, you can run `nvm use 10`)
 2. `cd` into rn/
 3. `npm install`
 4. `cd ios` && `pod install` && `cd ..`
