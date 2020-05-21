@@ -5,4 +5,4 @@
 3. `npm install`
 4. `cd ios` && `pod install` && `cd ..`
 5. replace `appId` in "getRealmApp.js" with your Realm app ID, which you can find in the Realm UI
-6. run `npx react-native run-ios` or `npx react-native run-android`
+6. Run `npx react-native run-ios` or `npx react-native run-android`
