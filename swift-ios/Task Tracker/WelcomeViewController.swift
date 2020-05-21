@@ -137,7 +137,7 @@ class WelcomeViewController: UIViewController {
         print("Log in as user: \(username!)");
         setLoading(true);
         
-        app.login(withCredential: AppCredentials(username: username!, password: password!)) { [weak self](user, error) in
+        app.login(withCredential: AppCredentials(username: username!, password: password!)) { [weak self](maybeUser, error) in
             // Completion handlers are not necessarily called on the UI thread.
             // This call to DispatchQueue.main.sync ensures that any changes to the UI,
             // namely disabling the loading indicator and navigating to the next page,
@@ -150,13 +150,25 @@ class WelcomeViewController: UIViewController {
                     self!.errorLabel.text = "Login failed: \(error!.localizedDescription)"
                     return
                 }
+                
+                guard let user = maybeUser else {
+                    fatalError("Invalid user object?")
+                }
 
                 print("Login succeeded!");
                 
                 if (!USE_PROJECTS_PAGE) {
-                    // For the first phase of the tutorial, go directly to the Tasks page without a project.
+    
+                    // For the first phase of the tutorial, go directly to the Tasks page
+                    // for the hardcoded project ID "My Project".
                     // This will use a common project and demonstrate sync.
-                    self!.navigationController!.pushViewController(TasksViewController(project: nil), animated: true);
+                    let partitionValue = "My Project"
+
+                    // Open a realm.
+                    let projectRealm = try! Realm(configuration: user.configuration(partitionValue: partitionValue))
+
+                    self!.navigationController!.pushViewController(TasksViewController(project: nil, projectRealm: projectRealm), animated: true);
+
                 } else {
                     // For the second phase of the tutorial, go to the Projects management page. 
                     // This is where you can manage permissions and collaborators.

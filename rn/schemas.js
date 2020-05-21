@@ -27,7 +27,7 @@ class Task {
     properties: {
       _id: 'object id',
       _partition: 'string',
-      name: 'string?',
+      name: 'string',
       status: 'string',
     },
     primaryKey: '_id',

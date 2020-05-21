@@ -18,20 +18,13 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     let tableView = UITableView()
     var notificationToken: NotificationToken?
 
-    required init(project: Project?) {
-        guard let user = app.currentUser() else {
-            fatalError("Must be logged in to access this view")
-        }
+    required init(project: Project?, projectRealm: Realm) {
 
         self.project = project
+        
+        realm = projectRealm
 
-        // For tutorial purposes, we can pass nil as the project.
-        // This allows us to work with the Tasks of a default project, which
-        // will use the hardcoded ID "My Project".
-        self.partitionValue = project != nil ? "\(project!._id)" : "My Project"
-
-        // Open a realm.
-        realm = try! Realm(configuration: user.configuration(partitionValue: partitionValue))
+        partitionValue = realm.configuration.syncConfiguration?.partitionValue as! String
 
         // Access all tasks in the realm.
         // Only tasks with the project ID as the partition key value will be in the realm.
@@ -80,6 +73,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
 
         if (project == nil) {
+            // TUTORIAL ONLY:
             // If project was not set, we do not have the Projects page.
             // We must be using the default project for tutorial purposes.
             // That means instead of letting the left bar button go back to the
