@@ -118,7 +118,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
         
-        // User can swip to delete items.
+        // User can swipe to delete items.
         let task = tasks[indexPath.row]
         
         // All modifications to a realm must happen in a write block.
