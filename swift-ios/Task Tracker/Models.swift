@@ -14,7 +14,7 @@ typealias ProjectId = String
 class Project: Object {
     @objc dynamic var _id = ObjectId.generate()
     @objc dynamic var _partition = ""
-    @objc dynamic var name: String? = nil
+    @objc dynamic var name = ""
     override static func primaryKey() -> String? {
         return "_id"
     }
@@ -35,7 +35,7 @@ enum TaskStatus: String {
 class Task: Object {
     @objc dynamic var _id: ObjectId = ObjectId.generate()
     @objc dynamic var _partition: ProjectId = ""
-    @objc dynamic var name: String? = nil
+    @objc dynamic var name = ""
     @objc dynamic var status = TaskStatus.Open.rawValue
 
     var statusEnum: TaskStatus {
