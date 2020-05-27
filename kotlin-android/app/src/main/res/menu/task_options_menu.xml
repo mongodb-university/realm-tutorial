@@ -4,15 +4,18 @@
 
     <item
         android:id="@+id/menu1"
-        android:title="Open" />
+        android:title="@string/open" />
 
     <item
         android:id="@+id/menu2"
-        android:title="In Progress" />
+        android:title="@string/in_progress" />
 
     <item
         android:id="@+id/menu3"
-        android:title="Complete" />
+        android:title="@string/complete" />
 
+    <item
+        android:id="@+id/menu4"
+        android:title="@string/delete_task"/>
 
 </menu>

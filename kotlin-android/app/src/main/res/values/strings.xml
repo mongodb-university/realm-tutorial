@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Object Server Example</string>
+    <string name="app_name">Task Tracker</string>
     <string name="realm_logo">Realm Logo</string>
     <string name="username">Email</string>
     <string name="password">Password</string>
@@ -11,4 +11,8 @@
     <string name="login_error_invalid_credentials">User name and password do not match.</string>
     <string name="new_task">Create new task</string>
     <string name="more">⋮</string>
+    <string name="open">Open</string>
+    <string name="in_progress">In Progress</string>
+    <string name="complete">Complete</string>
+    <string name="delete_task">Delete Task</string>
 </resources>

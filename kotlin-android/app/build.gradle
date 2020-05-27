@@ -36,7 +36,7 @@ android {
         // If you are running a local version of MongoDB Realm, modify endpoint accordingly. Most
         // likely it is "http://localhost:9090"
         def mongodbRealmUrl = "https://realm-dev.mongodb.com"
-        def appId = "myrealmapp-vjmee"  // Replace with proper Application ID
+        def appId = "<your app ID here>"  // Replace with proper Application ID
         debug {
             buildConfigField "String", "MONGODB_REALM_URL", "\"${mongodbRealmUrl}\""
             buildConfigField "String", "MONGODB_REALM_APP_ID", "\"${appId}\""

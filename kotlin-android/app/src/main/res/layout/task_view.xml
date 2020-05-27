@@ -49,7 +49,7 @@
         android:textSize="44sp"
         android:textAppearance="?android:textAppearanceLarge"
         android:paddingEnd="@dimen/activity_horizontal_margin"
-        tools:ignore="RtlSymmetry" />
+        tools:ignore="RelativeOverlap,RtlSymmetry" />
 
 </RelativeLayout>
 

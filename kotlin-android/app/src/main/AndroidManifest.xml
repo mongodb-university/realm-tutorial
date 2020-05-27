@@ -3,12 +3,12 @@
     package="io.realm.examples.objectserver">
 
     <application
-        android:name=".MyApplication"
+        android:name="com.mongodb.tasktracker.TaskTracker"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="io.realm.examples.objectserver.TaskActivity"
+            android:name="com.mongodb.tasktracker.TaskActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="io.realm.examples.objectserver.LoginActivity"
+            android:name="com.mongodb.tasktracker.LoginActivity"
             android:label="Login"></activity>
     </application>
 
