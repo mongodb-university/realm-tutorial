@@ -99,7 +99,14 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // User selected a project in the table. Go to the Project details page.
         let project = projects[indexPath.row]
-        navigationController!.pushViewController(TasksViewController(project: project), animated: true);
+        
+        guard let user = app.currentUser() else {
+            fatalError("Logged out?")
+        }
+        
+        let projectRealm = try! Realm(configuration: user.configuration(partitionValue: "\(project._id)"))
+        
+        navigationController!.pushViewController(TasksViewController(project: project, projectRealm: projectRealm), animated: true);
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
