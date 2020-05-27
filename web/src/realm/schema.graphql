@@ -1,0 +1,281 @@
+type DeleteManyPayload {
+  deletedCount: Int!
+}
+
+type InsertManyPayload {
+  insertedIds: [ObjectId]!
+}
+
+type Mutation {
+  deleteManyProjects(query: ProjectQueryInput): DeleteManyPayload
+  deleteManyTasks(query: TaskQueryInput): DeleteManyPayload
+  deleteManyUsers(query: UserQueryInput): DeleteManyPayload
+  deleteOneProject(query: ProjectQueryInput!): Project
+  deleteOneTask(query: TaskQueryInput!): Task
+  deleteOneUser(query: UserQueryInput!): User
+  insertManyProjects(data: [ProjectInsertInput!]!): InsertManyPayload
+  insertManyTasks(data: [TaskInsertInput!]!): InsertManyPayload
+  insertManyUsers(data: [UserInsertInput!]!): InsertManyPayload
+  insertOneProject(data: ProjectInsertInput!): Project
+  insertOneTask(data: TaskInsertInput!): Task
+  insertOneUser(data: UserInsertInput!): User
+  replaceOneProject(query: ProjectQueryInput, data: ProjectInsertInput!): Project
+  replaceOneTask(query: TaskQueryInput, data: TaskInsertInput!): Task
+  replaceOneUser(data: UserInsertInput!, query: UserQueryInput): User
+  updateManyProjects(set: ProjectUpdateInput!, query: ProjectQueryInput): UpdateManyPayload
+  updateManyTasks(query: TaskQueryInput, set: TaskUpdateInput!): UpdateManyPayload
+  updateManyUsers(query: UserQueryInput, set: UserUpdateInput!): UpdateManyPayload
+  updateOneProject(query: ProjectQueryInput, set: ProjectUpdateInput!): Project
+  updateOneTask(query: TaskQueryInput, set: TaskUpdateInput!): Task
+  updateOneUser(query: UserQueryInput, set: UserUpdateInput!): User
+  upsertOneProject(query: ProjectQueryInput, data: ProjectInsertInput!): Project
+  upsertOneTask(query: TaskQueryInput, data: TaskInsertInput!): Task
+  upsertOneUser(data: UserInsertInput!, query: UserQueryInput): User
+}
+
+scalar ObjectId
+
+type Project {
+  _id: ObjectId
+  name: String
+  users: [User]
+}
+
+input ProjectInsertInput {
+  users: ProjectUsersRelationInput
+  _id: ObjectId
+  name: String
+}
+
+input ProjectQueryInput {
+  _id_lte: ObjectId
+  _id_in: [ObjectId]
+  users_nin: [UserQueryInput]
+  _id_ne: ObjectId
+  name_exists: Boolean
+  AND: [ProjectQueryInput!]
+  _id: ObjectId
+  name_in: [String]
+  _id_gt: ObjectId
+  _id_gte: ObjectId
+  users_exists: Boolean
+  name_gt: String
+  _id_lt: ObjectId
+  name_lt: String
+  name: String
+  users: [UserQueryInput]
+  name_lte: String
+  name_ne: String
+  users_in: [UserQueryInput]
+  _id_nin: [ObjectId]
+  OR: [ProjectQueryInput!]
+  _id_exists: Boolean
+  name_gte: String
+  name_nin: [String]
+}
+
+enum ProjectSortByInput {
+  _ID_ASC
+  _ID_DESC
+  NAME_ASC
+  NAME_DESC
+}
+
+input ProjectUpdateInput {
+  name: String
+  name_unset: Boolean
+  users: ProjectUsersRelationInput
+  users_unset: Boolean
+  _id: ObjectId
+  _id_unset: Boolean
+}
+
+input ProjectUsersRelationInput {
+  create: [UserInsertInput]
+  link: [String]
+}
+
+type Query {
+  project(query: ProjectQueryInput): Project
+  projects(query: ProjectQueryInput, limit: Int = 100, sortBy: ProjectSortByInput): [Project]!
+  task(query: TaskQueryInput): Task
+  tasks(query: TaskQueryInput, limit: Int = 100, sortBy: TaskSortByInput): [Task]!
+  user(query: UserQueryInput): User
+  users(query: UserQueryInput, limit: Int = 100, sortBy: UserSortByInput): [User]!
+}
+
+type Task {
+  _id: ObjectId
+  assignee: User
+  description: String!
+  status: TaskStatus!
+}
+
+input TaskAssigneeRelationInput {
+  create: UserInsertInput
+  link: String
+}
+
+input TaskInsertInput {
+  status: TaskStatus!
+  _id: ObjectId
+  assignee: TaskAssigneeRelationInput
+  description: String!
+}
+
+input TaskQueryInput {
+  _id_exists: Boolean
+  description_nin: [String]
+  status_gte: TaskStatus
+  description: String
+  status_lte: TaskStatus
+  assignee: UserQueryInput
+  _id_in: [ObjectId]
+  _id_lte: ObjectId
+  _id_nin: [ObjectId]
+  assignee_exists: Boolean
+  _id_ne: ObjectId
+  status_gt: TaskStatus
+  OR: [TaskQueryInput!]
+  status_lt: TaskStatus
+  description_gt: String
+  description_gte: String
+  description_lte: String
+  description_lt: String
+  _id_gt: ObjectId
+  _id_gte: ObjectId
+  description_exists: Boolean
+  description_in: [String]
+  status: TaskStatus
+  _id: ObjectId
+  _id_lt: ObjectId
+  description_ne: String
+  status_in: [TaskStatus]
+  status_exists: Boolean
+  AND: [TaskQueryInput!]
+  status_ne: TaskStatus
+  status_nin: [TaskStatus]
+}
+
+enum TaskSortByInput {
+  STATUS_ASC
+  STATUS_DESC
+  _ID_ASC
+  _ID_DESC
+  ASSIGNEE_ASC
+  ASSIGNEE_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+}
+
+enum TaskStatus {
+  COMPLETE
+  OPEN
+  INPROGRESS
+}
+
+input TaskUpdateInput {
+  status: TaskStatus
+  status_unset: Boolean
+  _id: ObjectId
+  _id_unset: Boolean
+  assignee: TaskAssigneeRelationInput
+  assignee_unset: Boolean
+  description: String
+  description_unset: Boolean
+}
+
+type UpdateManyPayload {
+  matchedCount: Int!
+  modifiedCount: Int!
+}
+
+type User {
+  _id: ObjectId
+  image: String
+  name: String!
+  projects: [Project]
+  user_id: String!
+}
+
+input UserInsertInput {
+  user_id: String!
+  name: String!
+  image: String
+  projects: UserProjectsRelationInput
+  _id: ObjectId
+}
+
+input UserProjectsRelationInput {
+  create: [ProjectInsertInput]
+  link: [ObjectId]
+}
+
+input UserQueryInput {
+  _id: ObjectId
+  _id_in: [ObjectId]
+  image_in: [String]
+  user_id_exists: Boolean
+  name_lt: String
+  name_gt: String
+  _id_lte: ObjectId
+  OR: [UserQueryInput!]
+  user_id_lte: String
+  _id_ne: ObjectId
+  _id_exists: Boolean
+  image_exists: Boolean
+  name_nin: [String]
+  user_id_in: [String]
+  image_ne: String
+  projects: [ProjectQueryInput]
+  projects_nin: [ProjectQueryInput]
+  image_lt: String
+  name_lte: String
+  image_gte: String
+  user_id_lt: String
+  name: String
+  name_gte: String
+  _id_lt: ObjectId
+  user_id_nin: [String]
+  user_id_gte: String
+  name_exists: Boolean
+  projects_exists: Boolean
+  image_gt: String
+  image_lte: String
+  AND: [UserQueryInput!]
+  user_id_ne: String
+  image_nin: [String]
+  name_in: [String]
+  user_id_gt: String
+  projects_in: [ProjectQueryInput]
+  _id_gte: ObjectId
+  _id_gt: ObjectId
+  user_id: String
+  image: String
+  name_ne: String
+  _id_nin: [ObjectId]
+}
+
+enum UserSortByInput {
+  NAME_ASC
+  NAME_DESC
+  IMAGE_ASC
+  IMAGE_DESC
+  _ID_ASC
+  _ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+}
+
+input UserUpdateInput {
+  user_id: String
+  name_unset: Boolean
+  user_id_unset: Boolean
+  image_unset: Boolean
+  _id_unset: Boolean
+  projects_unset: Boolean
+  _id: ObjectId
+  name: String
+  image: String
+  projects: UserProjectsRelationInput
+}
