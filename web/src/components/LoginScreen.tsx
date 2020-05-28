@@ -38,7 +38,7 @@ const LoginScreen: React.FC = () => {
     const errorType = message || status;
     switch (errorType) {
       case "invalid username":
-        setError((err) => ({ ...err, email: "Invalid email address." }));
+        setError((prevErr) => ({ ...prevErr, email: "Invalid email address." }));
         break;
       case "invalid username/password":
       case "invalid password":
