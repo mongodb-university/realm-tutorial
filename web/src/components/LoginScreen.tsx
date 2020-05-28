@@ -142,7 +142,7 @@ const LoginScreen: React.FC = () => {
           <ToggleContainer>
             <ToggleText>
               {mode === "login"
-                ? "Dont't have an account?"
+                ? "Don't have an account?"
                 : "Already have an account?"}
             </ToggleText>
             <ToggleLink
