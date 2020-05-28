@@ -21,17 +21,47 @@ import io.realm.kotlin.where
 import io.realm.log.RealmLog
 import io.realm.examples.objectserver.R
 
-
+/*
+ * TaskActivity: allows a user to view a collection of Tasks, edit the status of those tasks,
+ * create new tasks, and delete existing tasks from the collection. All tasks are stored in a realm
+ * and synced across devices using the partition "My Project", which is shared by all users.
+ */
 class TaskActivity : AppCompatActivity() {
     private lateinit var realm: Realm
+    private var user: RealmUser? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ListAdapter
-    private var user: RealmUser? = null
     private lateinit var fab: FloatingActionButton
 
     override fun onStart() {
         super.onStart()
-        handleLogin()
+        try {
+            user = taskApp.currentUser()
+        } catch (e: IllegalStateException) {
+            RealmLog.warn(e)
+        }
+        if (user == null) {
+            // if no user is currently logged in, start the login activity so the user can authenticate
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+        else {
+            // configure realm to use the current user and the partition corresponding to "My Project"
+            val config = SyncConfiguration.Builder(user!!, "My Project")
+                    .waitForInitialRemoteData()
+                    .build()
+
+            // save this configuration as the default for this entire app so other activities and threads can open their own realm instances
+            Realm.setDefaultConfiguration(config)
+
+            // Sync all realm changes via a new instance, and when that instance has been successfully created connect it to an on-screen list (a recycler view)
+            Realm.getInstanceAsync(config, object: Realm.Callback() {
+                override fun onSuccess(realm: Realm) {
+                    // since this realm should live exactly as long as this activity, assign the realm to a member variable
+                    this@TaskActivity.realm = realm
+                    setUpRecyclerView(realm)
+                }
+            })
+        }
     }
 
     override fun onStop() {
@@ -44,6 +74,7 @@ class TaskActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
+
         // default instance uses the configuration created in the login activity
         realm = Realm.getDefaultInstance()
         recyclerView = findViewById(R.id.task_list)
@@ -94,8 +125,8 @@ class TaskActivity : AppCompatActivity() {
                         // always close the realm when finished interacting to free up resources
                         realm.close()
                         user = null
-                        handleLogin()
                         Log.v(TAG(), "user logged out")
+                        startActivity(Intent(this, LoginActivity::class.java))
                     } else {
                         RealmLog.error(it.error.toString())
                         Log.e(TAG(), "log out failed! Error: ${it.error}")
@@ -109,36 +140,9 @@ class TaskActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun handleLogin() {
-        try {
-            user = taskApp.currentUser()
-        } catch (e: IllegalStateException) {
-            RealmLog.warn(e)
-        }
-        if (user == null) {
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
-        else {
-            // configure realm to use the current user and the partition corresponding to "My Project"
-            val config = SyncConfiguration.Builder(user!!, "My Project")
-                    .waitForInitialRemoteData()
-                    .build()
-
-            // save this configuration as the default for this entire app so other activities and threads can open their own realm instances
-            Realm.setDefaultConfiguration(config)
-
-            // This will automatically sync all changes in the background for as long as the Realm is open
-            Realm.getInstanceAsync(config, object: Realm.Callback() {
-                override fun onSuccess(realm: Realm) {
-                    this@TaskActivity.realm = realm
-                    setUpRecyclerView(realm)
-                }
-            })
-        }
-    }
-
     private fun setUpRecyclerView(realm: Realm) {
+        // a recyclerview requires an adapter, which feeds it items to display.
+        // Realm provides RealmRecyclerViewAdapter, which you can extend to customize for your application
         // pass the adapter a collection of Tasks from the realm
         // we sort this collection so that the displayed order of Tasks remains stable across updates
         adapter = ListAdapter(realm.where<Task>().sort("_id").findAll())

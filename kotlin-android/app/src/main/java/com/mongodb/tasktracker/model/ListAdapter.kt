@@ -13,7 +13,10 @@ import io.realm.examples.objectserver.R
 import io.realm.kotlin.where
 import org.bson.types.ObjectId
 
-
+/*
+ * ListAdapter: extends the Realm-provided RealmRecyclerViewAdapter to provide data for a RecyclerView to display
+ * Realm objects on screen to a user.
+ */
 internal class ListAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerViewAdapter<Task, ListAdapter.MyViewHolder?>(data, true) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -87,6 +90,8 @@ internal class ListAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerVi
             val item = it.where<Task>().equalTo("_id", _id).findFirst()
             item?.status = _status
         }
+        // always close realms when you are done with them!
+        bgRealm.close()
     }
 
     private fun removeAt(id: ObjectId) {
@@ -98,6 +103,8 @@ internal class ListAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerVi
             val item = it.where<Task>().equalTo("_id", id).findFirst()
             item?.deleteFromRealm()
         }
+        // always close realms when you are done with them!
+        bgRealm.close()
     }
 
     internal inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {

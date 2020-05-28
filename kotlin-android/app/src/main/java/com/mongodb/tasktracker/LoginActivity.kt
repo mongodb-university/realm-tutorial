@@ -12,6 +12,9 @@ import io.realm.examples.objectserver.R
 import io.realm.examples.objectserver.databinding.ActivityLoginBinding
 import io.realm.log.RealmLog
 
+/*
+ * LoginActivity: Uses credentials provided by a user to create and log into a user account.
+ */
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var username: EditText
@@ -33,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
         createUserButton.setOnClickListener { login(true) }
     }
 
+    // handle user authentication (login) and account creation
     private fun login(createUser: Boolean) {
         if (!validateCredentials()) {
             onLoginFailed("Invalid username or password")
@@ -47,7 +51,9 @@ class LoginActivity : AppCompatActivity() {
 
 
         if (createUser) {
+            // register a user using the Realm App we created in the TaskTracker class
             taskApp.emailPasswordAuth.registerUserAsync(username, password) {
+                // while this operation completes, disable the buttons to login or create a new account
                 binding.buttonCreate.isEnabled = true
                 binding.buttonLogin.isEnabled = true
                 if (!it.isSuccess) {
@@ -55,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
                     Log.v(TAG(), "Error: ${it.error}")
                 } else {
                     Log.v(TAG(), "Successfully registered user.")
+                    // when the account has been created successfully, log in to the account
                     login(false)
                 }
             }
@@ -79,17 +86,20 @@ class LoginActivity : AppCompatActivity() {
     private fun onLoginSuccess() {
         loginButton.isEnabled = true
         createUserButton.isEnabled = true
+        // successful login ends this activity, bringing the user back to the task activity
         finish()
     }
 
     private fun onLoginFailed(errorMsg: String) {
         Log.v(TAG(), errorMsg)
+        // account creation disables the login and create user buttons; this ensures that they are always restored after a failed account creation
         loginButton.isEnabled = true
         createUserButton.isEnabled = true
         Toast.makeText(baseContext, errorMsg, Toast.LENGTH_LONG).show()
     }
 
     private fun validateCredentials(): Boolean = when {
+        // zero-length usernames and passwords are not valid (or secure), so prevent users from creating accounts with those client-side.
         username.text.toString().isEmpty() -> false
         password.text.toString().isEmpty() -> false
         else -> true

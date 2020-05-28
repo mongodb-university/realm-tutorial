@@ -13,6 +13,9 @@ lateinit var taskApp: RealmApp
 
 inline fun <reified T> T.TAG(): String = T::class.java.simpleName
 
+/*
+ * TaskTracker: Sets up the taskApp Realm App and enables Realm-specific logging in debug mode.
+ */
 class TaskTracker : Application() {
 
     override fun onCreate() {
