@@ -1,147 +1,115 @@
 # Task Tracker Tutorial
 
-## Answered Questions
- 
-- Do we need to emphasize MDBRealm first in tutorials or can we make it a later step?
-  - Drew: We should emphasize Realm from the start
-  - Drew: It's okay to emphasize Realm Schema (vs ROM + Dev Mode) for all tutorials
-  - Drew: Dev mode as an aside, e.g. "if you already have a Realm model, check out dev mode..."
-- What is the status of embedded objects in Realm DB?
-  - Drew: May be ready soon, should be ready by release
-- Sample data generation scripts/functions
-  - Drew: Probably want to avoid these, may conflict with the upcoming Template Apps project
- 
- ## Open Questions
- 
-- Do sync rules allow `%function` in Apply When expressions?
-- Do sync rules allow `%%root` in Apply When expressions? (probably not)
+The Task Tracker is a collaborative project management tool.
 
-## Frontend Tutorial Flow
+## Get Started
 
-0. Tracker App Introduction
-1. Data Model Explanation
+First, create a Realm app in the Realm UI and link a cluster.
 
-Web:
+Under "Rules" on the Realm UI, add the following collections:
+- tasks
+- projects
+- users
 
-2. Create a Realm App
-3. Define Realm Schemas
-4. Enable Auth
-5. Define Rules
-6. Use create-react-app to setup
-7. Add auth
-8. Add GraphQL
-9. Add "sync" with subscriptions
+## Schemas
 
-Mobile:
-
-2. Set up project in XCode/Android Studio
-3. Add dependencies w/ CocoaPods/Gradle
-4. Explain how the pre-made UI is wired up
-5. Define RealmObject Models
-6. Hook up UI to models
-7. Create a Realm App
-   - Enable Auth 
-   - Enable and Configure Sync
-   - Enable Dev Mode
-8. Add auth to client
-9. Delete local realm and open a synced realm
-10. Back to the app
-   - Define rules
-   - Turn off dev mode
-
-## Application Flow
-
-1. Enter app and see a list of `Project`s (or create a new one)
-2. The next view shows the project detail, i.e. a list of tasks
-  - Each task is a line item that shows the task name and its status
-  - Assigned tasks show the avatar of the assignee
-  - List should be sorted by status
-  - action: add a member
-3. Tasks show a detail modal/screen with actions on click/tap
-  - action: change the task status
-  - action: change the task assignee
-
-## PartitionKey
-
-- Project ID
-
-## List
-
-function getUsersForProject() {
-  
-}
-
-```ts
-type ProjectBoard = {
-  _id: ProjectID;
-  _partition: ProjectID;
-  name: String;
-  // isPrivate: Boolean;
-  users: User[]
-}
-type ProjectID = ObjectID;
-```
-
-## Task
-
-```ts
-type Task = {
-  _id: ObjectID;
-  _partition: ProjectID;
-  assignee: User | null;
-  status: TaskStatus;
-  description: String;
-  watchers: UserID[];
-}
-
-enum TaskStatus {
-  Open,
-  InProgress,
-  Complete,
-}
-```
-
-## User
-
-- Read-only on clients
-- Must use a function to update
-
-```ts
-type UserID = String
-type User = {
-  _id: ObjectID;
-  _partition: UserID;
-  id: UserID;
-  name: String;
-  image: String;
-  projects: ProjectID[];
-}
-```
-
-## Roles
+Define the schemas for each collection as follows:
 
 ### Tasks
 
-- IsInMyProject (ReadWrite)
+```json
 {
-  "%%user.projects": "%%partition"
-}
-- IsPublic (ReadOnly)
-{ "%%true": true }
-<!-- {
-  "%%false": {
-    "%function": {
-      name: "IsPrivateProject",
-      arguments: ["%%partition"]
+  "title": "Task",
+  "bsonType": "object",
+  "required": [
+    "_id",
+    "_partition",
+    "name",
+    "status"
+  ],
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
+    },
+    "_partition": {
+      "bsonType": "string"
+    },
+    "name": {
+      "bsonType": "string"
+    },
+    "status": {
+      "bsonType": "string"
     }
   }
-} -->
+}
+```
+
+### Projects
+
+```json
+{
+  "title": "Project",
+  "bsonType": "object",
+  "required": [
+    "_id",
+    "_partition",
+    "name"
+  ],
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
+    },
+    "_partition": {
+      "bsonType": "string"
+    },
+    "name": {
+      "bsonType": "string"
+    }
+  }
+}
+```
 
 ### Users
 
-- IsThisUser
+```json
 {
-  "%%user.id": "%%partition"
+  "title": "User",
+  "required": [
+    "_id",
+    "user_id",
+    "name"
+  ],
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
+    },
+    "user_id": {
+      "bsonType": "string"
+    },
+    "name": {
+      "bsonType": "string"
+    },
+    "image": {
+      "bsonType": "string"
+    }
+  }
 }
+```
 
+## Enable Sync
 
+On the Sync tab, enable Sync.
+
+- Set the partition key to `_partition` (string)
+
+## Troubleshooting
+
+The most common issue is schema mismatch due to frequent little tweaks to the
+schema as you develop your app.
+
+- Be sure to **check the logs in Realm UI** for more information as well as the console in your app.
+- **Delete the app from the simulator** to purge local data.
+- **Restart Sync** in the Realm UI by clicking "Delete Synced Data" on the Sync page.
+- Be sure to deploy your changes in the Realm UI.
+- If your schema does not match the server: compare the class definitions from the SDKs tab in the Realm UI with those in the client code.
+- When creating objects, make sure the partition value of your new object matches the partition value you opened the Realm with.
