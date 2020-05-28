@@ -43,6 +43,7 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
+        // while this operation completes, disable the buttons to login or create a new account
         binding.buttonCreate.isEnabled = false
         binding.buttonLogin.isEnabled = false
 
@@ -53,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
         if (createUser) {
             // register a user using the Realm App we created in the TaskTracker class
             taskApp.emailPasswordAuth.registerUserAsync(username, password) {
-                // while this operation completes, disable the buttons to login or create a new account
+                // re-enable the buttons after user registration completes
                 binding.buttonCreate.isEnabled = true
                 binding.buttonLogin.isEnabled = true
                 if (!it.isSuccess) {
@@ -68,6 +69,9 @@ class LoginActivity : AppCompatActivity() {
         } else {
             val creds = RealmCredentials.emailPassword(username, password)
             taskApp.loginAsync(creds) {
+                // re-enable the buttons after
+                loginButton.isEnabled = true
+                createUserButton.isEnabled = true
                 if (!it.isSuccess) {
                     RealmLog.error(it.error.toString())
                     onLoginFailed(it.error.message ?: "An error occurred.")
@@ -84,17 +88,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun onLoginSuccess() {
-        loginButton.isEnabled = true
-        createUserButton.isEnabled = true
         // successful login ends this activity, bringing the user back to the task activity
         finish()
     }
 
     private fun onLoginFailed(errorMsg: String) {
         Log.v(TAG(), errorMsg)
-        // account creation disables the login and create user buttons; this ensures that they are always restored after a failed account creation
-        loginButton.isEnabled = true
-        createUserButton.isEnabled = true
         Toast.makeText(baseContext, errorMsg, Toast.LENGTH_LONG).show()
     }
 

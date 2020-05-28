@@ -85,7 +85,8 @@ internal class ListAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerVi
         // need to create a separate instance of realm to issue an update, since this event is
         // handled by a background thread and realm instances cannot be shared across threads
         val bgRealm = Realm.getDefaultInstance()
-        bgRealm!!.executeTransactionAsync {
+        // execute Transaction (not async) because changeStatus should execute on a background thread
+        bgRealm!!.executeTransaction {
             // using our thread-local new realm instance, query for and update the task status
             val item = it.where<Task>().equalTo("_id", _id).findFirst()
             item?.status = _status
@@ -98,7 +99,8 @@ internal class ListAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerVi
         // need to create a separate instance of realm to issue an update, since this event is
         // handled by a background thread and realm instances cannot be shared across threads
         val bgRealm = Realm.getDefaultInstance()
-        bgRealm!!.executeTransactionAsync {
+        // execute Transaction (not async) because remoteAt should execute on a background thread
+        bgRealm!!.executeTransaction {
             // using our thread-local new realm instance, query for and delete the task
             val item = it.where<Task>().equalTo("_id", id).findFirst()
             item?.deleteFromRealm()
