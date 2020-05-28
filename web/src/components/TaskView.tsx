@@ -6,7 +6,11 @@ import Button from "@leafygreen-ui/button";
 import TextInput from "@leafygreen-ui/text-input";
 import { uiColors } from "@leafygreen-ui/palette";
 
-export function TaskView({ task }: { task: Task }) {
+interface TaskViewProps {
+  task: Task
+}
+
+export function TaskView({ task }: TaskViewProps) {
   const { status, assignee, description } = task;
   const statusColor = statusColors.get(status);
   const statusMessage = statusMessages.get(status);

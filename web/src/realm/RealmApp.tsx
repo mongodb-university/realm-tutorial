@@ -12,7 +12,7 @@ const RealmAppContext = React.createContext<IRealmApp | void>(undefined);
 interface IRealmApp {
   id: string;
   user: Realm.User | null;
-  logIn: (email: string, password: string) => Promise<Realm.User>;
+  logIn: (email: string, password: string) => Promise<void>;
   logOut: () => Promise<void>;
   registerUser(email: string, password: string): Promise<void>;
 }
@@ -35,9 +35,8 @@ const RealmApp: React.FC = ({ children }) => {
   const logIn = async (email: string, password: string) => {
     // TODO: Log in with the specified email and password
     const credentials = RealmWeb.Credentials.emailPassword(email, password);
-    const loggedInUser = await app.logIn(credentials);
-    setUser(loggedInUser);
-    return loggedInUser;
+    await app.logIn(credentials);
+    setUser(app.currentUser);
   };
 
   // Let logged in users log out

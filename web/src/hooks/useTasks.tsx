@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Task, TaskStatus, User } from "../types";
 
+import { GetAllTasksQuery } from "./../types";
 import {
   useGetAllTasksQuery,
   useAddTaskMutation,
@@ -26,18 +27,12 @@ export function useTasks(): {
   actions: TaskActions;
 } {
   const [tasks, setTasks] = React.useState<Task[]>([]);
-
   // Query for Tasks
-  const { loading, error, data } = useGetAllTasksQuery();
-  React.useEffect(() => {
-    // Throw if there's an error
-    if (error) throw error;
-
-    // Wait for the query to finish loading and update state with the returned tasks
-    if (!loading && data?.tasks) {
-      setTasks(data.tasks as Task[]);
+  const { loading } = useGetAllTasksQuery({ onCompleted: (data: GetAllTasksQuery) => {
+    if(data?.tasks) {
+      setTasks(data.tasks as Task[])
     }
-  }, [loading, error, data]);
+  }});
 
   // Create Task Mutation Functions
   const [addTaskMutation] = useAddTaskMutation();

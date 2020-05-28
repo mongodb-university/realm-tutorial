@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "@emotion/styled";
 import { Maybe, Task, TaskStatus } from "../types";
+import { useRealmApp } from "../realm/RealmApp";
 
 import { TaskActions } from "../hooks/useTasks";
 import { TaskView } from "./TaskView";
@@ -22,17 +23,21 @@ export function TaskDetailModal({
   taskActions,
   closeModal,
 }: TaskDetailModalProps): React.ReactElement {
+  const { user } = useRealmApp();
+  
   const changeTaskStatus = async (status: TaskStatus) => {
     if (!task) return;
     await taskActions.updateTask(task._id, { status });
   };
+  
   const deleteTask = async (task: Task) => {
     if (!task) return;
     await taskActions.deleteTask(task);
     closeModal();
   };
+  
   return (
-    <Modal
+    <PositionedModal
       size="small"
       open={Boolean(task)}
       shouldClose={() => {
@@ -62,14 +67,22 @@ export function TaskDetailModal({
               Move to Complete
             </FullWidthButton>
           )}
-          <FullWidthButton variant="danger" onClick={() => deleteTask(task)}>
-            Delete this task
-          </FullWidthButton>
+          {
+            task.assignee?.user_id === user?.id && (
+              <FullWidthButton variant="danger" onClick={() => deleteTask(task)}>
+                Delete this task
+              </FullWidthButton>
+            )
+          }
         </>
       )}
-    </Modal>
+    </PositionedModal>
   );
 }
+
+const PositionedModal = styled(Modal)`
+  > div { top: 20%; }
+`
 
 const FullWidthButton = styled(Button)`
   width: 100%;
