@@ -11,7 +11,7 @@ import {
 
 interface UpdatedTask {
   status?: TaskStatus;
-  description?: string;
+  name?: string;
   assignee?: User;
 }
 
@@ -28,11 +28,13 @@ export function useTasks(): {
 } {
   const [tasks, setTasks] = React.useState<Task[]>([]);
   // Query for Tasks
-  const { loading } = useGetAllTasksQuery({ onCompleted: (data: GetAllTasksQuery) => {
-    if(data?.tasks) {
-      setTasks(data.tasks as Task[])
-    }
-  }});
+  const { loading } = useGetAllTasksQuery({
+    onCompleted: (data: GetAllTasksQuery) => {
+      if (data?.tasks) {
+        setTasks(data.tasks as Task[]);
+      }
+    },
+  });
 
   // Create Task Mutation Functions
   const [addTaskMutation] = useAddTaskMutation();
@@ -43,8 +45,9 @@ export function useTasks(): {
     const variables = {
       task: {
         status: task.status,
-        description: task.description,
+        name: task.name,
         assignee: task.assignee ? { link: task.assignee.user_id } : undefined,
+        _partition: "My Project",
       },
     };
     const currentTasks = [...tasks];
@@ -54,7 +57,7 @@ export function useTasks(): {
       setTasks([...tasks, task]);
     } catch (err) {
       setTasks(currentTasks);
-      throw new Error("Unable to add task");
+      throw new Error(`Unable to add task: ${err}`);
     }
   };
 
@@ -63,7 +66,7 @@ export function useTasks(): {
       taskId: taskId,
       updates: {
         status: updated?.status ?? undefined,
-        description: updated?.description ?? undefined,
+        name: updated?.name ?? undefined,
         assignee: updated.assignee
           ? { link: updated.assignee.user_id }
           : undefined,

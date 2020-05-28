@@ -1,11 +1,11 @@
 import * as React from "react";
 import { TaskStatus, User, GetUserQuery } from "../types";
 import { TaskActions } from "../hooks/useTasks";
-import { useGetUserLazyQuery } from '../graphql-operations'
+import { useGetUserLazyQuery } from "../graphql-operations";
 
 export type DraftTask = {
   status: TaskStatus;
-  description: string;
+  name: string;
   assignee?: string;
 };
 
@@ -21,7 +21,7 @@ export default function useDraftTask(
 ): [DraftTask | null, DraftTaskActions] {
   const [draft, setDraft] = React.useState<DraftTask | null>(null);
   const draftAssignee = useDraftAssignee(draft);
-  
+
   const actions: DraftTaskActions = {
     createDraft: (draft: DraftTask) => {
       if (draft) {
@@ -39,6 +39,7 @@ export default function useDraftTask(
         await taskActions.addTask({
           ...draft,
           assignee: draftAssignee ?? undefined,
+          _partition: "My Project",
         });
         setDraft(null);
       }
@@ -48,21 +49,23 @@ export default function useDraftTask(
 }
 
 function useDraftAssignee(draft: DraftTask | null): User | undefined {
-  const [draftAssignee, setDraftAssignee] = React.useState<User | undefined>(undefined);
+  const [draftAssignee, setDraftAssignee] = React.useState<User | undefined>(
+    undefined
+  );
   const [getUserQuery] = useGetUserLazyQuery({
     onCompleted: ({ user }: GetUserQuery) => {
-      console.log("user", user)
-      if(user) {
-        setDraftAssignee(user)
+      console.log("user", user);
+      if (user) {
+        setDraftAssignee(user);
       }
-    }
+    },
   });
-  
+
   React.useEffect(() => {
-    if(draft?.assignee) {
-      getUserQuery({ variables: { userId: draft.assignee }})
+    if (draft?.assignee) {
+      getUserQuery({ variables: { userId: draft.assignee } });
     }
-  }, [draft, getUserQuery])
-  
-  return draftAssignee
+  }, [draft, getUserQuery]);
+
+  return draftAssignee;
 }

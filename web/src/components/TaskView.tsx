@@ -7,11 +7,11 @@ import TextInput from "@leafygreen-ui/text-input";
 import { uiColors } from "@leafygreen-ui/palette";
 
 interface TaskViewProps {
-  task: Task
+  task: Task;
 }
 
 export function TaskView({ task }: TaskViewProps) {
-  const { status, assignee, description } = task;
+  const { status, assignee, name } = task;
   const statusColor = statusColors.get(status);
   const statusMessage = statusMessages.get(status);
   return (
@@ -26,9 +26,9 @@ export function TaskView({ task }: TaskViewProps) {
         </Status>
       </Row>
       <Row>
-        <Description>
-          <span>{description}</span>
-        </Description>
+        <Name>
+          <span>{name}</span>
+        </Name>
       </Row>
       {/* <KeyID>{task._id}</KeyID> */}
     </>
@@ -44,7 +44,7 @@ export function DraftTaskView({
   draft,
   draftActions,
 }: DraftTaskViewProps): React.ReactElement {
-  const { status, description } = draft;
+  const { status, name } = draft;
   const { updateDraft, deleteDraft, saveDraft } = draftActions;
   const statusColor = statusColors.get(status);
   const statusMessage = statusMessages.get(status);
@@ -65,10 +65,10 @@ export function DraftTaskView({
           onChange={(e) => {
             updateDraft({
               ...draft,
-              description: e.target.value,
+              name: e.target.value,
             });
           }}
-          value={description}
+          value={name}
         />
       </Row>
       <Row>
@@ -83,7 +83,7 @@ export function DraftTaskView({
           onClick={async () => {
             await saveDraft();
           }}
-          disabled={!draft.description}
+          disabled={!draft.name}
         >
           Add
         </SubmitButton>
@@ -145,7 +145,7 @@ interface AssigneeProps {
 }
 
 function Assignee({ user }: AssigneeProps) {
-  const image = user?.image || "./no-avatar.png"
+  const image = user?.image || "./no-avatar.png";
   const username = user?.name || "No assignee";
   return (
     <AssigneeContainer>
@@ -191,7 +191,7 @@ const Row = styled.div`
   }
 `;
 
-const Description = styled.div`
+const Name = styled.div`
   font-size: 24px;
   margin: 0;
   text-align: left;

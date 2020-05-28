@@ -140,7 +140,11 @@ export default function TaskList(props: TaskListProps): React.ReactElement {
             {!draft && (
               <ListButton
                 onClick={() =>
-                  draftActions.createDraft({ status, description: "", assignee: user?.id ?? "" })
+                  draftActions.createDraft({
+                    status,
+                    name: "",
+                    assignee: user?.id ?? "",
+                  })
                 }
               >
                 + Add Task

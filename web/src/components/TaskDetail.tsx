@@ -24,18 +24,18 @@ export function TaskDetailModal({
   closeModal,
 }: TaskDetailModalProps): React.ReactElement {
   const { user } = useRealmApp();
-  
+
   const changeTaskStatus = async (status: TaskStatus) => {
     if (!task) return;
     await taskActions.updateTask(task._id, { status });
   };
-  
+
   const deleteTask = async (task: Task) => {
     if (!task) return;
     await taskActions.deleteTask(task);
     closeModal();
   };
-  
+
   return (
     <PositionedModal
       size="small"
@@ -67,13 +67,11 @@ export function TaskDetailModal({
               Move to Complete
             </FullWidthButton>
           )}
-          {
-            task.assignee?.user_id === user?.id && (
-              <FullWidthButton variant="danger" onClick={() => deleteTask(task)}>
-                Delete this task
-              </FullWidthButton>
-            )
-          }
+          {task.assignee?.user_id === user?.id && (
+            <FullWidthButton variant="danger" onClick={() => deleteTask(task)}>
+              Delete this task
+            </FullWidthButton>
+          )}
         </>
       )}
     </PositionedModal>
@@ -81,8 +79,10 @@ export function TaskDetailModal({
 }
 
 const PositionedModal = styled(Modal)`
-  > div { top: 20%; }
-`
+  > div {
+    top: 20%;
+  }
+`;
 
 const FullWidthButton = styled(Button)`
   width: 100%;

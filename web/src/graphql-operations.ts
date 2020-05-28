@@ -9,7 +9,7 @@ export const GetAllTasksDocument = gql`
     query GetAllTasks {
   tasks {
     _id
-    description
+    name
     status
     assignee {
       _id
@@ -49,7 +49,7 @@ export const AddTaskDocument = gql`
     mutation AddTask($task: TaskInsertInput!) {
   task: insertOneTask(data: $task) {
     _id
-    description
+    name
     status
     assignee {
       _id
@@ -89,7 +89,7 @@ export const UpdateTaskDocument = gql`
     mutation UpdateTask($taskId: ObjectId!, $updates: TaskUpdateInput!) {
   task: updateOneTask(query: {_id: $taskId}, set: $updates) {
     _id
-    description
+    name
     status
     assignee {
       _id
@@ -130,7 +130,7 @@ export const DeleteTaskDocument = gql`
     mutation DeleteTask($taskId: ObjectId!) {
   deletedTask: deleteOneTask(query: {_id: $taskId}) {
     _id
-    description
+    name
     status
     assignee {
       _id
@@ -202,38 +202,3 @@ export function useGetUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHook
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = ApolloReactCommon.QueryResult<Types.GetUserQuery, Types.GetUserQueryVariables>;
-export const AddUserDocument = gql`
-    mutation AddUser($user: UserInsertInput!) {
-  insertOneUser(data: $user) {
-    _id
-    name
-    image
-    user_id
-  }
-}
-    `;
-export type AddUserMutationFn = ApolloReactCommon.MutationFunction<Types.AddUserMutation, Types.AddUserMutationVariables>;
-
-/**
- * __useAddUserMutation__
- *
- * To run a mutation, you first call `useAddUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addUserMutation, { data, loading, error }] = useAddUserMutation({
- *   variables: {
- *      user: // value for 'user'
- *   },
- * });
- */
-export function useAddUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Types.AddUserMutation, Types.AddUserMutationVariables>) {
-        return ApolloReactHooks.useMutation<Types.AddUserMutation, Types.AddUserMutationVariables>(AddUserDocument, baseOptions);
-      }
-export type AddUserMutationHookResult = ReturnType<typeof useAddUserMutation>;
-export type AddUserMutationResult = ApolloReactCommon.MutationResult<Types.AddUserMutation>;
-export type AddUserMutationOptions = ApolloReactCommon.BaseMutationOptions<Types.AddUserMutation, Types.AddUserMutationVariables>;
