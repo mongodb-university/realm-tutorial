@@ -30,7 +30,6 @@ export function TaskView({ task }: TaskViewProps) {
           <span>{name}</span>
         </Name>
       </Row>
-      {/* <KeyID>{task._id}</KeyID> */}
     </>
   );
 }
@@ -114,10 +113,6 @@ const statusColors = new Map<TaskStatus, StatusColor>([
     { background: uiColors.green.base, text: uiColors.gray.light3 },
   ],
 ]);
-
-// const KeyID = styled.div`
-//   font-size: 10px;
-// `;
 
 const DraftInput = styled(TextInput)`
   width: 100%;
