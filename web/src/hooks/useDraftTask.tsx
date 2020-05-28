@@ -24,7 +24,7 @@ export default function useDraftTask(
   
   const actions: DraftTaskActions = {
     createDraft: (draft: DraftTask) => {
-      if(draft) {
+      if (draft) {
         setDraft(draft);
       }
     },
