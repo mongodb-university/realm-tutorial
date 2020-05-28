@@ -6,6 +6,16 @@ The Task Tracker is a collaborative project management tool.
 
 First, create a Realm app in the Realm UI and link a cluster.
 
+## Enable authentication
+
+Under "Users" on the Realm UI, go to the Providers tab and enable the email/password provider.
+
+- Select "automatically confirm users"
+- Select "run a password reset function"
+- Click "create new" for the reset function and use the default that is created. This reset function always denies password reset requests, but you can change that later.
+
+## Collections
+
 Under "Rules" on the Realm UI, add the following collections:
 - tasks
 - projects
