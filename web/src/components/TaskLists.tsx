@@ -92,7 +92,7 @@ const TaskListsContainer: React.FC<DragDropContextProps> = ({
           height: 100%;
           display: flex;
           justify-content: center;
-          padding: 40px;
+          padding-top: 0px;
         `}
       >
         {children}
@@ -156,10 +156,11 @@ export default function TaskList(props: TaskListProps): React.ReactElement {
 const Layout = styled.div`
   display: flex;
   flex-direction: column;
-  width: 512px;
-  /* max-height: 100vh; */
-  padding: 0 40px;
+  flex: 1;
+  max-width: 512px;
+  margin: 10px 10px;
 `;
+
 const ListTitle = styled.h2`
   margin: 0;
   margin-bottom: 16px;
@@ -173,7 +174,8 @@ const ListContainer = styled.div`
   padding: 24px;
   background: ${uiColors.gray.light1};
   border-radius: 4px;
-  /* overflow-y: scroll; */
+  overflow-y: scroll;
+  max-height: 80vh;
   :not(:last-child) {
     margin-bottom: 8px;
   }
