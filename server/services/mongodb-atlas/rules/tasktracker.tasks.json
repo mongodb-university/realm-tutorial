@@ -1,0 +1,44 @@
+{
+    "database": "tasktracker",
+    "collection": "tasks",
+    "relationships": {
+        "assignee": {
+            "ref": "#/stitch/mongodb-atlas/tasktracker/users",
+            "source_key": "assignee",
+            "foreign_key": "_id",
+            "is_list": false
+        }
+    },
+    "schema": {
+        "title": "Task",
+        "bsonType": "object",
+        "required": [
+            "_id",
+            "_partition",
+            "name",
+            "status"
+        ],
+        "properties": {
+            "_id": {
+                "bsonType": "objectId"
+            },
+            "_partition": {
+                "bsonType": "string"
+            },
+            "name": {
+                "bsonType": "string"
+            },
+            "status": {
+                "bsonType": "string",
+                "enum": [
+                    "Open",
+                    "InProgress",
+                    "Complete"
+                ]
+            },
+            "assignee": {
+                "bsonType": "objectId"
+            }
+        }
+    }
+}

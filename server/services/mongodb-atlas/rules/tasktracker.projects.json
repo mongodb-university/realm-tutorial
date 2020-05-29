@@ -1,16 +1,6 @@
 {
-    "database": "tracker",
+    "database": "tasktracker",
     "collection": "projects",
-    "roles": [
-        {
-            "name": "default",
-            "apply_when": {},
-            "write": true,
-            "insert": true,
-            "delete": true,
-            "additional_fields": {}
-        }
-    ],
     "schema": {
         "title": "Project",
         "bsonType": "object",
@@ -24,7 +14,7 @@
                 "bsonType": "objectId"
             },
             "_partition": {
-                "bsonType": "objectId"
+                "bsonType": "string"
             },
             "name": {
                 "bsonType": "string"

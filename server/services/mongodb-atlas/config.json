@@ -4,6 +4,16 @@
     "config": {
         "clusterName": "Cluster0",
         "readPreference": "primary",
+        "sync": {
+            "state": "enabled",
+            "partition": {
+                "key": "_partition",
+                "permissions": {
+                    "read": {},
+                    "write": {}
+                }
+            }
+        },
         "wireProtocolEnabled": false
     },
     "version": 1
