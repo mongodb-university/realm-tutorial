@@ -163,8 +163,8 @@ export type MutationUpdateOneUserArgs = {
 
 
 export type MutationUpsertOneProjectArgs = {
-  data: ProjectInsertInput;
   query?: Maybe<ProjectQueryInput>;
+  data: ProjectInsertInput;
 };
 
 
@@ -182,7 +182,7 @@ export type MutationUpsertOneUserArgs = {
 
 export type Project = {
   __typename?: 'Project';
-  _id?: Maybe<Scalars['ObjectId']>;
+  _id: Scalars['ObjectId'];
   _partition: Scalars['String'];
   name: Scalars['String'];
 };
@@ -194,53 +194,53 @@ export type ProjectInsertInput = {
 };
 
 export type ProjectQueryInput = {
-  name?: Maybe<Scalars['String']>;
-  _partition_gt?: Maybe<Scalars['String']>;
-  name_gt?: Maybe<Scalars['String']>;
-  _partition_exists?: Maybe<Scalars['Boolean']>;
-  _id_lt?: Maybe<Scalars['ObjectId']>;
-  _partition?: Maybe<Scalars['String']>;
-  name_gte?: Maybe<Scalars['String']>;
   name_lte?: Maybe<Scalars['String']>;
-  _partition_lte?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
   _id?: Maybe<Scalars['ObjectId']>;
-  name_ne?: Maybe<Scalars['String']>;
-  _partition_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  name_gt?: Maybe<Scalars['String']>;
+  _id_lte?: Maybe<Scalars['ObjectId']>;
+  name_gte?: Maybe<Scalars['String']>;
+  name_in?: Maybe<Array<Maybe<Scalars['String']>>>;
   _id_gt?: Maybe<Scalars['ObjectId']>;
+  _id_lt?: Maybe<Scalars['ObjectId']>;
+  _partition_lte?: Maybe<Scalars['String']>;
   _id_exists?: Maybe<Scalars['Boolean']>;
-  name_lt?: Maybe<Scalars['String']>;
-  _partition_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
-  _partition_gte?: Maybe<Scalars['String']>;
-  name_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
   OR?: Maybe<Array<ProjectQueryInput>>;
-  _partition_ne?: Maybe<Scalars['String']>;
+  name_lt?: Maybe<Scalars['String']>;
   _id_gte?: Maybe<Scalars['ObjectId']>;
-  AND?: Maybe<Array<ProjectQueryInput>>;
-  _id_ne?: Maybe<Scalars['ObjectId']>;
-  _id_nin?: Maybe<Array<Maybe<Scalars['ObjectId']>>>;
+  _partition_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  name_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
+  _partition_gt?: Maybe<Scalars['String']>;
+  name_ne?: Maybe<Scalars['String']>;
   _id_in?: Maybe<Array<Maybe<Scalars['ObjectId']>>>;
+  _partition_ne?: Maybe<Scalars['String']>;
+  _id_ne?: Maybe<Scalars['ObjectId']>;
+  _partition?: Maybe<Scalars['String']>;
+  _partition_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
+  _id_nin?: Maybe<Array<Maybe<Scalars['ObjectId']>>>;
+  _partition_gte?: Maybe<Scalars['String']>;
   name_exists?: Maybe<Scalars['Boolean']>;
   _partition_lt?: Maybe<Scalars['String']>;
-  _id_lte?: Maybe<Scalars['ObjectId']>;
-  name_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  _partition_exists?: Maybe<Scalars['Boolean']>;
+  AND?: Maybe<Array<ProjectQueryInput>>;
 };
 
 export enum ProjectSortByInput {
+  IdDesc = '_ID_DESC',
+  PartitionAsc = '_PARTITION_ASC',
   PartitionDesc = '_PARTITION_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
-  IdAsc = '_ID_ASC',
-  IdDesc = '_ID_DESC',
-  PartitionAsc = '_PARTITION_ASC'
+  IdAsc = '_ID_ASC'
 }
 
 export type ProjectUpdateInput = {
+  _partition_unset?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   name_unset?: Maybe<Scalars['Boolean']>;
   _id?: Maybe<Scalars['ObjectId']>;
   _id_unset?: Maybe<Scalars['Boolean']>;
   _partition?: Maybe<Scalars['String']>;
-  _partition_unset?: Maybe<Scalars['Boolean']>;
 };
 
 export type Query = {
@@ -272,9 +272,9 @@ export type QueryTaskArgs = {
 
 
 export type QueryTasksArgs = {
-  sortBy?: Maybe<TaskSortByInput>;
   query?: Maybe<TaskQueryInput>;
   limit?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<TaskSortByInput>;
 };
 
 
@@ -291,7 +291,7 @@ export type QueryUsersArgs = {
 
 export type Task = {
   __typename?: 'Task';
-  _id?: Maybe<Scalars['ObjectId']>;
+  _id: Scalars['ObjectId'];
   _partition: Scalars['String'];
   assignee?: Maybe<User>;
   name: Scalars['String'];
@@ -299,91 +299,91 @@ export type Task = {
 };
 
 export type TaskAssigneeRelationInput = {
-  create?: Maybe<UserInsertInput>;
   link?: Maybe<Scalars['ObjectId']>;
+  create?: Maybe<UserInsertInput>;
 };
 
 export type TaskInsertInput = {
+  _id?: Maybe<Scalars['ObjectId']>;
   _partition: Scalars['String'];
-  assignee?: Maybe<TaskAssigneeRelationInput>;
   name: Scalars['String'];
   status: TaskStatus;
-  _id?: Maybe<Scalars['ObjectId']>;
+  assignee?: Maybe<TaskAssigneeRelationInput>;
 };
 
 export type TaskQueryInput = {
+  _id_gt?: Maybe<Scalars['ObjectId']>;
+  name_exists?: Maybe<Scalars['Boolean']>;
+  _id_lte?: Maybe<Scalars['ObjectId']>;
+  _partition_lte?: Maybe<Scalars['String']>;
+  name_lt?: Maybe<Scalars['String']>;
+  name_gte?: Maybe<Scalars['String']>;
+  _id_ne?: Maybe<Scalars['ObjectId']>;
+  name?: Maybe<Scalars['String']>;
+  status_lte?: Maybe<TaskStatus>;
+  _id_gte?: Maybe<Scalars['ObjectId']>;
+  _id_in?: Maybe<Array<Maybe<Scalars['ObjectId']>>>;
+  _partition_ne?: Maybe<Scalars['String']>;
+  _id_exists?: Maybe<Scalars['Boolean']>;
+  name_ne?: Maybe<Scalars['String']>;
+  name_gt?: Maybe<Scalars['String']>;
+  AND?: Maybe<Array<TaskQueryInput>>;
+  OR?: Maybe<Array<TaskQueryInput>>;
+  assignee_exists?: Maybe<Scalars['Boolean']>;
+  _id_lt?: Maybe<Scalars['ObjectId']>;
+  status_lt?: Maybe<TaskStatus>;
+  name_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  status_ne?: Maybe<TaskStatus>;
+  status_nin?: Maybe<Array<Maybe<TaskStatus>>>;
+  _partition_gt?: Maybe<Scalars['String']>;
+  status_in?: Maybe<Array<Maybe<TaskStatus>>>;
+  _id?: Maybe<Scalars['ObjectId']>;
+  _partition_exists?: Maybe<Scalars['Boolean']>;
+  status?: Maybe<TaskStatus>;
+  name_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
+  _partition_gte?: Maybe<Scalars['String']>;
+  _partition_in?: Maybe<Array<Maybe<Scalars['String']>>>;
   _partition_lt?: Maybe<Scalars['String']>;
   _partition_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
-  assignee?: Maybe<UserQueryInput>;
-  name_lte?: Maybe<Scalars['String']>;
-  AND?: Maybe<Array<TaskQueryInput>>;
   status_gt?: Maybe<TaskStatus>;
-  name_lt?: Maybe<Scalars['String']>;
+  assignee?: Maybe<UserQueryInput>;
   _id_nin?: Maybe<Array<Maybe<Scalars['ObjectId']>>>;
-  _partition?: Maybe<Scalars['String']>;
-  _partition_lte?: Maybe<Scalars['String']>;
-  status_ne?: Maybe<TaskStatus>;
-  status_in?: Maybe<Array<Maybe<TaskStatus>>>;
-  _id_lt?: Maybe<Scalars['ObjectId']>;
-  name?: Maybe<Scalars['String']>;
-  name_exists?: Maybe<Scalars['Boolean']>;
-  status_lte?: Maybe<TaskStatus>;
-  status_exists?: Maybe<Scalars['Boolean']>;
-  _id?: Maybe<Scalars['ObjectId']>;
-  _id_gte?: Maybe<Scalars['ObjectId']>;
-  assignee_exists?: Maybe<Scalars['Boolean']>;
-  _id_in?: Maybe<Array<Maybe<Scalars['ObjectId']>>>;
-  _id_ne?: Maybe<Scalars['ObjectId']>;
-  _partition_ne?: Maybe<Scalars['String']>;
-  name_gt?: Maybe<Scalars['String']>;
-  _partition_gt?: Maybe<Scalars['String']>;
-  name_ne?: Maybe<Scalars['String']>;
-  _id_exists?: Maybe<Scalars['Boolean']>;
-  status_nin?: Maybe<Array<Maybe<TaskStatus>>>;
-  _partition_gte?: Maybe<Scalars['String']>;
   status_gte?: Maybe<TaskStatus>;
-  _id_gt?: Maybe<Scalars['ObjectId']>;
-  status?: Maybe<TaskStatus>;
-  name_gte?: Maybe<Scalars['String']>;
-  name_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
-  _partition_exists?: Maybe<Scalars['Boolean']>;
-  OR?: Maybe<Array<TaskQueryInput>>;
-  name_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  _partition_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  _id_lte?: Maybe<Scalars['ObjectId']>;
-  status_lt?: Maybe<TaskStatus>;
+  _partition?: Maybe<Scalars['String']>;
+  status_exists?: Maybe<Scalars['Boolean']>;
+  name_lte?: Maybe<Scalars['String']>;
 };
 
 export enum TaskSortByInput {
   AssigneeAsc = 'ASSIGNEE_ASC',
-  StatusDesc = 'STATUS_DESC',
   IdAsc = '_ID_ASC',
-  IdDesc = '_ID_DESC',
   PartitionAsc = '_PARTITION_ASC',
-  PartitionDesc = '_PARTITION_DESC',
+  StatusDesc = 'STATUS_DESC',
+  NameDesc = 'NAME_DESC',
   StatusAsc = 'STATUS_ASC',
   AssigneeDesc = 'ASSIGNEE_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC'
+  IdDesc = '_ID_DESC',
+  PartitionDesc = '_PARTITION_DESC',
+  NameAsc = 'NAME_ASC'
 }
 
 export enum TaskStatus {
+  Open = 'OPEN',
   Inprogress = 'INPROGRESS',
-  Complete = 'COMPLETE',
-  Open = 'OPEN'
+  Complete = 'COMPLETE'
 }
 
 export type TaskUpdateInput = {
-  assignee_unset?: Maybe<Scalars['Boolean']>;
   status_unset?: Maybe<Scalars['Boolean']>;
+  _partition?: Maybe<Scalars['String']>;
+  _id?: Maybe<Scalars['ObjectId']>;
+  name_unset?: Maybe<Scalars['Boolean']>;
+  assignee?: Maybe<TaskAssigneeRelationInput>;
+  _id_unset?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   status?: Maybe<TaskStatus>;
-  _partition?: Maybe<Scalars['String']>;
-  name_unset?: Maybe<Scalars['Boolean']>;
-  _id?: Maybe<Scalars['ObjectId']>;
-  _id_unset?: Maybe<Scalars['Boolean']>;
+  assignee_unset?: Maybe<Scalars['Boolean']>;
   _partition_unset?: Maybe<Scalars['Boolean']>;
-  assignee?: Maybe<TaskAssigneeRelationInput>;
 };
 
 export type UpdateManyPayload = {
@@ -402,87 +402,87 @@ export type User = {
 };
 
 export type UserInsertInput = {
-  image?: Maybe<Scalars['String']>;
   _partition?: Maybe<Scalars['String']>;
   _id?: Maybe<Scalars['ObjectId']>;
   user_id: Scalars['String'];
   name: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
 };
 
 export type UserQueryInput = {
-  image_exists?: Maybe<Scalars['Boolean']>;
-  user_id_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  image_ne?: Maybe<Scalars['String']>;
-  _partition_lt?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['String']>;
-  image_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  user_id_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
-  image_lt?: Maybe<Scalars['String']>;
-  _id_gt?: Maybe<Scalars['ObjectId']>;
-  user_id_lte?: Maybe<Scalars['String']>;
-  name_lt?: Maybe<Scalars['String']>;
-  _partition_ne?: Maybe<Scalars['String']>;
-  image_gte?: Maybe<Scalars['String']>;
-  OR?: Maybe<Array<UserQueryInput>>;
-  name_exists?: Maybe<Scalars['Boolean']>;
-  name?: Maybe<Scalars['String']>;
-  image_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
-  _id?: Maybe<Scalars['ObjectId']>;
-  user_id_ne?: Maybe<Scalars['String']>;
-  _id_lte?: Maybe<Scalars['ObjectId']>;
-  _id_ne?: Maybe<Scalars['ObjectId']>;
-  image_lte?: Maybe<Scalars['String']>;
-  _partition_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
   _id_nin?: Maybe<Array<Maybe<Scalars['ObjectId']>>>;
-  AND?: Maybe<Array<UserQueryInput>>;
-  name_lte?: Maybe<Scalars['String']>;
-  _id_lt?: Maybe<Scalars['ObjectId']>;
-  _partition?: Maybe<Scalars['String']>;
-  name_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  _partition_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  _id_in?: Maybe<Array<Maybe<Scalars['ObjectId']>>>;
-  _partition_gt?: Maybe<Scalars['String']>;
-  _partition_lte?: Maybe<Scalars['String']>;
-  user_id_exists?: Maybe<Scalars['Boolean']>;
-  _partition_exists?: Maybe<Scalars['Boolean']>;
-  image_gt?: Maybe<Scalars['String']>;
-  _id_exists?: Maybe<Scalars['Boolean']>;
-  name_gt?: Maybe<Scalars['String']>;
-  _id_gte?: Maybe<Scalars['ObjectId']>;
-  user_id_gt?: Maybe<Scalars['String']>;
   name_ne?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['String']>;
-  _partition_gte?: Maybe<Scalars['String']>;
-  user_id_gte?: Maybe<Scalars['String']>;
+  _partition_lte?: Maybe<Scalars['String']>;
+  _partition_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  AND?: Maybe<Array<UserQueryInput>>;
+  user_id_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  user_id_exists?: Maybe<Scalars['Boolean']>;
+  _partition_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
+  OR?: Maybe<Array<UserQueryInput>>;
+  user_id_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
+  user_id_ne?: Maybe<Scalars['String']>;
+  image_lt?: Maybe<Scalars['String']>;
+  user_id_gt?: Maybe<Scalars['String']>;
   name_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
-  name_gte?: Maybe<Scalars['String']>;
+  _id?: Maybe<Scalars['ObjectId']>;
+  _id_lt?: Maybe<Scalars['ObjectId']>;
+  name_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  _partition_lt?: Maybe<Scalars['String']>;
+  image_exists?: Maybe<Scalars['Boolean']>;
+  name_lte?: Maybe<Scalars['String']>;
+  image_gt?: Maybe<Scalars['String']>;
+  user_id_gte?: Maybe<Scalars['String']>;
+  _id_gte?: Maybe<Scalars['ObjectId']>;
+  name_exists?: Maybe<Scalars['Boolean']>;
+  _id_exists?: Maybe<Scalars['Boolean']>;
+  _partition_gte?: Maybe<Scalars['String']>;
+  image_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  name_gt?: Maybe<Scalars['String']>;
+  _partition?: Maybe<Scalars['String']>;
+  image_lte?: Maybe<Scalars['String']>;
+  _id_gt?: Maybe<Scalars['ObjectId']>;
+  image?: Maybe<Scalars['String']>;
+  user_id?: Maybe<Scalars['String']>;
+  _id_lte?: Maybe<Scalars['ObjectId']>;
+  name?: Maybe<Scalars['String']>;
+  name_lt?: Maybe<Scalars['String']>;
+  user_id_lte?: Maybe<Scalars['String']>;
+  _partition_ne?: Maybe<Scalars['String']>;
+  _id_in?: Maybe<Array<Maybe<Scalars['ObjectId']>>>;
+  image_ne?: Maybe<Scalars['String']>;
   user_id_lt?: Maybe<Scalars['String']>;
+  _partition_exists?: Maybe<Scalars['Boolean']>;
+  _id_ne?: Maybe<Scalars['ObjectId']>;
+  _partition_gt?: Maybe<Scalars['String']>;
+  name_gte?: Maybe<Scalars['String']>;
+  image_nin?: Maybe<Array<Maybe<Scalars['String']>>>;
+  image_gte?: Maybe<Scalars['String']>;
 };
 
 export enum UserSortByInput {
+  IdAsc = '_ID_ASC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  ImageAsc = 'IMAGE_ASC',
+  PartitionDesc = '_PARTITION_DESC',
   IdDesc = '_ID_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
-  NameAsc = 'NAME_ASC',
   ImageDesc = 'IMAGE_DESC',
-  PartitionAsc = '_PARTITION_ASC',
-  PartitionDesc = '_PARTITION_DESC',
-  IdAsc = '_ID_ASC',
-  NameDesc = 'NAME_DESC',
-  ImageAsc = 'IMAGE_ASC'
+  PartitionAsc = '_PARTITION_ASC'
 }
 
 export type UserUpdateInput = {
-  name?: Maybe<Scalars['String']>;
-  _partition?: Maybe<Scalars['String']>;
   name_unset?: Maybe<Scalars['Boolean']>;
-  image?: Maybe<Scalars['String']>;
-  image_unset?: Maybe<Scalars['Boolean']>;
-  _partition_unset?: Maybe<Scalars['Boolean']>;
-  _id?: Maybe<Scalars['ObjectId']>;
   _id_unset?: Maybe<Scalars['Boolean']>;
+  name?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  _partition_unset?: Maybe<Scalars['Boolean']>;
+  image_unset?: Maybe<Scalars['Boolean']>;
   user_id?: Maybe<Scalars['String']>;
   user_id_unset?: Maybe<Scalars['Boolean']>;
+  _id?: Maybe<Scalars['ObjectId']>;
+  _partition?: Maybe<Scalars['String']>;
 };
 
 export type GetAllTasksQueryVariables = {};

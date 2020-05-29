@@ -48,7 +48,12 @@ Define the schemas for each collection as follows. Please note: we may change th
       "bsonType": "string"
     },
     "status": {
-      "bsonType": "string"
+      "bsonType": "string",
+      "enum": [
+        "Open",
+        "InProgress",
+        "Complete"
+      ]
     }
   }
 }

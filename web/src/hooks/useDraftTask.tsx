@@ -1,5 +1,6 @@
 import * as React from "react";
-import { TaskStatus, User, GetUserQuery } from "../types";
+import BSON from "bson";
+import { TaskStatus, User, GetUserQuery, Task } from "../types";
 import { TaskActions } from "../hooks/useTasks";
 import { useGetUserLazyQuery } from "../graphql-operations";
 
@@ -38,6 +39,7 @@ export default function useDraftTask(
       if (draft) {
         await taskActions.addTask({
           ...draft,
+          _id: new BSON.ObjectId(),
           assignee: draftAssignee ?? undefined,
           _partition: "My Project",
         });
