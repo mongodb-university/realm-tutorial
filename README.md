@@ -23,7 +23,7 @@ Under "Rules" on the Realm UI, add the following collections:
 
 ## Schemas
 
-Define the schemas for each collection as follows:
+Define the schemas for each collection as follows. Please note: we may change these in future versions of the tutorial.
 
 ### Tasks
 
@@ -101,6 +101,9 @@ Define the schemas for each collection as follows:
     },
     "image": {
       "bsonType": "string"
+    },
+    "_partition": {
+      "bsonType": "string"
     }
   }
 }
@@ -120,6 +123,6 @@ schema as you develop your app.
 - Be sure to **check the logs in Realm UI** for more information as well as the console in your app.
 - **Delete the app from the simulator** to purge local data.
 - **Restart Sync** in the Realm UI by clicking "Delete Synced Data" on the Sync page.
-- Be sure to deploy your changes in the Realm UI.
-- If your schema does not match the server: compare the class definitions from the SDKs tab in the Realm UI with those in the client code.
-- When creating objects, make sure the partition value of your new object matches the partition value you opened the Realm with.
+- Be sure to **deploy your changes** in the Realm UI.
+- If your schema does not match the server, **compare the class definitions from the SDKs tab in the Realm UI** with those in the client code.
+- When creating objects, make sure the **partition value of your new object matches** the partition value you opened the Realm with.
