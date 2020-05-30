@@ -2,11 +2,11 @@ import React, {useContext, useState} from 'react';
 import Realm from 'realm';
 import {getRealmApp} from './getRealmApp';
 
-// Create a new Context object that will be provided to descendents of the AuthProvider.
-const AuthContext = React.createContext(null);
-
 // Access the Realm App.
 const app = getRealmApp();
+
+// Create a new Context object that will be provided to descendents of the AuthProvider.
+const AuthContext = React.createContext(null);
 
 // The AuthProvider is responsible for user management and provides the
 // AuthContext value to its descendents. Components under an AuthProvider can
@@ -27,7 +27,7 @@ const AuthProvider = ({children}) => {
   // Log out the current user.
   const logOut = () => {
     if (user == null) {
-      console.error("Not logged in -- can't log out!");
+      console.warn("Not logged in -- can't log out!");
       return;
     }
     console.log('Logging out...');
