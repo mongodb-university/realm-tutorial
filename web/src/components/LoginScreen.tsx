@@ -18,12 +18,12 @@ const LoginScreen: React.FC = () => {
   };
 
   // Keep track of form input state
-  const [email, setEmail] = React.useState<string>("joe.jasper@example.com");
-  const [password, setPassword] = React.useState<string>("password");
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
   // Whenever the mode changes, clear the form inputs
   React.useEffect(() => {
-    setEmail("joe.jasper@example.com");
-    setPassword("password");
+    setEmail("");
+    setPassword("");
     setError({});
   }, [mode]);
   // Keep track of input validation/errors

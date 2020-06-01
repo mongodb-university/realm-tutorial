@@ -22,7 +22,7 @@ export default RealmApolloProvider;
 
 // TODO: Implement createApolloClient()
 function createApolloClient(realmAppId: string, user: RealmWeb.User) {
-  const graphql_url = `https://realm-dev.mongodb.com/api/client/v2.0/app/${realmAppId}/graphql`;
+  const graphql_url = `https://realm.mongodb.com/api/client/v2.0/app/${realmAppId}/graphql`;
   const httpLink = new HttpLink({ uri: graphql_url });
   const authorizationHeaderLink = setContext(async (_, { headers }) => ({
     headers: {

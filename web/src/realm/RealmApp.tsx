@@ -1,11 +1,8 @@
 import * as React from "react";
 import * as RealmWeb from "realm-web";
 
-const REALM_APP_ID = "myrealmapp-vjmee";
-const app = new RealmWeb.App({
-  id: REALM_APP_ID,
-  baseUrl: "https://realm-dev.mongodb.com",
-});
+const REALM_APP_ID = "<Your App ID>";
+const app = new RealmWeb.App({ id: REALM_APP_ID });
 
 const RealmAppContext = React.createContext<IRealmApp | void>(undefined);
 
