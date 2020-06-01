@@ -28,7 +28,7 @@ internal class ListAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerVi
         val obj: Task? = getItem(position)
         holder.data = obj
         holder.name.text = obj?.name
-        holder.status.text = obj?.status
+        holder.status.text = obj?.statusEnum?.displayName
 
         // multiselect popup to control status
         holder.itemView.setOnClickListener {
@@ -37,14 +37,14 @@ internal class ListAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerVi
                 val menu = popup.menu
 
                 // the menu should only contain statuses different from the current status
-                if (holder.data?.status != TaskStatus.OPEN.text) {
-                    menu.add(0, TaskStatus.OPEN.code, Menu.NONE, TaskStatus.OPEN.text)
+                if (holder.data?.statusEnum != TaskStatus.Open) {
+                    menu.add(0, TaskStatus.Open.ordinal, Menu.NONE, TaskStatus.Open.displayName)
                 }
-                if (holder.data?.status != TaskStatus.IN_PROGRESS.text) {
-                    menu.add(0, TaskStatus.IN_PROGRESS.code, Menu.NONE, TaskStatus.IN_PROGRESS.text)
+                if (holder.data?.statusEnum != TaskStatus.InProgress) {
+                    menu.add(0, TaskStatus.InProgress.ordinal, Menu.NONE, TaskStatus.InProgress.displayName)
                 }
-                if (holder.data?.status != TaskStatus.COMPLETE.text) {
-                    menu.add(0, TaskStatus.COMPLETE.code, Menu.NONE, TaskStatus.COMPLETE.text)
+                if (holder.data?.statusEnum != TaskStatus.Complete) {
+                    menu.add(0, TaskStatus.Complete.ordinal, Menu.NONE, TaskStatus.Complete.displayName)
                 }
 
                 // add a delete button to the menu, identified by the delete code
@@ -53,16 +53,16 @@ internal class ListAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerVi
 
                 // handle clicks for each button based on the code the button passes the listener
                 popup.setOnMenuItemClickListener { item: MenuItem? ->
-                    var status: String? = null
+                    var status: TaskStatus? = null
                     when (item!!.itemId) {
-                        TaskStatus.OPEN.code -> {
-                            status = TaskStatus.OPEN.text
+                        TaskStatus.Open.ordinal -> {
+                            status = TaskStatus.Open
                         }
-                        TaskStatus.IN_PROGRESS.code -> {
-                            status = TaskStatus.IN_PROGRESS.text
+                        TaskStatus.InProgress.ordinal -> {
+                            status = TaskStatus.InProgress
                         }
-                        TaskStatus.COMPLETE.code -> {
-                            status = TaskStatus.COMPLETE.text
+                        TaskStatus.Complete.ordinal -> {
+                            status = TaskStatus.Complete
                         }
                         deleteCode -> {
                             removeAt(holder.data?._id!!)
@@ -72,7 +72,7 @@ internal class ListAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerVi
                     // if the status variable has a new value, update the status of the task in realm
                     if (status != null) {
                         Log.v(TAG(), "Changing status of ${holder.data?.name} (${holder.data?._id}) to $status")
-                        changeStatus(status, holder.data?._id)
+                        changeStatus(status!!, holder.data?._id)
                     }
                     true
             }
@@ -81,7 +81,7 @@ internal class ListAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerVi
     }
 
 
-    private fun changeStatus(_status: String, _id: ObjectId?) {
+    private fun changeStatus(status: TaskStatus, _id: ObjectId?) {
         // need to create a separate instance of realm to issue an update, since this event is
         // handled by a background thread and realm instances cannot be shared across threads
         val bgRealm = Realm.getDefaultInstance()
@@ -89,7 +89,7 @@ internal class ListAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerVi
         bgRealm!!.executeTransaction {
             // using our thread-local new realm instance, query for and update the task status
             val item = it.where<Task>().equalTo("_id", _id).findFirst()
-            item?.status = _status
+            item?.statusEnum = status
         }
         // always close realms when you are done with them!
         bgRealm.close()

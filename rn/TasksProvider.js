@@ -3,7 +3,7 @@ import Realm from 'realm';
 import {useAuth} from './AuthProvider';
 import {Task} from './schemas';
 
-// Create the context that will be provided to descendents of TasksProvider via
+// Create the context that will be provided to descendants of TasksProvider via
 // the useTasks hook.
 const TasksContext = React.createContext(null);
 
@@ -25,15 +25,8 @@ const TasksProvider = ({children, projectId}) => {
     // Check that the user is logged in. You must authenticate to open a synced
     // realm.
     if (user == null) {
-      console.error('TasksView must be authenticated!');
+      console.warn('TasksView must be authenticated!');
       return;
-    }
-
-    // If there is already an open realm, close it.
-    if (realmRef.current != null) {
-      realmRef.current.removeAllListeners();
-      realmRef.current.close();
-      realmRef.current = null;
     }
 
     // Define the configuration for the realm to use the Task schema. Base the
@@ -54,9 +47,19 @@ const TasksProvider = ({children, projectId}) => {
       } with config: ${JSON.stringify(config)}...`,
     );
 
+    // Set this flag to true if the cleanup handler runs before the realm open
+    // success handler, e.g. because the component unmounted.
+    let canceled = false;
+
     // Now open the realm asynchronously with the given configuration.
     Realm.open(config)
-      .then((openedRealm) => {
+      .then(openedRealm => {
+        // If this request has been canceled, we should close the realm.
+        if (canceled) {
+          openedRealm.close();
+          return;
+        }
+
         // Update the realmRef so we can use this opened realm for writing.
         realmRef.current = openedRealm;
 
@@ -74,10 +77,15 @@ const TasksProvider = ({children, projectId}) => {
         // Set the tasks state variable and re-render.
         setTasks([...syncTasks]);
       })
-      .catch(console.error);
+      .catch(error => console.warn('Failed to open realm:', error));
 
-    // Return the cleanup function to be called when the component is unmounted.
+    // Return the cleanup function to be called when the component is unmounted
+    // or the next time the effect runs.
     return () => {
+      // Update the canceled flag shared between both this callback and the
+      // realm open success callback above in case this runs first.
+      canceled = true;
+
       // If there is an open realm, we must close it.
       const realm = realmRef.current;
       if (realm != null) {
@@ -133,7 +141,7 @@ const TasksProvider = ({children, projectId}) => {
   };
 
   // Render the children within the TaskContext's provider. The value contains
-  // everything that should be made available to descendents that use the
+  // everything that should be made available to descendants that use the
   // useTasks hook.
   return (
     <TasksContext.Provider
@@ -149,7 +157,7 @@ const TasksProvider = ({children, projectId}) => {
   );
 };
 
-// The useTasks hook can be used by any descendent of the TasksProvider. It
+// The useTasks hook can be used by any descendant of the TasksProvider. It
 // provides the tasks of the TasksProvider's project and various functions to
 // create, update, and delete the tasks in that project.
 const useTasks = () => {

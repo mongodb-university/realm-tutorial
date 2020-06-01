@@ -26,6 +26,17 @@ class Project: Object {
     }
 }
 
+class User: Object {
+    @objc dynamic var _id: ObjectId = ObjectId.generate()
+    @objc dynamic var _partition: String? = nil
+    @objc dynamic var image: String? = nil
+    @objc dynamic var name: String = ""
+    @objc dynamic var user_id: String = ""
+    override static func primaryKey() -> String? {
+        return "_id"
+    }
+}
+
 enum TaskStatus: String {
   case Open
   case InProgress
@@ -35,12 +46,13 @@ enum TaskStatus: String {
 class Task: Object {
     @objc dynamic var _id: ObjectId = ObjectId.generate()
     @objc dynamic var _partition: ProjectId = ""
+    @objc dynamic var assignee: User?
     @objc dynamic var name = ""
     @objc dynamic var status = TaskStatus.Open.rawValue
 
     var statusEnum: TaskStatus {
         get {
-            return TaskStatus(rawValue: status)!
+            return TaskStatus(rawValue: status) ?? .Open
         }
         set {
             status = newValue.rawValue
@@ -57,4 +69,3 @@ class Task: Object {
         self.name = name
     }
 }
-
