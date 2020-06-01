@@ -19,12 +19,17 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var notificationToken: NotificationToken?
 
     required init(project: Project?, projectRealm: Realm) {
+        // Ensure the realm was opened with sync.
+        guard let syncConfiguration = projectRealm.configuration.syncConfiguration else {
+            fatalError("Sync configuration not found! Realm not opened with sync?");
+        }
 
         self.project = project
         
         realm = projectRealm
 
-        partitionValue = realm.configuration.syncConfiguration?.partitionValue as! String
+        // Partition value must be of string type.
+        partitionValue = syncConfiguration.partitionValue.stringValue!
 
         // Access all tasks in the realm.
         // Only tasks with the project ID as the partition key value will be in the realm.

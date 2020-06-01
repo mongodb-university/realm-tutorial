@@ -17,7 +17,7 @@ struct Constants {
     static let REALM_BASE_URL = "https://realm-dev.mongodb.com"
 }
 
-let app = RealmApp(Constants.REALM_APP_ID, configuration: AppConfiguration(baseURL: Constants.REALM_BASE_URL,
+let app = RealmApp(id: Constants.REALM_APP_ID, configuration: AppConfiguration(baseURL: Constants.REALM_BASE_URL,
     transport: nil,
     localAppName: nil,
     localAppVersion: nil))
