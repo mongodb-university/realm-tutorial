@@ -70,7 +70,7 @@ export function TaskItem({task}) {
         bottomDivider
         checkmark={
           task.status === Task.STATUS_COMPLETE ? (
-            <Text>&#10004;</Text>
+            <Text>{'&#10004;' /* checkmark */}</Text>
           ) : task.status === Task.STATUS_IN_PROGRESS ? (
             <Text>In Progress</Text>
           ) : null

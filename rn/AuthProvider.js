@@ -5,11 +5,11 @@ import {getRealmApp} from './getRealmApp';
 // Access the Realm App.
 const app = getRealmApp();
 
-// Create a new Context object that will be provided to descendents of the AuthProvider.
+// Create a new Context object that will be provided to descendants of the AuthProvider.
 const AuthContext = React.createContext(null);
 
 // The AuthProvider is responsible for user management and provides the
-// AuthContext value to its descendents. Components under an AuthProvider can
+// AuthContext value to its descendants. Components under an AuthProvider can
 // use the useAuth() hook to access the auth value.
 const AuthProvider = ({children}) => {
   const [user, setUser] = useState(null);

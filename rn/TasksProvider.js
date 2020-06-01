@@ -3,7 +3,7 @@ import Realm from 'realm';
 import {useAuth} from './AuthProvider';
 import {Task} from './schemas';
 
-// Create the context that will be provided to descendents of TasksProvider via
+// Create the context that will be provided to descendants of TasksProvider via
 // the useTasks hook.
 const TasksContext = React.createContext(null);
 
@@ -141,7 +141,7 @@ const TasksProvider = ({children, projectId}) => {
   };
 
   // Render the children within the TaskContext's provider. The value contains
-  // everything that should be made available to descendents that use the
+  // everything that should be made available to descendants that use the
   // useTasks hook.
   return (
     <TasksContext.Provider
@@ -157,7 +157,7 @@ const TasksProvider = ({children, projectId}) => {
   );
 };
 
-// The useTasks hook can be used by any descendent of the TasksProvider. It
+// The useTasks hook can be used by any descendant of the TasksProvider. It
 // provides the tasks of the TasksProvider's project and various functions to
 // create, update, and delete the tasks in that project.
 const useTasks = () => {
