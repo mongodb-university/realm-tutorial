@@ -3,7 +3,7 @@ import {Button, Text, Input} from 'react-native-elements';
 import {useAuth} from './AuthProvider';
 
 // This view has an input for email and password and logs in the user when the
-// "log in" button is pressed.
+// login button is pressed.
 export function LogInView() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +25,7 @@ export function LogInView() {
       <Button
         onPress={async () => {
           console.log(
-            `Log in button pressed with email ${email} and password ${password}`,
+            `Login button pressed with email ${email} and password ${password}`,
           );
           setError(null);
           try {
@@ -34,7 +34,7 @@ export function LogInView() {
             setError(`Login failed: ${e.message}`);
           }
         }}
-        title="Login"
+        title="Log In"
       />
       <Text>{error}</Text>
     </>

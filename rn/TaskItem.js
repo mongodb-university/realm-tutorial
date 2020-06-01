@@ -26,7 +26,9 @@ export function TaskItem({task}) {
   ];
 
   // For each possible status other than the current status, make an action to
-  // move the task into that status. This could be refactored numerous ways.
+  // move the task into that status. Rather than creating a generic method to
+  // avoid repetition, we split each status to separate each case in the code
+  // below for demonstration purposes.
   if (task.status !== Task.STATUS_OPEN) {
     actions.push({
       title: 'Mark Open',
@@ -70,7 +72,7 @@ export function TaskItem({task}) {
         bottomDivider
         checkmark={
           task.status === Task.STATUS_COMPLETE ? (
-            <Text>&#10004;</Text>
+            <Text>{'&#10004;' /* checkmark */}</Text>
           ) : task.status === Task.STATUS_IN_PROGRESS ? (
             <Text>In Progress</Text>
           ) : null
