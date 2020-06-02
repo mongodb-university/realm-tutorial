@@ -1,31 +1,21 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion rootProject.sdkVersion
-    buildToolsVersion rootProject.buildTools
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
 
     defaultConfig {
-        applicationId 'io.realm.examples.objectserver'
-        targetSdkVersion rootProject.sdkVersion
-        minSdkVersion rootProject.minSdkVersion
+        applicationId "com.mongodb.tasktracker"
+        minSdkVersion 21
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
-    }
 
-    dataBinding {
-        enabled = true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -49,12 +39,15 @@ realm {
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'
-    implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation "androidx.appcompat:appcompat:${androidXVersion}"
+    implementation 'androidx.core:core-ktx:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "io.realm:android-adapters:4.0.0"
-    implementation "androidx.recyclerview:recyclerview:${androidXVersion}"
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
