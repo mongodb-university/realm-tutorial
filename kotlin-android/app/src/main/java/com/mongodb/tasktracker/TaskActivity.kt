@@ -106,7 +106,7 @@ class TaskActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         recyclerView.adapter = null
-        // if a user hasn't logged out when we close the realm, still need to explicitly close
+        // if a user hasn't logged out when the activity exits, still need to explicitly close the realm
         realm.close()
     }
 
@@ -141,7 +141,7 @@ class TaskActivity : AppCompatActivity() {
         // a recyclerview requires an adapter, which feeds it items to display.
         // Realm provides RealmRecyclerViewAdapter, which you can extend to customize for your application
         // pass the adapter a collection of Tasks from the realm
-        // we sort this collection so that the displayed order of Tasks remains stable across updates
+        // sort this collection so that the displayed order of Tasks remains stable across updates
         adapter = TaskAdapter(realm.where<Task>().sort("_id").findAll())
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter

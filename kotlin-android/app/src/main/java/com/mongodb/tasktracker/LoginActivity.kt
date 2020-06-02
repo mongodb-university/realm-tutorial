@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun onLoginFailed(errorMsg: String) {
-        Log.v(TAG(), errorMsg)
+        Log.e(TAG(), errorMsg)
         Toast.makeText(baseContext, errorMsg, Toast.LENGTH_LONG).show()
     }
 
@@ -71,9 +71,9 @@ class LoginActivity : AppCompatActivity() {
                 loginButton.isEnabled = true
                 if (!it.isSuccess) {
                     onLoginFailed("Could not register user.")
-                    Log.v(TAG(), "Error: ${it.error}")
+                    Log.e(TAG(), "Error: ${it.error}")
                 } else {
-                    Log.v(TAG(), "Successfully registered user.")
+                    Log.i(TAG(), "Successfully registered user.")
                     // when the account has been created successfully, log in to the account
                     login(false)
                 }
