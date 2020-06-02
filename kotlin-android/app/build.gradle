@@ -20,7 +20,7 @@ android {
 
     buildTypes {
         def mongodbRealmUrl = "https://realm-dev.mongodb.com"
-        def appId = "myrealmapp-vjmee" // "<your app ID here>"  // Replace with proper Application ID
+        def appId = "<your app ID here>"  // Replace with proper Application ID
         debug {
             buildConfigField "String", "MONGODB_REALM_URL", "\"${mongodbRealmUrl}\""
             buildConfigField "String", "MONGODB_REALM_APP_ID", "\"${appId}\""
