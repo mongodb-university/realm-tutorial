@@ -15,22 +15,20 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.realm.Realm
 import io.realm.RealmUser
 import io.realm.SyncConfiguration
-import com.mongodb.tasktracker.model.ListAdapter
+import com.mongodb.tasktracker.model.TaskAdapter
 import com.mongodb.tasktracker.model.Task
 import io.realm.kotlin.where
-import io.realm.log.RealmLog
-import io.realm.examples.objectserver.R
 
 /*
- * TaskActivity: allows a user to view a collection of Tasks, edit the status of those tasks,
- * create new tasks, and delete existing tasks from the collection. All tasks are stored in a realm
- * and synced across devices using the partition "My Project", which is shared by all users.
- */
+* TaskActivity: allows a user to view a collection of Tasks, edit the status of those tasks,
+* create new tasks, and delete existing tasks from the collection. All tasks are stored in a realm
+* and synced across devices using the partition "My Project", which is shared by all users.
+*/
 class TaskActivity : AppCompatActivity() {
     private lateinit var realm: Realm
     private var user: RealmUser? = null
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ListAdapter
+    private lateinit var adapter: TaskAdapter
     private lateinit var fab: FloatingActionButton
 
     override fun onStart() {
@@ -38,7 +36,7 @@ class TaskActivity : AppCompatActivity() {
         try {
             user = taskApp.currentUser()
         } catch (e: IllegalStateException) {
-            RealmLog.warn(e)
+            Log.w(TAG(), e)
         }
         if (user == null) {
             // if no user is currently logged in, start the login activity so the user can authenticate
@@ -47,8 +45,8 @@ class TaskActivity : AppCompatActivity() {
         else {
             // configure realm to use the current user and the partition corresponding to "My Project"
             val config = SyncConfiguration.Builder(user!!, "My Project")
-                    .waitForInitialRemoteData()
-                    .build()
+                .waitForInitialRemoteData()
+                .build()
 
             // save this configuration as the default for this entire app so other activities and threads can open their own realm instances
             Realm.setDefaultConfiguration(config)
@@ -85,18 +83,18 @@ class TaskActivity : AppCompatActivity() {
             val input = EditText(this)
             val dialogBuilder = AlertDialog.Builder(this)
             dialogBuilder.setMessage("Enter task name:")
-                    .setCancelable(true)
-                    .setPositiveButton("Create") { dialog, _ -> run {
-                        dialog.dismiss()
-                        val task = Task(input.text.toString())
-                        // all realm writes need to occur inside of a transaction
-                        realm.executeTransactionAsync { realm ->
-                            realm.insert(task)
-                        }
+                .setCancelable(true)
+                .setPositiveButton("Create") { dialog, _ -> run {
+                    dialog.dismiss()
+                    val task = Task(input.text.toString())
+                    // all realm writes need to occur inside of a transaction
+                    realm.executeTransactionAsync { realm ->
+                        realm.insert(task)
                     }
-                    }
-                    .setNegativeButton("Cancel") { dialog, _ -> dialog.cancel()
-                    }
+                }
+                }
+                .setNegativeButton("Cancel") { dialog, _ -> dialog.cancel()
+                }
 
             val dialog = dialogBuilder.create()
             dialog.setView(input)
@@ -128,7 +126,6 @@ class TaskActivity : AppCompatActivity() {
                         Log.v(TAG(), "user logged out")
                         startActivity(Intent(this, LoginActivity::class.java))
                     } else {
-                        RealmLog.error(it.error.toString())
                         Log.e(TAG(), "log out failed! Error: ${it.error}")
                     }
                 }
@@ -145,7 +142,7 @@ class TaskActivity : AppCompatActivity() {
         // Realm provides RealmRecyclerViewAdapter, which you can extend to customize for your application
         // pass the adapter a collection of Tasks from the realm
         // we sort this collection so that the displayed order of Tasks remains stable across updates
-        adapter = ListAdapter(realm.where<Task>().sort("_id").findAll())
+        adapter = TaskAdapter(realm.where<Task>().sort("_id").findAll())
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)

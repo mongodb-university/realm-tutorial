@@ -1,45 +1,31 @@
-project.ext.sdkVersion = 29
-project.ext.minSdkVersion = 16
-project.ext.buildTools = "29.0.2"
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext {
-        androidXVersion = '1.0.0'
-    }
-}
-
-// Don't cache SNAPSHOT (changing) dependencies.
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
-
-allprojects {
     ext.kotlin_version = '1.3.72'
-    def currentVersion = "10.0.0-SNAPSHOT"
-    buildscript {
-        repositories {
-            google()
-            jcenter()
-            maven {
-                url 'http://oss.jfrog.org/artifactory/oss-snapshot-local'
-            }
-            maven { url 'https://jitpack.io' }
-        }
-        dependencies {
-            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-            classpath "com.android.tools.build:gradle:3.6.3"
-            classpath "io.realm:realm-gradle-plugin:${currentVersion}"
-        }
-    }
-
-    group = 'io.realm'
-    version = currentVersion
-
     repositories {
-        jcenter()
         google()
+        jcenter()
         maven {
             url 'http://oss.jfrog.org/artifactory/oss-snapshot-local'
         }
     }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "io.realm:realm-gradle-plugin:10.0.0-SNAPSHOT"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url 'http://oss.jfrog.org/artifactory/oss-snapshot-local'
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
