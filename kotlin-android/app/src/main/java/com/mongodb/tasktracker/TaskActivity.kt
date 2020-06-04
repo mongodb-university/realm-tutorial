@@ -13,11 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.realm.Realm
-import io.realm.RealmUser
-import io.realm.SyncConfiguration
+import io.realm.mongodb.User
+import io.realm.kotlin.where
+import io.realm.mongodb.sync.SyncConfiguration
 import com.mongodb.tasktracker.model.TaskAdapter
 import com.mongodb.tasktracker.model.Task
-import io.realm.kotlin.where
 
 /*
 * TaskActivity: allows a user to view a collection of Tasks, edit the status of those tasks,
@@ -26,7 +26,7 @@ import io.realm.kotlin.where
 */
 class TaskActivity : AppCompatActivity() {
     private lateinit var realm: Realm
-    private var user: RealmUser? = null
+    private var user: User? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TaskAdapter
     private lateinit var fab: FloatingActionButton

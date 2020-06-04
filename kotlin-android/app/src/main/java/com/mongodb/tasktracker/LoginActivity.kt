@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import io.realm.RealmCredentials
+import io.realm.mongodb.Credentials
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var username: EditText
@@ -79,7 +79,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         } else {
-            val creds = RealmCredentials.emailPassword(username, password)
+            val creds = Credentials.emailPassword(username, password)
             taskApp.loginAsync(creds) {
                 // re-enable the buttons after
                 loginButton.isEnabled = true
