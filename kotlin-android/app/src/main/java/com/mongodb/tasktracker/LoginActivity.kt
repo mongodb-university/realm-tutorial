@@ -66,17 +66,17 @@ class LoginActivity : AppCompatActivity() {
         if (createUser) {
             // register a user using the Realm App we created in the TaskTracker class
             taskApp.emailPasswordAuth.registerUserAsync(username, password) {
-                    // re-enable the buttons after user registration completes
-                    createUserButton.isEnabled = true
-                    loginButton.isEnabled = true
-                    if (!it.isSuccess) {
-                        onLoginFailed("Could not register user.")
-                        Log.e(TAG(), "Error: ${it.error}")
-                    } else {
-                        Log.i(TAG(), "Successfully registered user.")
-                        // when the account has been created successfully, log in to the account
-                        login(false)
-                    }
+                // re-enable the buttons after user registration completes
+                createUserButton.isEnabled = true
+                loginButton.isEnabled = true
+                if (!it.isSuccess) {
+                    onLoginFailed("Could not register user.")
+                    Log.e(TAG(), "Error: ${it.error}")
+                } else {
+                    Log.i(TAG(), "Successfully registered user.")
+                    // when the account has been created successfully, log in to the account
+                    login(false)
+                }
             }
         } else {
             val creds = Credentials.emailPassword(username, password)
