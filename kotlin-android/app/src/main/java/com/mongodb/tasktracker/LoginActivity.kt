@@ -88,7 +88,6 @@ class LoginActivity : AppCompatActivity() {
                     onLoginFailed(it.error.message ?: "An error occurred.")
                 } else {
                     onLoginSuccess()
-
                 }
             }
         }
