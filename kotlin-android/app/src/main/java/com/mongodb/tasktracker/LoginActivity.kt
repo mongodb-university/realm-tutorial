@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import io.realm.RealmCredentials
+import io.realm.mongodb.Credentials
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var username: EditText
@@ -66,20 +66,20 @@ class LoginActivity : AppCompatActivity() {
         if (createUser) {
             // register a user using the Realm App we created in the TaskTracker class
             taskApp.emailPasswordAuth.registerUserAsync(username, password) {
-                // re-enable the buttons after user registration completes
-                createUserButton.isEnabled = true
-                loginButton.isEnabled = true
-                if (!it.isSuccess) {
-                    onLoginFailed("Could not register user.")
-                    Log.e(TAG(), "Error: ${it.error}")
-                } else {
-                    Log.i(TAG(), "Successfully registered user.")
-                    // when the account has been created successfully, log in to the account
-                    login(false)
-                }
+                    // re-enable the buttons after user registration completes
+                    createUserButton.isEnabled = true
+                    loginButton.isEnabled = true
+                    if (!it.isSuccess) {
+                        onLoginFailed("Could not register user.")
+                        Log.e(TAG(), "Error: ${it.error}")
+                    } else {
+                        Log.i(TAG(), "Successfully registered user.")
+                        // when the account has been created successfully, log in to the account
+                        login(false)
+                    }
             }
         } else {
-            val creds = RealmCredentials.emailPassword(username, password)
+            val creds = Credentials.emailPassword(username, password)
             taskApp.loginAsync(creds) {
                 // re-enable the buttons after
                 loginButton.isEnabled = true
@@ -88,6 +88,7 @@ class LoginActivity : AppCompatActivity() {
                     onLoginFailed(it.error.message ?: "An error occurred.")
                 } else {
                     onLoginSuccess()
+
                 }
             }
         }

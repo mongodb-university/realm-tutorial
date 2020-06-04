@@ -4,12 +4,12 @@ import android.app.Application
 import android.util.Log
 
 import io.realm.Realm
-import io.realm.RealmApp
-import io.realm.RealmAppConfiguration
 import io.realm.log.LogLevel
 import io.realm.log.RealmLog
+import io.realm.mongodb.App
+import io.realm.mongodb.AppConfiguration
 
-lateinit var taskApp: RealmApp
+lateinit var taskApp: App
 
 // global Kotlin extension that resolves to the short version
 // of the name of the current class. Used for labelling logs.
@@ -23,7 +23,8 @@ class TaskTracker : Application() {
     override fun onCreate() {
         super.onCreate()
         Realm.init(this)
-        taskApp = RealmApp(RealmAppConfiguration.Builder(BuildConfig.MONGODB_REALM_APP_ID)
+        taskApp = App(
+            AppConfiguration.Builder(BuildConfig.MONGODB_REALM_APP_ID)
             .baseUrl(BuildConfig.MONGODB_REALM_URL)
             .appName(BuildConfig.VERSION_NAME)
             .appVersion(BuildConfig.VERSION_CODE.toString())
