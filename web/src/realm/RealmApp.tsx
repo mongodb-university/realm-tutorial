@@ -24,19 +24,21 @@ const RealmApp: React.FC = ({ children }) => {
   
   // Let new users register an account
   const registerUser = async (email: string, password: string) => {
-    return await app.emailPasswordAuth.registerUser(email, password);
-  }
-  
+    // TODO: Register a new user with the specified email and password
+    
+  };
+
   // Let registered users log in
   const logIn = async (email: string, password: string) => {
-    const credentials = Realm.Credentials.emailPassword(email, password);
-    await app.logIn(credentials);
+    // TODO: Log in with the specified email and password
+    
     setUser(app.currentUser);
   }
   
   // Let logged in users log out
   const logOut = async () => {
-    await app.currentUser?.logOut();
+    // TODO: Log the current user out
+    
     setUser(app.currentUser);
   }
   
