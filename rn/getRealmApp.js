@@ -8,7 +8,6 @@ export function getRealmApp() {
     const appId = '<enter your Realm app ID here>'; // Set Realm app ID here.
     const appConfig = {
       id: appId,
-      url: 'https://realm-dev.mongodb.com',
       timeout: 1000,
       app: {
         name: 'default',

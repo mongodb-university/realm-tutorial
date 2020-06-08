@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import io.realm.RealmCredentials
+import io.realm.mongodb.Credentials
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var username: EditText
@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun onLoginFailed(errorMsg: String) {
-        Log.v(TAG(), errorMsg)
+        Log.e(TAG(), errorMsg)
         Toast.makeText(baseContext, errorMsg, Toast.LENGTH_LONG).show()
     }
 
@@ -71,15 +71,15 @@ class LoginActivity : AppCompatActivity() {
                 loginButton.isEnabled = true
                 if (!it.isSuccess) {
                     onLoginFailed("Could not register user.")
-                    Log.v(TAG(), "Error: ${it.error}")
+                    Log.e(TAG(), "Error: ${it.error}")
                 } else {
-                    Log.v(TAG(), "Successfully registered user.")
+                    Log.i(TAG(), "Successfully registered user.")
                     // when the account has been created successfully, log in to the account
                     login(false)
                 }
             }
         } else {
-            val creds = RealmCredentials.emailPassword(username, password)
+            val creds = Credentials.emailPassword(username, password)
             taskApp.loginAsync(creds) {
                 // re-enable the buttons after
                 loginButton.isEnabled = true

@@ -13,11 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.realm.Realm
-import io.realm.RealmUser
-import io.realm.SyncConfiguration
+import io.realm.mongodb.User
+import io.realm.kotlin.where
+import io.realm.mongodb.sync.SyncConfiguration
 import com.mongodb.tasktracker.model.TaskAdapter
 import com.mongodb.tasktracker.model.Task
-import io.realm.kotlin.where
 
 /*
 * TaskActivity: allows a user to view a collection of Tasks, edit the status of those tasks,
@@ -26,7 +26,7 @@ import io.realm.kotlin.where
 */
 class TaskActivity : AppCompatActivity() {
     private lateinit var realm: Realm
-    private var user: RealmUser? = null
+    private var user: User? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TaskAdapter
     private lateinit var fab: FloatingActionButton
@@ -106,7 +106,7 @@ class TaskActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         recyclerView.adapter = null
-        // if a user hasn't logged out when we close the realm, still need to explicitly close
+        // if a user hasn't logged out when the activity exits, still need to explicitly close the realm
         realm.close()
     }
 
@@ -141,7 +141,7 @@ class TaskActivity : AppCompatActivity() {
         // a recyclerview requires an adapter, which feeds it items to display.
         // Realm provides RealmRecyclerViewAdapter, which you can extend to customize for your application
         // pass the adapter a collection of Tasks from the realm
-        // we sort this collection so that the displayed order of Tasks remains stable across updates
+        // sort this collection so that the displayed order of Tasks remains stable across updates
         adapter = TaskAdapter(realm.where<Task>().sort("_id").findAll())
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter

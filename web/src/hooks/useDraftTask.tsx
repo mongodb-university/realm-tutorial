@@ -1,6 +1,6 @@
 import * as React from "react";
 import BSON from "bson";
-import { TaskStatus, User, GetUserQuery, Task } from "../types";
+import { TaskStatus, User, GetUserQuery } from "../types";
 import { TaskActions } from "../hooks/useTasks";
 import { useGetUserLazyQuery } from "../graphql-operations";
 

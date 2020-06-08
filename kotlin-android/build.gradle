@@ -16,6 +16,11 @@ buildscript {
     }
 }
 
+// Don't cache SNAPSHOT (changing) dependencies.
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 allprojects {
     repositories {
         google()
