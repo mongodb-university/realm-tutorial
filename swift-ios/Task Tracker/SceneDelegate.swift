@@ -11,16 +11,9 @@ import RealmSwift
 
 struct Constants {
     // Set this to your Realm App ID found in the Realm UI.
-    static let REALM_APP_ID = "<your Realm app ID>"
-    
-    // The base URL points to the server hosting MongoDB Realm.
-    static let REALM_BASE_URL = "https://realm-dev.mongodb.com"
+    static let REALM_APP_ID = "<your-realm-app-id>"
 }
-
-let app = RealmApp(id: Constants.REALM_APP_ID, configuration: AppConfiguration(baseURL: Constants.REALM_BASE_URL,
-    transport: nil,
-    localAppName: nil,
-    localAppVersion: nil))
+let app = RealmApp(id: Constants.REALM_APP_ID)
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

@@ -28,7 +28,7 @@ class Project: Object {
 
 class User: Object {
     @objc dynamic var _id: ObjectId = ObjectId.generate()
-    @objc dynamic var _partition: String? = nil
+    @objc dynamic var _partition: String = ""
     @objc dynamic var image: String? = nil
     @objc dynamic var name: String = ""
     @objc dynamic var user_id: String = ""
