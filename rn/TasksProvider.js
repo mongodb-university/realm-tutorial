@@ -37,7 +37,7 @@ const TasksProvider = ({children, projectId}) => {
       schema: [Task.schema],
       sync: {
         user,
-        partitionValue: `"${projectId}"`,
+        partitionValue: projectId,
       },
     };
 
@@ -53,7 +53,7 @@ const TasksProvider = ({children, projectId}) => {
 
     // Now open the realm asynchronously with the given configuration.
     Realm.open(config)
-      .then(openedRealm => {
+      .then((openedRealm) => {
         // If this request has been canceled, we should close the realm.
         if (canceled) {
           openedRealm.close();
@@ -77,7 +77,7 @@ const TasksProvider = ({children, projectId}) => {
         // Set the tasks state variable and re-render.
         setTasks([...syncTasks]);
       })
-      .catch(error => console.warn('Failed to open realm:', error));
+      .catch((error) => console.warn('Failed to open realm:', error));
 
     // Return the cleanup function to be called when the component is unmounted
     // or the next time the effect runs.
