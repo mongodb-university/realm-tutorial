@@ -1,8 +1,8 @@
 import * as React from "react";
-import * as RealmWeb from "realm-web";
+import * as Realm from "realm-web";
 
 const REALM_APP_ID = "<Your App ID>";
-const app = new RealmWeb.App({ id: REALM_APP_ID });
+const app = new Realm.App({ id: REALM_APP_ID });
 
 const RealmAppContext = React.createContext<IRealmApp | void>(undefined);
 
@@ -31,7 +31,7 @@ const RealmApp: React.FC = ({ children }) => {
   // Let registered users log in
   const logIn = async (email: string, password: string) => {
     // TODO: Log in with the specified email and password
-    const credentials = RealmWeb.Credentials.emailPassword(email, password);
+    const credentials = Realm.Credentials.emailPassword(email, password);
     await app.logIn(credentials);
     setUser(app.currentUser);
   };
