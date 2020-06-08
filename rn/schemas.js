@@ -25,7 +25,7 @@ class Task {
   static schema = {
     name: 'Task',
     properties: {
-      _id: 'object id',
+      _id: 'objectId',
       _partition: 'string',
       name: 'string',
       status: 'string',
