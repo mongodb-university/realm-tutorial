@@ -12,13 +12,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "io.realm:realm-gradle-plugin:10.0.0-SNAPSHOT"
+        classpath "io.realm:realm-gradle-plugin:10.0.0-BETA.2"
     }
-}
-
-// Don't cache SNAPSHOT (changing) dependencies.
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 allprojects {
