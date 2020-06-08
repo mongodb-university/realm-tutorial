@@ -25,9 +25,6 @@ class TaskTracker : Application() {
         Realm.init(this)
         taskApp = App(
             AppConfiguration.Builder(BuildConfig.MONGODB_REALM_APP_ID)
-            .baseUrl(BuildConfig.MONGODB_REALM_URL)
-            .appName(BuildConfig.VERSION_NAME)
-            .appVersion(BuildConfig.VERSION_CODE.toString())
             .build())
 
         // Enable more logging in debug mode

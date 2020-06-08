@@ -19,18 +19,20 @@ android {
     }
 
     buildTypes {
-        def mongodbRealmUrl = "https://realm-dev.mongodb.com"
         def appId = "<your app ID here>"  // Replace with proper Application ID
         debug {
-            buildConfigField "String", "MONGODB_REALM_URL", "\"${mongodbRealmUrl}\""
             buildConfigField "String", "MONGODB_REALM_APP_ID", "\"${appId}\""
         }
         release {
-            buildConfigField "String", "MONGODB_REALM_URL", "\"${mongodbRealmUrl}\""
             buildConfigField "String", "MONGODB_REALM_APP_ID", "\"${appId}\""
             minifyEnabled true
             signingConfig signingConfigs.debug
         }
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
 }
 
