@@ -11,9 +11,9 @@ import {
   DragDropContextProps,
 } from "react-beautiful-dnd";
 
-import { Task, TaskStatus } from "../types";
+import { Task } from "../types";
 import TaskCard, { DraftTaskCard } from "./TaskCard";
-import { TaskActions } from "../hooks/useTasks";
+import { TaskStatus, TaskActions } from "../hooks/useTasks";
 import useDraftTask from "../hooks/useDraftTask";
 import useTaskLists from "../hooks/useTaskLists";
 import { useRealmApp } from "../realm/RealmApp";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import BSON from "bson";
-import { TaskStatus, User, GetUserQuery } from "../types";
-import { TaskActions } from "../hooks/useTasks";
+import { User, GetUserQuery } from "../types";
+import { TaskStatus, TaskActions } from "./useTasks";
 import { useGetUserLazyQuery } from "../graphql-operations";
 
 export type DraftTask = {

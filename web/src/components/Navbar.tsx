@@ -6,7 +6,8 @@ import { uiColors } from "@leafygreen-ui/palette";
 
 const Navbar: React.FC = () => {
   const { user, logOut } = useRealmApp();
-  const { email } = ((user?.profile as unknown) as { data: { email: string } }).data;
+  const profile: Realm.UserProfile | undefined = user?.profile
+  const email = profile?.email;
   return (
     <Container>
       <LoggedInUser>{email}</LoggedInUser>

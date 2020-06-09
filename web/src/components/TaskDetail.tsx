@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "@emotion/styled";
-import { Maybe, Task, TaskStatus } from "../types";
+import { Maybe, Task } from "../types";
+import { TaskStatus } from "../hooks/useTasks";
 import { useRealmApp } from "../realm/RealmApp";
 
 import { TaskActions } from "../hooks/useTasks";

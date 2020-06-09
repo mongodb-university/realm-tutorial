@@ -170,6 +170,7 @@ export const GetUserDocument = gql`
     query GetUser($userId: String!) {
   user(query: {user_id: $userId}) {
     _id
+    _partition
     name
     image
     user_id
