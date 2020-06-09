@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "@emotion/styled";
-import { Task, TaskStatus, User } from "../types";
+import { Task, User } from "../types";
+import { TaskStatus } from "../hooks/useTasks";
 import { DraftTask, DraftTaskActions } from "../hooks/useDraftTask";
 import Button from "@leafygreen-ui/button";
 import TextInput from "@leafygreen-ui/text-input";
@@ -11,7 +12,8 @@ interface TaskViewProps {
 }
 
 export function TaskView({ task }: TaskViewProps) {
-  const { status, assignee, name } = task;
+  const { assignee, name } = task;
+  const status = task.status as TaskStatus;
   const statusColor = statusColors.get(status);
   const statusMessage = statusMessages.get(status);
   return (

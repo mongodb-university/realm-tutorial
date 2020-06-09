@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Task, TaskStatus, Scalars } from "../types";
+import { Task, Scalars } from "../types";
+import { TaskStatus } from "./useTasks";
 import { taskStatus } from "../components/TaskLists";
 
 import * as R from "ramda";
@@ -118,7 +119,7 @@ export default function useTaskLists(tasks: Task[]): UseTaskListsPayload {
           newTasks.reduce(
             (grouped, task) => ({
               ...grouped,
-              [task.status]: [...grouped[task.status], task],
+              [task.status]: [...grouped[task.status as TaskStatus], task],
             }),
             {
               [TaskStatus.Open]: [],
@@ -131,7 +132,7 @@ export default function useTaskLists(tasks: Task[]): UseTaskListsPayload {
         });
         // Delete removed tasks
         removedTasks.forEach((removedTask) => {
-          removeTaskFromList(removedTask._id, removedTask.status);
+          removeTaskFromList(removedTask._id, removedTask.status as TaskStatus);
         });
         // Update modified tasks
         modifiedTasks.forEach((modifiedTask) => {
@@ -143,7 +144,7 @@ export default function useTaskLists(tasks: Task[]): UseTaskListsPayload {
             (id) => id === modifiedTask._id
           );
           const newStatus = modifiedTask.status;
-          moveTask(modifiedTask, oldStatus, oldIndex, newStatus);
+          moveTask(modifiedTask, oldStatus as TaskStatus, oldIndex, newStatus as TaskStatus);
         });
         updateListsWithNewTasks(tasks);
       }

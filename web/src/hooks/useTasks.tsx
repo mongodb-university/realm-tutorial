@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Task, TaskStatus, User } from "../types";
+import { Task, User } from "../types";
 
 import { GetAllTasksQuery } from "./../types";
 import {
@@ -8,6 +8,12 @@ import {
   useUpdateTaskMutation,
   useDeleteTaskMutation,
 } from "./../graphql-operations";
+
+export enum TaskStatus {
+  Complete = 'COMPLETE',
+  Open = 'OPEN',
+  Inprogress = 'INPROGRESS'
+}
 
 interface UpdatedTask {
   status?: TaskStatus;
