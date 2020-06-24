@@ -50,29 +50,23 @@ export function LogInView() {
 const ToggleAuthModeComponent = ({authMode, setAuthMode}) => {
   if (authMode === 'Login') {
     return (
-      <>
-        <Text>Haven't created an account yet?</Text>
-        <Button
-          title="Register"
-          type="outline"
-          onPress={async () => {
-            setAuthMode('Register');
-          }}
-        />
-      </>
+      <Button
+        title="Haven't created an account yet? Register"
+        type="outline"
+        onPress={async () => {
+          setAuthMode('Register');
+        }}
+      />
     );
   } else {
     return (
-      <>
-        <Text>Have an Account already?</Text>
-        <Button
-          title="Login"
-          type="outline"
-          onPress={async () => {
-            setAuthMode('Login');
-          }}
-        />
-      </>
+      <Button
+        title="Have an Account already? Login"
+        type="outline"
+        onPress={async () => {
+          setAuthMode('Login');
+        }}
+      />
     );
   }
 };
