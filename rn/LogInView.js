@@ -41,7 +41,7 @@ export function LogInView() {
             setError(`Login failed: ${e.message}`);
           }
         }}
-        title="Log In"
+        title={authMode}
       />
       <Text>{error}</Text>
       <ToggleAuthModeComponent setAuthMode={setAuthMode} authMode={authMode} />
