@@ -61,7 +61,7 @@ const ToggleAuthModeComponent = ({authMode, setAuthMode}) => {
   } else {
     return (
       <Button
-        title="Have an Account already? Login"
+        title="Have an account already? Login"
         type="outline"
         onPress={async () => {
           setAuthMode('Login');
