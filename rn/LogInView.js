@@ -26,9 +26,7 @@ export function LogInView() {
       />
       <Button
         onPress={async () => {
-          console.log(
-            `${authMode} button pressed with email ${email} and password ${password}`,
-          );
+          console.log(`${authMode} button pressed with email ${email}`);
           setError(null);
           try {
             if (authMode === 'Login') {
