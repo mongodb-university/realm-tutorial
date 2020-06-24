@@ -36,7 +36,7 @@ export function LogInView() {
               setAuthMode('Login');
             }
           } catch (e) {
-            setError(`Login failed: ${e.message}`);
+            setError(`Operation failed: ${e.message}`);
           }
         }}
         title={authMode}
