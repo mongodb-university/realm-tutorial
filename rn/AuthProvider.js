@@ -24,6 +24,12 @@ const AuthProvider = ({children}) => {
     console.log(`Logged in as ${newUser.identity}`);
   };
 
+  const registerUser = async (email, password) => {
+    // await app.auth.emailPassword.registerEmail(email, password);
+    console.log(`Registering as ${email}...`);
+    await app.auth.emailPassword.registerEmail(email, password);
+  };
+
   // Log out the current user.
   const logOut = () => {
     if (user == null) {
@@ -40,6 +46,7 @@ const AuthProvider = ({children}) => {
       value={{
         logIn,
         logOut,
+        registerUser,
         user,
       }}>
       {children}
