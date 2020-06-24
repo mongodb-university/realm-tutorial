@@ -8,10 +8,12 @@ export function LogInView() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState();
-  const {logIn} = useAuth();
+  const {logIn, registerUser} = useAuth();
+  const [authMode, setAuthMode] = useState('Login');
+
   return (
     <>
-      <Text h3>Log In</Text>
+      <Text h3>{authMode}</Text>
       <Input
         autoCapitalize="none"
         placeholder="email"
@@ -24,19 +26,47 @@ export function LogInView() {
       />
       <Button
         onPress={async () => {
-          console.log(
-            `Login button pressed with email ${email} and password ${password}`,
-          );
+          console.log(`${authMode} button pressed with email ${email}`);
           setError(null);
           try {
-            await logIn(email, password);
+            if (authMode === 'Login') {
+              await logIn(email, password);
+            } else {
+              await registerUser(email, password);
+              setAuthMode('Login');
+            }
           } catch (e) {
-            setError(`Login failed: ${e.message}`);
+            setError(`Operation failed: ${e.message}`);
           }
         }}
-        title="Log In"
+        title={authMode}
       />
       <Text>{error}</Text>
+      <ToggleAuthModeComponent setAuthMode={setAuthMode} authMode={authMode} />
     </>
   );
 }
+
+const ToggleAuthModeComponent = ({authMode, setAuthMode}) => {
+  if (authMode === 'Login') {
+    return (
+      <Button
+        title="Haven't created an account yet? Register"
+        type="outline"
+        onPress={async () => {
+          setAuthMode('Register');
+        }}
+      />
+    );
+  } else {
+    return (
+      <Button
+        title="Have an account already? Login"
+        type="outline"
+        onPress={async () => {
+          setAuthMode('Login');
+        }}
+      />
+    );
+  }
+};
