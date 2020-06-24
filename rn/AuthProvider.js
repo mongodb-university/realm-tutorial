@@ -25,7 +25,6 @@ const AuthProvider = ({children}) => {
   };
 
   const registerUser = async (email, password) => {
-    // await app.auth.emailPassword.registerEmail(email, password);
     console.log(`Registering as ${email}...`);
     await app.auth.emailPassword.registerEmail(email, password);
   };
