@@ -25,8 +25,8 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
         // available projects.
         realm = try! Realm(configuration: user.configuration(partitionValue: user.identity!))
         
-        // Access all objects in the realm
-        projects = realm.objects(Project.self)
+        // Access all objects in the realm, sorted by _id so that the ordering is defined.
+        projects = realm.objects(Project.self).sorted(byKeyPath: "_id")
 
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
