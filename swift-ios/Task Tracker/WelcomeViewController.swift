@@ -112,7 +112,7 @@ class WelcomeViewController: UIViewController {
 
     @objc func signUp() {
         setLoading(true);
-        app.usernamePasswordProviderClient().registerEmail(username!, password: password!, completion: {[weak self](error) in
+        app.emailPasswordAuth().registerEmail(username!, password: password!, completion: {[weak self](error) in
             // Completion handlers are not necessarily called on the UI thread.
             // This call to DispatchQueue.main.sync ensures that any changes to the UI,
             // namely disabling the loading indicator and navigating to the next page,
@@ -137,7 +137,7 @@ class WelcomeViewController: UIViewController {
         print("Log in as user: \(username!)");
         setLoading(true);
         
-        app.login(withCredential: AppCredentials(username: username!, password: password!)) { [weak self](maybeUser, error) in
+        app.login(withCredential: Credentials(username: username!, password: password!)) { [weak self](maybeUser, error) in
             // Completion handlers are not necessarily called on the UI thread.
             // This call to DispatchQueue.main.sync ensures that any changes to the UI,
             // namely disabling the loading indicator and navigating to the next page,
