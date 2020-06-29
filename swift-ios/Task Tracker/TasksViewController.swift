@@ -31,9 +31,9 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         // Partition value must be of string type.
         partitionValue = syncConfiguration.partitionValue.stringValue!
 
-        // Access all tasks in the realm.
+        // Access all tasks in the realm, sorted by _id so that the ordering is defined.
         // Only tasks with the project ID as the partition key value will be in the realm.
-        tasks = realm.objects(Task.self)
+        tasks = realm.objects(Task.self).sorted(byKeyPath: "_id")
 
         super.init(nibName: nil, bundle: nil)
 
