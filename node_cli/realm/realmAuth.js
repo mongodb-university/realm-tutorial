@@ -8,7 +8,6 @@ const appConfig = {
  };
 
 const app = new Realm.App(appConfig);
-console.log('app', app.auth);
 
 let user;
 
@@ -34,7 +33,7 @@ async function login(email, password) {
     }
   }
 
-  async function logout() {
+async function logout() {
   user = app.currentUser;
   if (user.identity !== undefined) user.logOut();
   return !user.isLoggedIn;

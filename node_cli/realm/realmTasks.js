@@ -1,19 +1,19 @@
 var Realm = require('realm');
+var mongodb = require('mongodb');
 var realmAuth = require('./realmAuth');
 var schemas = require('./schemas');
-var mongodb = require('mongodb');
+var index = require('../index');
+
 //import * as auth from "./realmAuth"
 //import * as schemas from '../schemas'
 
 async function setRealm(user) {
-   console.log('setRealm', user);
    const config = {
       schema: [schemas.taskSchema],//, schemas.Project],
       sync: {
          user: user,
          partitionValue: 'myPartition',
-      },
-      };
+      }};
    
       return await Realm.open(config).then(r=>{
          return r;
@@ -21,12 +21,12 @@ async function setRealm(user) {
 }
 
 async function getTasks(user) {
-   console.log('get tasks')
    return setRealm(user).then(async r => {
       let allTasks =  await r.objects("Task");
-      console.log(JSON.stringify(allTasks, null, 3))
       return allTasks;
-      });
+   }).catch(err => {
+      return index.output(err, "error")
+   });
 }
 
 async function getTask(user, taskId){
@@ -34,14 +34,14 @@ async function getTask(user, taskId){
       let task = await r.objectForPrimaryKey("Task", mongodb.ObjectID(taskId));
       return task;
    }).catch(err=>{
-      console.log(err);
+      return index.output(err, "error")
    });
 }
 
 async function createTask(user, taskName, taskStatus) {
    return setRealm(user).then(r => {
-      try{
-         return r.write(function() {
+      try {
+         r.beginTransaction();
             let t = r.create('Task', 
             { 
                _id: new mongodb.ObjectID(),
@@ -50,12 +50,11 @@ async function createTask(user, taskName, taskStatus) {
                status: taskStatus, 
                assignee: new mongodb.ObjectID(user.identity) 
             });
-            console.log('t', t.name, t.status);
-            return t;
-         });
+         r.commitTransaction();
+         return t;
       } catch (err) {
-         console.log('err', err);
-         return null;
+         r.cancelTransaction();
+         return index.output(err, "error")
       }
  });
 }
@@ -65,14 +64,13 @@ async function changeTask(user, taskId, field, newValue){
    try{
       r.beginTransaction() 
          let task = await r.objectForPrimaryKey("Task", mongodb.ObjectID(taskId));
-         console.log('you made it this far', JSON.stringify(task, null, 3))
          task[field] = newValue;
-         console.log('new task:', JSON.stringify(task, null, 3));
+         //console.log('new task:', JSON.stringify(task, null, 3));
       r.commitTransaction();
-      return true;
+      return JSON.stringify(task, null, 3);
    } catch (err) {
-      console.log('err', err);
-      return false;
+      r.cancelTransaction();
+      return index.output(err, "error")
    }
   });
 }
@@ -86,8 +84,8 @@ async function deleteTask(user, taskId){
          r.commitTransaction();
          return true;
       } catch(err) {
-         console.log(err);
-         return false;
+         r.cancelTransaction();
+         return index.output(err, "error")
       };
    });
 }
