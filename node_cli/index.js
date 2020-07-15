@@ -22,7 +22,6 @@ console.log(
    )
 );
 
-
 function run() {
    output('*** WELCOME ***', 'header');
    output('Please log in to your Realm account:', 'header');

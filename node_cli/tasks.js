@@ -58,6 +58,75 @@ exports.getTask = async(user)=>{
    });
 }
 
+exports.deleteTask = async(user)=>{
+   index.output('DELETE A TASK', 'header');
+   return await inquirer.prompt([
+   {
+      type: 'input',
+      name: 'id',
+      message: 'What is the task ID (_id)?',
+   },{
+      type: 'confirm',
+      name: 'confirm',
+      message: 'Are you sure you want to delete this task?'
+   }]).then(async answers=>{
+      if (answers.confirm){
+         await realmTasks.deleteTask(user, answers.id).then(r=>{
+            if (r) index.output('Task deleted.', 'result');
+            return;
+         })
+      }
+      return;
+   })
+}
+
+exports.editTask = async(user)=>{
+   index.output('CHANGE A TASK', 'header');
+   return await inquirer.prompt([
+   {
+      type: 'input',
+      name: 'id',
+      message: 'What is the task ID (_id)?',
+   },{
+      type: 'input',
+      name: 'key',
+      message: 'What is the field you want to change?',
+   },{
+      type: 'input',
+      name: 'value',
+      message: 'What is the new value?',
+   },
+   ]).then(async answers=>{
+         await realmTasks.changeTask(user, answers).then(r=>{
+            index.output('Task updated.', 'result');
+            index.output(r, 'result');
+            return;
+         })
+      })
+}
+
+exports.changeStatus = async(user)=>{
+   index.output('Update Task Status', 'header');
+   return await inquirer.prompt([
+   {
+      type: 'input',
+      name: 'id',
+      message: 'What is the task ID (_id)?',
+   },{
+      type: 'rawlist',
+      name: 'value',
+      message: 'What is the new status?',
+      choices: ['Open', 'In Progress', 'Closed'],
+   }]).then(async answers=>{
+      answers.key = 'status'
+         await realmTasks.changeTask(user, answers).then(r=>{
+            index.output('Task updated.', 'result');
+            index.output(r, 'result');
+            return;
+         })
+      })
+}
+
 
 
     

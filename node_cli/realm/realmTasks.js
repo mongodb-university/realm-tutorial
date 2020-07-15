@@ -59,12 +59,12 @@ async function createTask(user, taskName, taskStatus) {
  });
 }
 
-async function changeTask(user, taskId, field, newValue){
+async function changeTask(user, answers){
   return setRealm(user).then(async r => {
    try{
       r.beginTransaction() 
-         let task = await r.objectForPrimaryKey("Task", mongodb.ObjectID(taskId));
-         task[field] = newValue;
+         let task = await r.objectForPrimaryKey("Task", mongodb.ObjectID(answers.id));
+         task[answers.key] = answers.value;
          //console.log('new task:', JSON.stringify(task, null, 3));
       r.commitTransaction();
       return JSON.stringify(task, null, 3);
@@ -85,7 +85,8 @@ async function deleteTask(user, taskId){
          return true;
       } catch(err) {
          r.cancelTransaction();
-         return index.output(err, "error")
+         index.output(err, "error")
+         return false;
       };
    });
 }
