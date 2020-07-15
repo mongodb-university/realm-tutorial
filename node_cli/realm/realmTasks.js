@@ -1,12 +1,11 @@
 var Realm = require("realm");
 var mongodb = require("mongodb");
-var realmAuth = require("./realmAuth");
-var schemas = require("./schemas");
-var index = require("../index");
+const schemas = require("./schemas");
+const index = require("../index");
 
 async function setRealm(user) {
   const config = {
-    schema: [schemas.taskSchema], //, schemas.Project],
+    schema: [schemas.TaskSchema, schemas.UserSchema, schemas.ProjectSchema],
     sync: {
       user: user,
       partitionValue: "myPartition",
@@ -41,15 +40,14 @@ async function getTask(user, taskId) {
 }
 
 async function createTask(user, taskName, taskStatus) {
-  return setRealm(user).then((r) => {
+  return setRealm(user).then(async (r) => {
     try {
       r.beginTransaction();
-      let t = r.create("Task", {
+      let t = await r.create("Task", {
         _id: new mongodb.ObjectID(),
         _partition: "myPartition",
         name: taskName,
         status: taskStatus,
-        assignee: new mongodb.ObjectID(user.identity),
       });
       r.commitTransaction();
       return t;

@@ -1,4 +1,4 @@
-var Realm = require("realm");
+const Realm = require("realm");
 
 const REALM_APP_ID = "realmtutorials-dcyrc";
 const appConfig = {

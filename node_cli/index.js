@@ -2,7 +2,6 @@ const inquirer = require("inquirer");
 const chalk = require("chalk");
 const clear = require("clear");
 const figlet = require("figlet");
-
 const realmAuth = require("./realm/realmAuth");
 const main = require("./main");
 
@@ -48,11 +47,11 @@ function run() {
           return;
         }
         output("You have successfully logged in.", "result");
-        return main.mainMenu(authedUser).then(console.log("here?"));
+        return main.mainMenu(authedUser);
       });
     })
     .catch((err) => {
-      console.log(err);
+      output(err, "error");
     });
 }
 

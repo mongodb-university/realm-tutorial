@@ -1,10 +1,6 @@
 const inquirer = require("inquirer");
-const chalk = require("chalk");
-const clear = require("clear");
-const figlet = require("figlet");
-
-var realmTasks = require("./realm/realmTasks");
-var index = require("./index");
+const realmTasks = require("./realm/realmTasks");
+const index = require("./index");
 
 exports.getTasks = async (user) => {
   return await realmTasks.getTasks(user).then((tasks) => {

@@ -1,13 +1,37 @@
-let taskSchema = {
+const TaskSchema = {
   name: "Task",
-  primaryKey: "_id",
   properties: {
     _id: "objectId",
     _partition: "string",
-    assignee: "objectId",
+    assignee: "User?",
     name: "string",
     status: "string",
   },
+  primaryKey: "_id",
 };
 
-module.exports.taskSchema = taskSchema;
+const UserSchema = {
+  name: "User",
+  properties: {
+    _id: "objectId",
+    _partition: "string",
+    image: "string?",
+    name: "string",
+    user_id: "string",
+  },
+  primaryKey: "_id",
+};
+
+const ProjectSchema = {
+  name: "Project",
+  properties: {
+    _id: "objectId",
+    _partition: "string",
+    name: "string",
+  },
+  primaryKey: "_id",
+};
+
+exports.ProjectSchema = ProjectSchema;
+exports.TaskSchema = TaskSchema;
+exports.UserSchema = UserSchema;
