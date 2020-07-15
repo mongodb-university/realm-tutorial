@@ -1,12 +1,12 @@
  let taskSchema = {
    name: "Task",
-   primaryKey: '_id',
+   primaryKey: "_id",
    properties: {
-      _id: 'objectId',
-      _partition: 'string',
-      assignee: 'objectId',
-      name: 'string',
-      status: 'string'
+      _id: "objectId",
+      _partition: "string",
+      assignee: "objectId",
+      name: "string",
+      status: "string"
    }
 };
 
