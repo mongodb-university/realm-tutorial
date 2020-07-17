@@ -92,3 +92,4 @@ module.exports.changeTask = changeTask;
 module.exports.getTasks = getTasks;
 module.exports.createTask = createTask;
 module.exports.deleteTask = deleteTask;
+module.exports.openRealm = openRealm;

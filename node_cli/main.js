@@ -1,7 +1,10 @@
 const inquirer = require("inquirer");
+const ora = require("ora");
+
 const tasks = require("./tasks");
 const { logout } = require("./realm/realmAuth");
 const index = require("./index");
+const watch = require("./watch");
 
 async function mainMenu(authedUser) {
   try {
@@ -18,6 +21,7 @@ async function mainMenu(authedUser) {
         "Delete a task",
         "Watch for changes",
         "Log out / Quit",
+        new inquirer.Separator(),
       ],
     });
 
@@ -47,7 +51,16 @@ async function mainMenu(authedUser) {
         return mainMenu(authedUser);
       }
       case "Watch for changes": {
-        //TODO
+        await watch.watchForChanges(authedUser);
+        index.output(
+          "We are now watching for changes to the task collection.",
+          "result"
+        );
+        await ora("Watching (use Ctrl-C to quit)").start();
+        // Uncomment the next line to continue
+        // working rather than waiting while watching
+        // return mainMenu(authedUser);
+        break;
       }
       case "Log out / Quit": {
         const loggedOut = await logout();

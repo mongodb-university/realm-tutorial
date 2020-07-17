@@ -16,6 +16,7 @@
     "figlet": "^1.5.0",
     "inquirer": "^7.3.2",
     "mongodb": "^3.5.9",
+    "ora": "^4.0.5",
     "realm": "^10.0.0-beta.9"
   },
   "devDependencies": {
