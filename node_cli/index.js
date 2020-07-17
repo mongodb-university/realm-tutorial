@@ -1,59 +1,57 @@
+const Realm = require("realm");
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 const clear = require("clear");
 const figlet = require("figlet");
-const realmAuth = require("./realm/realmAuth");
+const users = require("./users");
 const main = require("./main");
 
+/* Change the logLevel to increase or decrease console "noise"
+Options are:
+fatal, error, warn, info, detail, debug, and trace
+*/
+Realm.Sync.setLogLevel("error");
+
 const output = (text, type) => {
-  if (type == "result") console.log(chalk.cyanBright(text));
+  if (type == "result") console.log(chalk.yellowBright(text + "\n"));
   if (type == "header") console.log(chalk.cyanBright.bold("\n" + text + "\n"));
   if (type == "error") console.log(chalk.red.bold("\n ❗" + text + " ❗\n"));
 };
 
-let authedUser;
-
 clear();
 console.log(
   chalk.green.bold(
-    figlet.textSync("realm-cli", {
+    figlet.textSync("Realm Tasks", {
       font: "colossal",
     })
   )
 );
 
-function run() {
+async function run() {
   output("*** WELCOME ***", "header");
-  output("Please log in to your Realm account:", "header");
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "email",
-        message: "Email:",
-      },
-      {
-        type: "password",
-        name: "password",
-        message: "Password:",
-        mask: "*",
-      },
-    ])
-    .then((input) => {
-      realmAuth.login(input.email, input.password).then((result) => {
-        authedUser = result;
-        if (!authedUser.isLoggedIn) {
-          output("Something went wrong logging you in.", "error");
-          return;
-        }
-        output("You have successfully logged in.", "result");
-        return main.mainMenu(authedUser);
-      });
-    })
-    .catch((err) => {
-      output(err, "error");
-    });
+  output(
+    "Please log in to your Realm account or register as a new user.",
+    "header"
+  );
+
+  let choice = await inquirer.prompt([
+    {
+      type: "rawlist",
+      name: "start",
+      message: "What do you want to do?",
+      choices: ["Log in", "Register as a new user"],
+    },
+  ]);
+
+  if (choice.start == "Log in") {
+    users.login();
+  } else {
+    users.register();
+  }
 }
 
-run();
+run().catch((err) => {
+  output(err, "error");
+});
+
 exports.output = output;

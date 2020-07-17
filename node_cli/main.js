@@ -4,8 +4,8 @@ const { logout } = require("./realm/realmAuth");
 const index = require("./index");
 
 async function mainMenu(authedUser) {
-  inquirer
-    .prompt({
+  try {
+    const answers = await inquirer.prompt({
       type: "rawlist",
       name: "mainMenu",
       message: "What would you like to do?",
@@ -19,62 +19,54 @@ async function mainMenu(authedUser) {
         "Watch for changes",
         "Log out / Quit",
       ],
-    })
-    .then(async (answers) => {
-      switch (answers.mainMenu) {
-        case "Create a task":
-          await tasks.createTask(authedUser).then(() => {
-            mainMenu(authedUser);
-          });
-          break;
-        case "Show all of my tasks":
-          await tasks.getTasks(authedUser).then(() => {
-            mainMenu(authedUser);
-          });
-          break;
-        case "Get a specific task":
-          await tasks.getTask(authedUser).then(() => {
-            mainMenu(authedUser);
-          });
-          break;
-        case "Change a task status":
-          await tasks.changeStatus(authedUser).then(() => {
-            mainMenu(authedUser);
-          });
-          break;
-        case "Edit a task":
-          await tasks.editTask(authedUser).then(() => {
-            mainMenu(authedUser);
-          });
-          break;
-        case "Delete a task":
-          await tasks.deleteTask(authedUser).then(() => {
-            mainMenu(authedUser);
-          });
-          break;
-        case "Watch for changes":
-          //TODO
-          break;
-        case "Log out / Quit":
-          await logout().then((l) => {
-            if (!l) index.output("error logging out", "error");
-            else
-              index.output(
-                "You have been logged out. Ctrl-C to quit",
-                "result"
-              );
-            return;
-          });
-          break;
-        default:
-          mainMenu(authedUser);
-          break;
-      }
-    })
-    .catch((err) => {
-      index.output(err, "error");
-      return;
     });
+
+    switch (answers.mainMenu) {
+      case "Create a task": {
+        await tasks.createTask(authedUser);
+        return mainMenu(authedUser);
+      }
+      case "Show all of my tasks": {
+        await tasks.getTasks(authedUser);
+        return mainMenu(authedUser);
+      }
+      case "Get a specific task": {
+        await tasks.getTask(authedUser);
+        return mainMenu(authedUser);
+      }
+      case "Change a task status": {
+        await tasks.changeStatus(authedUser);
+        return mainMenu(authedUser);
+      }
+      case "Edit a task": {
+        await tasks.editTask(authedUser);
+        return mainMenu(authedUser);
+      }
+      case "Delete a task": {
+        await tasks.deleteTask(authedUser);
+        return mainMenu(authedUser);
+      }
+      case "Watch for changes": {
+        //TODO
+      }
+      case "Log out / Quit": {
+        const loggedOut = await logout();
+        if (!loggedOut) index.output("Error logging out", "error");
+        else
+          index.output(
+            "You have been logged out. Use Ctrl-C to quit.",
+            "result"
+          );
+        return;
+      }
+      default: {
+        return mainMenu(authedUser);
+      }
+    }
+  } catch (err) {
+    index.output(err, "error");
+    return;
+  }
 }
 
 exports.mainMenu = mainMenu;
