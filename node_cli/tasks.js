@@ -1,14 +1,56 @@
 const inquirer = require("inquirer");
-const realmTasks = require("./realm/realmTasks");
+const Realm = require("realm");
+const mongodb = require("mongodb");
+const schemas = require("./schemas");
 const index = require("./index");
+const users = require("./users");
 
-exports.getTasks = async (user) => {
-  const tasks = await realmTasks.getTasks(user);
+async function openRealm() {
+  const config = {
+    schema: [schemas.TaskSchema, schemas.UserSchema, schemas.ProjectSchema],
+    sync: {
+      user: users.getAuthedUser(),
+      partitionValue: "myPartition",
+    },
+  };
+  return await Realm.open(config);
+}
+
+exports.getTasks = async () => {
+  const realm = await openRealm();
+  const tasks = await realm.objects("Task");
   index.output("MY TASKS:", "header");
   index.output(JSON.stringify(tasks, null, 3), "result");
+  realm.close();
 };
 
-exports.createTask = async (user) => {
+exports.getTask = async () => {
+  const realm = await openRealm();
+  try {
+    const task = await inquirer.prompt([
+      {
+        type: "input",
+        name: "id",
+        message: "What is the task ID (_id)?",
+      },
+    ]);
+    let result = await realm.objectForPrimaryKey(
+      "Task",
+      mongodb.ObjectID(task.id)
+    );
+    if (result !== undefined) {
+      index.output("Here is the task you requested:", "header");
+      index.output(JSON.stringify(result, " ", 3), "result");
+    }
+  } catch (err) {
+    index.output(err, "error");
+  } finally {
+    realm.close();
+  }
+};
+
+exports.createTask = async () => {
+  const realm = await openRealm();
   try {
     index.output("*** CREATE NEW TASK ***", "header");
     const task = await inquirer.prompt([
@@ -27,37 +69,28 @@ exports.createTask = async (user) => {
         },
       },
     ]);
-
-    const result = await realmTasks.createTask(user, task.name, task.status);
+    let result;
+    realm.write(async () => {
+      result = await realm.create("Task", {
+        _id: new mongodb.ObjectID(),
+        _partition: "myPartition",
+        name: task.name,
+        status: task.status,
+      });
+    });
+    realm.close();
 
     index.output("New task created", "header");
     index.output(JSON.stringify(result, " ", 3), "result");
   } catch (err) {
     index.output(err, "error");
+  } finally {
+    realm.close();
   }
 };
 
-exports.getTask = async (user) => {
-  try {
-    const task = await inquirer.prompt([
-      {
-        type: "input",
-        name: "id",
-        message: "What is the task ID (_id)?",
-      },
-    ]);
-
-    const result = await realmTasks.getTask(user, task.id);
-    if (result !== undefined) {
-      index.output("Here is the task you requested:", "header");
-      index.output(JSON.stringify(result, " ", 3), "result");
-    }
-  } catch (err) {
-    index.output(err, "error");
-  }
-};
-
-exports.deleteTask = async (user) => {
+exports.deleteTask = async () => {
+  const realm = await openRealm();
   index.output("DELETE A TASK", "header");
   const answers = await inquirer.prompt([
     {
@@ -73,13 +106,21 @@ exports.deleteTask = async (user) => {
   ]);
 
   if (answers.confirm) {
-    let deleteResult = await realmTasks.deleteTask(user, answers.id);
-    if (deleteResult) index.output("Task deleted.", "result");
+    let task = await realm.objectForPrimaryKey(
+      "Task",
+      mongodb.ObjectID(answers.id)
+    );
+    realm.write(() => {
+      realm.delete(task);
+      index.output("Task deleted.", "result");
+    });
     return;
   }
+
+  realm.close();
 };
 
-exports.editTask = async (user) => {
+exports.editTask = async () => {
   index.output("CHANGE A TASK", "header");
   let answers = await inquirer.prompt([
     {
@@ -99,13 +140,13 @@ exports.editTask = async (user) => {
     },
   ]);
 
-  let changeResult = await realmTasks.changeTask(user, answers);
+  let changeResult = await modifyTask(answers);
   index.output("Task updated.", "result");
   index.output(changeResult, "result");
   return;
 };
 
-exports.changeStatus = async (user) => {
+exports.changeStatus = async () => {
   index.output("Update Task Status", "header");
   const answers = await inquirer.prompt([
     {
@@ -122,8 +163,27 @@ exports.changeStatus = async (user) => {
   ]);
 
   answers.key = "status";
-  let changeResult = await realmTasks.changeTask(user, answers);
+  let changeResult = await modifyTask(answers);
   index.output("Task updated.", "result");
   index.output(changeResult, "result");
   return;
 };
+
+async function modifyTask(answers) {
+  const realm = await openRealm();
+  let task;
+  try {
+    realm.beginTransaction();
+    task = await realm.objectForPrimaryKey(
+      "Task",
+      mongodb.ObjectID(answers.id)
+    );
+    task[answers.key] = answers.value;
+    realm.commitTransaction();
+    return JSON.stringify(task, null, 3);
+  } catch (err) {
+    return index.output(err, "error");
+  } /* finally {
+    realm.close();
+  }*/
+}

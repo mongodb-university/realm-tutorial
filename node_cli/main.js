@@ -2,56 +2,65 @@ const inquirer = require("inquirer");
 const ora = require("ora");
 
 const tasks = require("./tasks");
-const { logout } = require("./realm/realmAuth");
 const index = require("./index");
 const watch = require("./watch");
+const users = require("./users");
 
-async function mainMenu(authedUser) {
+const choice1 = "Create a task";
+const choice2 = "Show all of my tasks";
+const choice3 = "Get a specific task";
+const choice4 = "Change a task status";
+const choice5 = "Edit a task";
+const choice6 = "Delete a task";
+const choice7 = "Watch for changes";
+const choice8 = "Log out / Quit";
+
+async function mainMenu() {
   try {
     const answers = await inquirer.prompt({
       type: "rawlist",
       name: "mainMenu",
       message: "What would you like to do?",
       choices: [
-        "Create a task",
-        "Show all of my tasks",
-        "Get a specific task",
-        "Change a task status",
-        "Edit a task",
-        "Delete a task",
-        "Watch for changes",
-        "Log out / Quit",
+        choice1,
+        choice2,
+        choice3,
+        choice4,
+        choice5,
+        choice6,
+        choice7,
+        choice8,
         new inquirer.Separator(),
       ],
     });
 
     switch (answers.mainMenu) {
-      case "Create a task": {
-        await tasks.createTask(authedUser);
-        return mainMenu(authedUser);
+      case choice1: {
+        await tasks.createTask();
+        return mainMenu();
       }
-      case "Show all of my tasks": {
-        await tasks.getTasks(authedUser);
-        return mainMenu(authedUser);
+      case choice2: {
+        await tasks.getTasks();
+        return mainMenu();
       }
-      case "Get a specific task": {
-        await tasks.getTask(authedUser);
-        return mainMenu(authedUser);
+      case choice3: {
+        await tasks.getTask();
+        return mainMenu();
       }
-      case "Change a task status": {
-        await tasks.changeStatus(authedUser);
-        return mainMenu(authedUser);
+      case choice4: {
+        await tasks.changeStatus();
+        return mainMenu();
       }
-      case "Edit a task": {
-        await tasks.editTask(authedUser);
-        return mainMenu(authedUser);
+      case choice5: {
+        await tasks.editTask();
+        return mainMenu();
       }
-      case "Delete a task": {
-        await tasks.deleteTask(authedUser);
-        return mainMenu(authedUser);
+      case choice6: {
+        await tasks.deleteTask();
+        return mainMenu();
       }
-      case "Watch for changes": {
-        await watch.watchForChanges(authedUser);
+      case choice7: {
+        await watch.watchForChanges();
         index.output(
           "We are now watching for changes to the task collection.",
           "result"
@@ -59,13 +68,14 @@ async function mainMenu(authedUser) {
         await ora("Watching (use Ctrl-C to quit)").start();
         // Uncomment the next line to continue
         // working rather than waiting while watching
-        // return mainMenu(authedUser);
+        // return mainMenu();
         break;
       }
-      case "Log out / Quit": {
-        const loggedOut = await logout();
-        if (!loggedOut) index.output("Error logging out", "error");
-        else
+      case choice8: {
+        const loggedOut = await users.logOut();
+        if (!loggedOut) {
+          index.output("Error logging out", "error");
+        } else
           index.output(
             "You have been logged out. Use Ctrl-C to quit.",
             "result"
@@ -73,7 +83,7 @@ async function mainMenu(authedUser) {
         return;
       }
       default: {
-        return mainMenu(authedUser);
+        return mainMenu();
       }
     }
   } catch (err) {

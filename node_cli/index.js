@@ -4,18 +4,29 @@ const chalk = require("chalk");
 const clear = require("clear");
 const figlet = require("figlet");
 const users = require("./users");
-const main = require("./main");
 
-/* Change the logLevel to increase or decrease console "noise"
-Options are:
-fatal, error, warn, info, detail, debug, and trace
+/*  Change the logLevel to increase or decrease the 
+    amount of messages you see in the console.
+    Valid options are:
+    fatal, error, warn, info, detail, debug, and trace
 */
 Realm.Sync.setLogLevel("error");
 
 const output = (text, type) => {
-  if (type == "result") console.log(chalk.yellowBright(text + "\n"));
-  if (type == "header") console.log(chalk.cyanBright.bold("\n" + text + "\n"));
-  if (type == "error") console.log(chalk.red.bold("\n ❗" + text + " ❗\n"));
+  switch (type) {
+    case "header": {
+      console.log(chalk.cyanBright.bold("\n" + text + "\n"));
+      break;
+    }
+    case "error": {
+      console.log(chalk.red.bold("\n ❗\n" + text + "\n ❗\n"));
+      break;
+    }
+    case "header":
+    default: {
+      console.log(chalk.yellowBright(text + "\n"));
+    }
+  }
 };
 
 clear();
@@ -44,14 +55,15 @@ async function run() {
   ]);
 
   if (choice.start == "Log in") {
-    users.login();
+    users.logIn();
   } else {
-    users.register();
+    users.registerUser();
   }
 }
 
 run().catch((err) => {
-  output(err, "error");
+  output(err.message, "error");
 });
 
 exports.output = output;
+exports.run = run;

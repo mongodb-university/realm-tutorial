@@ -1,5 +1,5 @@
 const chalk = require("chalk");
-const realmTasks = require("./realm/realmTasks");
+const realmTasks = require("./tasks");
 const { cyan } = require("chalk");
 
 function listener(tasks, changes) {
