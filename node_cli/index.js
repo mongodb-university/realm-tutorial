@@ -79,7 +79,7 @@ run().catch((err) => {
 });
 
 async function getRealm() {
-  if (realm == undefined || realm.isClosed()) {
+  if (realm == undefined) {
     await openRealm();
   }
   return realm;

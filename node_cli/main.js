@@ -6,14 +6,17 @@ const index = require("./index");
 const watch = require("./watch");
 const users = require("./users");
 
-const create_task = "Create a task";
-const show_all = "Show all of my tasks";
-const get_task = "Get a specific task";
-const change_status = "Change a task status";
-const edit_task = "Edit a task";
-const delete_task = "Delete a task";
-const watch_for_changes = "Watch for changes";
-const logout = "Log out / Quit";
+const Choices = {
+  CreateTask: "Create a task",
+  ShowAllTasks: "Show all of my tasks",
+  GetTask: "Get a specific task",
+  ChangeTaskStatus: "Change a task status",
+  EditTask: "Edit a task",
+  DeleteTask: "Delete a task",
+  WatchForChanges: "Watch for changes",
+  LogOut: "Log out / Quit",
+};
+
 
 async function mainMenu() {
   try {
@@ -22,52 +25,52 @@ async function mainMenu() {
       name: "mainMenu",
       message: "What would you like to do?",
       choices: [
-        create_task,
-        show_all,
-        get_task,
-        change_status,
-        edit_task,
-        delete_task,
-        watch,
-        logout,
+        ...Object.values(Choices), 
         new inquirer.Separator(),
       ],
     });
 
     switch (answers.mainMenu) {
-      case create_task: {
+      case Choices.CreateTask: {
         await tasks.createTask();
         return mainMenu();
       }
-      case show_all: {
+      case Choices.ShowAllTasks: {
         await tasks.getTasks();
         return mainMenu();
       }
-      case get_task: {
+      case Choices.GetTask: {
         await tasks.getTask();
         return mainMenu();
       }
-      case change_status: {
+      case Choices.ChangeTaskStatus: {
         await tasks.changeStatus();
         return mainMenu();
       }
-      case edit_task: {
+      case Choices.EditTask: {
         await tasks.editTask();
         return mainMenu();
       }
-      case delete_task: {
+      case Choices.DeleteTask: {
         await tasks.deleteTask();
         return mainMenu();
       }
-      case watch_for_changes: {
+      case Choices.WatchForChanges: {
         await watch.watchForChanges();
         index.output(
           "We are now watching for changes to the task collection.",
           "result"
         );
         await ora("Watching (use Ctrl-C to quit)").start();
-        // Uncomment the next line to continue
-        // working rather than waiting while watching
+
+        /* Note: we've implemented this such that the console 
+            stays open and no further input is possible while
+            watching for changes. You can open a separate console
+            to do further work, or you can uncomment the next line
+            to continue working rather than waiting while watching. 
+            Changes will still be displayed in the console as they 
+            occur.
+            */
         // return mainMenu();
         break;
       }

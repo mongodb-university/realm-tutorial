@@ -153,8 +153,8 @@ async function modifyTask(answers) {
   const realm = await index.getRealm();
   let task;
   try {
-    realm.write(async () => {
-      task = await realm.objectForPrimaryKey(
+    realm.write(() => {
+      task = realm.objectForPrimaryKey(
         "Task",
         mongodb.ObjectID(answers.id)
       );
