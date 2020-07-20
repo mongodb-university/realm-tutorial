@@ -6,14 +6,14 @@ const index = require("./index");
 const watch = require("./watch");
 const users = require("./users");
 
-const choice1 = "Create a task";
-const choice2 = "Show all of my tasks";
-const choice3 = "Get a specific task";
-const choice4 = "Change a task status";
-const choice5 = "Edit a task";
-const choice6 = "Delete a task";
-const choice7 = "Watch for changes";
-const choice8 = "Log out / Quit";
+const create_task = "Create a task";
+const show_all = "Show all of my tasks";
+const get_task = "Get a specific task";
+const change_status = "Change a task status";
+const edit_task = "Edit a task";
+const delete_task = "Delete a task";
+const watch_for_changes = "Watch for changes";
+const logout = "Log out / Quit";
 
 async function mainMenu() {
   try {
@@ -22,44 +22,44 @@ async function mainMenu() {
       name: "mainMenu",
       message: "What would you like to do?",
       choices: [
-        choice1,
-        choice2,
-        choice3,
-        choice4,
-        choice5,
-        choice6,
-        choice7,
-        choice8,
+        create_task,
+        show_all,
+        get_task,
+        change_status,
+        edit_task,
+        delete_task,
+        watch,
+        logout,
         new inquirer.Separator(),
       ],
     });
 
     switch (answers.mainMenu) {
-      case choice1: {
+      case create_task: {
         await tasks.createTask();
         return mainMenu();
       }
-      case choice2: {
+      case show_all: {
         await tasks.getTasks();
         return mainMenu();
       }
-      case choice3: {
+      case get_task: {
         await tasks.getTask();
         return mainMenu();
       }
-      case choice4: {
+      case change_status: {
         await tasks.changeStatus();
         return mainMenu();
       }
-      case choice5: {
+      case edit_task: {
         await tasks.editTask();
         return mainMenu();
       }
-      case choice6: {
+      case delete_task: {
         await tasks.deleteTask();
         return mainMenu();
       }
-      case choice7: {
+      case watch_for_changes: {
         await watch.watchForChanges();
         index.output(
           "We are now watching for changes to the task collection.",
@@ -71,7 +71,7 @@ async function mainMenu() {
         // return mainMenu();
         break;
       }
-      case choice8: {
+      case logout: {
         const loggedOut = await users.logOut();
         if (!loggedOut) {
           index.output("Error logging out", "error");
