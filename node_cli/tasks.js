@@ -1,31 +1,18 @@
 const inquirer = require("inquirer");
 const Realm = require("realm");
 const mongodb = require("mongodb");
-const schemas = require("./schemas");
 const index = require("./index");
-const users = require("./users");
-
-async function openRealm() {
-  const config = {
-    schema: [schemas.TaskSchema, schemas.UserSchema, schemas.ProjectSchema],
-    sync: {
-      user: users.getAuthedUser(),
-      partitionValue: "myPartition",
-    },
-  };
-  return await Realm.open(config);
-}
 
 exports.getTasks = async () => {
-  const realm = await openRealm();
+  const realm = await index.getRealm();
+  console.dir(realm);
   const tasks = await realm.objects("Task");
   index.output("MY TASKS:", "header");
   index.output(JSON.stringify(tasks, null, 3), "result");
-  realm.close();
 };
 
 exports.getTask = async () => {
-  const realm = await openRealm();
+  const realm = await index.getRealm();
   try {
     const task = await inquirer.prompt([
       {
@@ -44,13 +31,11 @@ exports.getTask = async () => {
     }
   } catch (err) {
     index.output(err, "error");
-  } finally {
-    realm.close();
   }
 };
 
 exports.createTask = async () => {
-  const realm = await openRealm();
+  const realm = await index.getRealm();
   try {
     index.output("*** CREATE NEW TASK ***", "header");
     const task = await inquirer.prompt([
@@ -78,19 +63,16 @@ exports.createTask = async () => {
         status: task.status,
       });
     });
-    realm.close();
 
     index.output("New task created", "header");
     index.output(JSON.stringify(result, " ", 3), "result");
   } catch (err) {
     index.output(err, "error");
-  } finally {
-    realm.close();
   }
 };
 
 exports.deleteTask = async () => {
-  const realm = await openRealm();
+  const realm = await index.getRealm();
   index.output("DELETE A TASK", "header");
   const answers = await inquirer.prompt([
     {
@@ -116,8 +98,6 @@ exports.deleteTask = async () => {
     });
     return;
   }
-
-  realm.close();
 };
 
 exports.editTask = async () => {
@@ -170,20 +150,18 @@ exports.changeStatus = async () => {
 };
 
 async function modifyTask(answers) {
-  const realm = await openRealm();
+  const realm = await index.getRealm();
   let task;
   try {
-    realm.beginTransaction();
-    task = await realm.objectForPrimaryKey(
-      "Task",
-      mongodb.ObjectID(answers.id)
-    );
-    task[answers.key] = answers.value;
-    realm.commitTransaction();
+    realm.write(async () => {
+      task = await realm.objectForPrimaryKey(
+        "Task",
+        mongodb.ObjectID(answers.id)
+      );
+      task[answers.key] = answers.value;
+    });
     return JSON.stringify(task, null, 3);
   } catch (err) {
     return index.output(err, "error");
-  } /* finally {
-    realm.close();
-  }*/
+  }
 }

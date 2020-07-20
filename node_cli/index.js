@@ -4,6 +4,7 @@ const chalk = require("chalk");
 const clear = require("clear");
 const figlet = require("figlet");
 const users = require("./users");
+const schemas = require("./schemas");
 
 /*  Change the logLevel to increase or decrease the 
     amount of messages you see in the console.
@@ -11,6 +12,18 @@ const users = require("./users");
     fatal, error, warn, info, detail, debug, and trace
 */
 Realm.Sync.setLogLevel("error");
+
+let realm;
+async function openRealm() {
+  const config = {
+    schema: [schemas.TaskSchema, schemas.UserSchema, schemas.ProjectSchema],
+    sync: {
+      user: users.getAuthedUser(),
+      partitionValue: "myPartition",
+    },
+  };
+  realm = await Realm.open(config);
+}
 
 const output = (text, type) => {
   switch (type) {
@@ -65,5 +78,20 @@ run().catch((err) => {
   output(err.message, "error");
 });
 
+async function getRealm() {
+  if (realm == undefined || realm.isClosed()) {
+    await openRealm();
+  }
+  return realm;
+}
+
+async function closeRealm() {
+  if (realm) {
+    realm.close();
+  }
+}
+
+exports.getRealm = getRealm;
+exports.closeRealm = closeRealm;
 exports.output = output;
 exports.run = run;

@@ -98,6 +98,7 @@ async function registerUser() {
 async function logOut() {
   user = app.currentUser;
   await user.logOut();
+  await index.closeRealm();
   return !user.isLoggedIn;
 }
 
