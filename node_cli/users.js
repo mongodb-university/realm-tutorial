@@ -3,6 +3,7 @@ const Realm = require("realm");
 const index = require("./index");
 const config = require("./config");
 const main = require("./main");
+const output = require("./output");
 
 const REALM_APP_ID = config.realmAppId;
 const appConfig = {
@@ -37,23 +38,20 @@ async function logIn() {
     const user = await app.logIn(credentials);
     if (user) {
       authedUser = user;
-      index.output(
-        "You have successfully logged in as " + authedUser.id,
-        "result"
-      );
+      output.result("You have successfully logged in as " + authedUser.id);
       return main.mainMenu();
     } else {
-      index.output("There was an error logging you in", "error");
+      output.error("There was an error logging you in");
       return logIn();
     }
   } catch (err) {
-    index.output(JSON.stringify(err, " ", 3), "error");
+    output.error(JSON.stringify(err, " ", 3));
     return logIn();
   }
 }
 
 async function registerUser() {
-  index.output("WELCOME NEW USER", "header");
+  output.header("WELCOME, NEW USER");
   const input = await inquirer.prompt([
     {
       type: "input",
@@ -73,24 +71,20 @@ async function registerUser() {
       input.email,
       input.password
     );
-    index.output(result, "result");
+    output.result(result);
     const user = await logIn(input.email, input.password);
     if (user) {
       authedUser = user;
-      index.output(
-        "You have successfully created a new Realm user and are now logged in.",
-        "result"
+      output.result(
+        "You have successfully created a new Realm user and are now logged in."
       );
       return main.mainMenu();
     } else {
-      index.output(
-        "There was an error registering the new user account.",
-        "error"
-      );
+      output.error("There was an error registering the new user account.");
       return registerUser();
     }
   } catch (err) {
-    index.output(JSON.stringify(err, " ", 3), "error");
+    output.error(JSON.stringify(err, " ", 3));
     return registerUser();
   }
 }

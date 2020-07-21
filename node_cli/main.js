@@ -5,6 +5,7 @@ const tasks = require("./tasks");
 const index = require("./index");
 const watch = require("./watch");
 const users = require("./users");
+const output = require("./output");
 
 const Choices = {
   CreateTask: "Create a task",
@@ -17,17 +18,13 @@ const Choices = {
   LogOut: "Log out / Quit",
 };
 
-
 async function mainMenu() {
   try {
     const answers = await inquirer.prompt({
       type: "rawlist",
       name: "mainMenu",
       message: "What would you like to do?",
-      choices: [
-        ...Object.values(Choices), 
-        new inquirer.Separator(),
-      ],
+      choices: [...Object.values(Choices), new inquirer.Separator()],
     });
 
     switch (answers.mainMenu) {
@@ -57,9 +54,8 @@ async function mainMenu() {
       }
       case Choices.WatchForChanges: {
         await watch.watchForChanges();
-        index.output(
-          "We are now watching for changes to the task collection.",
-          "result"
+        output.result(
+          "We are now watching for changes to the task collection."
         );
         await ora("Watching (use Ctrl-C to quit)").start();
 
@@ -74,15 +70,11 @@ async function mainMenu() {
         // return mainMenu();
         break;
       }
-      case logout: {
+      case Choices.LogOut: {
         const loggedOut = await users.logOut();
         if (!loggedOut) {
-          index.output("Error logging out", "error");
-        } else
-          index.output(
-            "You have been logged out. Use Ctrl-C to quit.",
-            "result"
-          );
+          output.error("Error logging out");
+        } else output.result("You have been logged out. Use Ctrl-C to quit.");
         return;
       }
       default: {
@@ -90,7 +82,7 @@ async function mainMenu() {
       }
     }
   } catch (err) {
-    index.output(err, "error");
+    output.error(err);
     return;
   }
 }

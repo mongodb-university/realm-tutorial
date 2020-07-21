@@ -1,10 +1,8 @@
 const Realm = require("realm");
 const inquirer = require("inquirer");
-const chalk = require("chalk");
-const clear = require("clear");
-const figlet = require("figlet");
 const users = require("./users");
 const schemas = require("./schemas");
+const output = require("./output");
 
 /*  Change the logLevel to increase or decrease the 
     amount of messages you see in the console.
@@ -25,37 +23,12 @@ async function openRealm() {
   realm = await Realm.open(config);
 }
 
-const output = (text, type) => {
-  switch (type) {
-    case "header": {
-      console.log(chalk.cyanBright.bold("\n" + text + "\n"));
-      break;
-    }
-    case "error": {
-      console.log(chalk.red.bold("\n ❗\n" + text + "\n ❗\n"));
-      break;
-    }
-    case "header":
-    default: {
-      console.log(chalk.yellowBright(text + "\n"));
-    }
-  }
-};
-
-clear();
-console.log(
-  chalk.green.bold(
-    figlet.textSync("Realm Tasks", {
-      font: "colossal",
-    })
-  )
-);
+output.intro();
 
 async function run() {
-  output("*** WELCOME ***", "header");
-  output(
-    "Please log in to your Realm account or register as a new user.",
-    "header"
+  output.header("*** WELCOME ***");
+  output.header(
+    "Please log in to your Realm account or register as a new user."
   );
 
   let choice = await inquirer.prompt([
@@ -67,7 +40,7 @@ async function run() {
     },
   ]);
 
-  if (choice.start == "Log in") {
+  if (choice.start === "Log in") {
     users.logIn();
   } else {
     users.registerUser();
@@ -75,7 +48,7 @@ async function run() {
 }
 
 run().catch((err) => {
-  output(err.message, "error");
+  output.error(err.message);
 });
 
 async function getRealm() {
@@ -88,10 +61,10 @@ async function getRealm() {
 async function closeRealm() {
   if (realm) {
     realm.close();
+    realm = undefined;
   }
 }
 
 exports.getRealm = getRealm;
 exports.closeRealm = closeRealm;
-exports.output = output;
 exports.run = run;
