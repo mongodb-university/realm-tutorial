@@ -13,8 +13,6 @@ const appConfig = {
 
 const app = new Realm.App(appConfig);
 
-authedUser = {};
-
 async function logIn() {
   const input = await inquirer.prompt([
     {
@@ -37,15 +35,14 @@ async function logIn() {
     );
     const user = await app.logIn(credentials);
     if (user) {
-      authedUser = user;
-      output.result("You have successfully logged in as " + authedUser.id);
+      output.result("You have successfully logged in as " + app.currentUser.id);
       return main.mainMenu();
     } else {
       output.error("There was an error logging you in");
       return logIn();
     }
   } catch (err) {
-    output.error(JSON.stringify(err, " ", 3));
+    output.error(JSON.stringify(err, null, 2));
     return logIn();
   }
 }
@@ -72,9 +69,8 @@ async function registerUser() {
       input.password
     );
     output.result(result);
-    const user = await logIn(input.email, input.password);
+    const user = await app.logIn(credentials);
     if (user) {
-      authedUser = user;
       output.result(
         "You have successfully created a new Realm user and are now logged in."
       );
@@ -84,7 +80,7 @@ async function registerUser() {
       return registerUser();
     }
   } catch (err) {
-    output.error(JSON.stringify(err, " ", 3));
+    output.error(JSON.stringify(err, null, 2));
     return registerUser();
   }
 }
@@ -97,7 +93,7 @@ async function logOut() {
 }
 
 function getAuthedUser() {
-  return authedUser;
+  return app.currentUser;
 }
 
 exports.getAuthedUser = getAuthedUser;

@@ -10,12 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "babel-core": "^6.26.3",
+    "bson": "^4.0.4",
     "chalk": "^4.1.0",
     "clear": "^0.1.0",
     "events": "^3.1.0",
     "figlet": "^1.5.0",
     "inquirer": "^7.3.2",
-    "mongodb": "^3.5.9",
     "ora": "^4.0.5",
     "realm": "^10.0.0-beta.9"
   },

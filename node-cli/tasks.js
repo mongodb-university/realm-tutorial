@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
 const Realm = require("realm");
-const mongodb = require("mongodb");
+const bson = require("bson");
 const index = require("./index");
 const output = require("./output");
 
@@ -8,7 +8,7 @@ exports.getTasks = async () => {
   const realm = await index.getRealm();
   const tasks = await realm.objects("Task");
   output.header("MY TASKS:");
-  output.result(JSON.stringify(tasks, null, 3));
+  output.result(JSON.stringify(tasks, null, 2));
 };
 
 exports.getTask = async () => {
@@ -23,11 +23,11 @@ exports.getTask = async () => {
     ]);
     let result = await realm.objectForPrimaryKey(
       "Task",
-      mongodb.ObjectID(task.id)
+      new bson.ObjectID(task.id)
     );
     if (result !== undefined) {
       output.header("Here is the task you requested:");
-      output.result(JSON.stringify(result, " ", 3));
+      output.result(JSON.stringify(result, null, 2));
     }
   } catch (err) {
     output.error(err);
@@ -57,7 +57,7 @@ exports.createTask = async () => {
     let result;
     realm.write(() => {
       result = realm.create("Task", {
-        _id: new mongodb.ObjectID(),
+        _id: new bson.ObjectID(),
         _partition: "myPartition",
         name: task.name,
         status: task.status,
@@ -65,7 +65,7 @@ exports.createTask = async () => {
     });
 
     output.header("New task created");
-    output.result(JSON.stringify(result, " ", 3));
+    output.result(JSON.stringify(result, null, 2));
   } catch (err) {
     output.error(err);
   }
@@ -90,7 +90,7 @@ exports.deleteTask = async () => {
   if (answers.confirm) {
     let task = await realm.objectForPrimaryKey(
       "Task",
-      mongodb.ObjectID(answers.id)
+      new bson.ObjectID(answers.id)
     );
     realm.write(() => {
       realm.delete(task);
@@ -154,10 +154,10 @@ async function modifyTask(answers) {
   let task;
   try {
     realm.write(() => {
-      task = realm.objectForPrimaryKey("Task", mongodb.ObjectID(answers.id));
+      task = realm.objectForPrimaryKey("Task", new bson.ObjectID(answers.id));
       task[answers.key] = answers.value;
     });
-    return JSON.stringify(task, null, 3);
+    return JSON.stringify(task, null, 2);
   } catch (err) {
     return output.error(err);
   }

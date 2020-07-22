@@ -10,12 +10,12 @@ function listener(tasks, changes) {
 
   changes.insertions.forEach((index) => {
     let insertedTask = tasks[index];
-    output.watchResult("Task Created", JSON.stringify(insertedTask, " ", 3));
+    output.watchResult("Task Created", JSON.stringify(insertedTask, null, 2));
   });
 
   changes.modifications.forEach((index) => {
     let modifiedTask = tasks[index];
-    output.watchResult("Task Modified", JSON.stringify(modifiedTask, " ", 3));
+    output.watchResult("Task Modified", JSON.stringify(modifiedTask, null, 2));
   });
 }
 
