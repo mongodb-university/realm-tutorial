@@ -20,7 +20,7 @@ async function openRealm() {
       partitionValue: "myPartition",
     },
   };
-  realm = await Realm.open(config);
+  realm = Realm.open(config);
 }
 
 output.intro();
@@ -59,7 +59,7 @@ async function getRealm() {
 }
 
 async function closeRealm() {
-  if (realm) {
+  if (realm != undefined) {
     realm.close();
     realm = undefined;
   }
