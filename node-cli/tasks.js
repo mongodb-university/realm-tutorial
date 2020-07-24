@@ -6,7 +6,7 @@ const output = require("./output");
 
 exports.getTasks = async () => {
   const realm = await index.getRealm();
-  const tasks = await realm.objects("Task");
+  const tasks = realm.objects("Task");
   output.header("MY TASKS:");
   output.result(JSON.stringify(tasks, null, 2));
 };
@@ -21,7 +21,7 @@ exports.getTask = async () => {
         message: "What is the task ID (_id)?",
       },
     ]);
-    let result = await realm.objectForPrimaryKey(
+    let result = realm.objectForPrimaryKey(
       "Task",
       new bson.ObjectID(task.id)
     );
@@ -88,7 +88,7 @@ exports.deleteTask = async () => {
   ]);
 
   if (answers.confirm) {
-    let task = await realm.objectForPrimaryKey(
+    let task = realm.objectForPrimaryKey(
       "Task",
       new bson.ObjectID(answers.id)
     );
