@@ -28,7 +28,7 @@ const AuthProvider = ({children}) => {
   // authentication provider to register the user.
   const registerUser = async (email, password) => {
     console.log(`Registering as ${email}...`);
-    await app.auth.emailPassword.registerEmail(email, password);
+    await app.emailPasswordAuth.registerUser(email, password);
   };
 
   // Log out the current user.
