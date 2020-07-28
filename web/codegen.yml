@@ -13,6 +13,8 @@ generates:
     plugins:
       - typescript-react-apollo
     config:
+      apolloReactCommonImportFrom: '@apollo/client'
+      apolloReactHooksImportFrom: '@apollo/client'
       withHooks: true
       withComponent: false
       withHOC: false
