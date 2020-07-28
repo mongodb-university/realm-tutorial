@@ -68,7 +68,7 @@ export function TaskDetailModal({
               Move to Complete
             </FullWidthButton>
           )}
-          {task.assignee?.user_id === user?.id && (
+          {task.assignee?._id === user?.id && (
             <FullWidthButton variant="danger" onClick={() => deleteTask(task)}>
               Delete this task
             </FullWidthButton>

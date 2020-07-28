@@ -67,6 +67,7 @@ export default function useTaskLists(tasks: Task[]): UseTaskListsPayload {
   const [lists, setLists] = React.useState<TaskListDescription[]>(
     createLists(tasks)
   );
+  console.log("lists", lists)
 
   const updateListsWithNewTasks = React.useCallback((tasks: Task[]) => {
     setLists((lists: TaskListDescription[]) =>
@@ -115,12 +116,16 @@ export default function useTaskLists(tasks: Task[]): UseTaskListsPayload {
 
       if (newTasks.length || removedTasks.length || modifiedTasks.length) {
         // Add new tasks
+        console.log("newTasks", newTasks)
         Object.entries<Task[]>(
           newTasks.reduce(
-            (grouped, task) => ({
+            (grouped, task) => {
+              console.log("grouped", grouped)
+              console.log("task", task)
+              return ({
               ...grouped,
               [task.status]: [...grouped[task.status as TaskStatus], task],
-            }),
+            })},
             {
               [TaskStatus.Open]: [],
               [TaskStatus.Inprogress]: [],

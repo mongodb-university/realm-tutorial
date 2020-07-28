@@ -1,8 +1,8 @@
 import * as React from "react";
-import * as RealmWeb from "realm-web";
+import * as Realm from "realm-web";
 
-const REALM_APP_ID = "<Your App ID>";
-const app = new RealmWeb.App({ id: REALM_APP_ID });
+const REALM_APP_ID = "task-tracker-tutorial-bnwjg";
+const app = new Realm.App({ id: REALM_APP_ID });
 
 const RealmAppContext = React.createContext<IRealmApp | void>(undefined);
 
@@ -21,28 +21,25 @@ const RealmApp: React.FC = ({ children }) => {
   React.useEffect(() => {
     setUser(app.currentUser);
   }, [appRef.current.currentUser]);
-
+  
   // Let new users register an account
   const registerUser = async (email: string, password: string) => {
-    // TODO: Register a new user with the specified email and password
-    return await app.auth.emailPassword.registerUser(email, password);
-  };
-
+    return await app.emailPasswordAuth.registerUser(email, password);
+  }
+  
   // Let registered users log in
   const logIn = async (email: string, password: string) => {
-    // TODO: Log in with the specified email and password
-    const credentials = RealmWeb.Credentials.emailPassword(email, password);
+    const credentials = Realm.Credentials.emailPassword(email, password);
     await app.logIn(credentials);
     setUser(app.currentUser);
-  };
-
+  }
+  
   // Let logged in users log out
   const logOut = async () => {
-    // TODO: Log the current user out
-    await app.logOut();
+    await app.currentUser?.logOut();
     setUser(app.currentUser);
-  };
-
+  }
+  
   // Provide the current user and authentication methods to the wrapped tree
   const context: IRealmApp = {
     id: REALM_APP_ID,

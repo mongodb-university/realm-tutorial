@@ -15,7 +15,6 @@ export const GetAllTasksDocument = gql`
       _id
       name
       image
-      user_id
     }
   }
 }
@@ -55,7 +54,6 @@ export const AddTaskDocument = gql`
       _id
       name
       image
-      user_id
     }
   }
 }
@@ -95,7 +93,6 @@ export const UpdateTaskDocument = gql`
       _id
       name
       image
-      user_id
     }
   }
 }
@@ -136,7 +133,6 @@ export const DeleteTaskDocument = gql`
       _id
       name
       image
-      user_id
     }
   }
 }
@@ -168,12 +164,10 @@ export type DeleteTaskMutationResult = ApolloReactCommon.MutationResult<Types.De
 export type DeleteTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<Types.DeleteTaskMutation, Types.DeleteTaskMutationVariables>;
 export const GetUserDocument = gql`
     query GetUser($userId: String!) {
-  user(query: {user_id: $userId}) {
+  user(query: {_id: $userId}) {
     _id
-    _partition
     name
     image
-    user_id
   }
 }
     `;
