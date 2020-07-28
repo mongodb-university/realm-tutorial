@@ -38,7 +38,7 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
-    "realm-web": "^0.2.0",
+    "realm-web": "^0.7.0",
     "typescript": "~3.7.2",
     "validator": "^13.0.0"
   },
