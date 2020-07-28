@@ -110,8 +110,11 @@ interface TaskListProps {
 }
 export default function TaskList(props: TaskListProps): React.ReactElement {
   const { user } = useRealmApp();
+  if(!user) {
+    throw new Error("TaskList may only render with a logged in user.")
+  }
   const { status, displayName, tasks, taskActions, showDetail } = props;
-  const [draft, draftActions] = useDraftTask(taskActions);
+  const [draft, draftActions] = useDraftTask(user, taskActions);
 
   return (
     <Droppable droppableId={status}>

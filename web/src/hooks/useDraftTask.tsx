@@ -2,7 +2,7 @@ import * as React from "react";
 import BSON from "bson";
 import { User, GetUserQuery } from "../types";
 import { TaskStatus, TaskActions } from "./useTasks";
-import { useGetUserLazyQuery } from "../graphql-operations";
+import { useGetUserQuery } from "../graphql-operations";
 
 export type DraftTask = {
   status: TaskStatus;
@@ -18,10 +18,19 @@ export interface DraftTaskActions {
 }
 
 export default function useDraftTask(
+  currentUser: Realm.User,
   taskActions: TaskActions
 ): [DraftTask | null, DraftTaskActions] {
   const [draft, setDraft] = React.useState<DraftTask | null>(null);
-  const draftAssignee = useDraftAssignee(draft);
+  const [draftUser, setDraftUser] = React.useState<User | null>(null);
+  useGetUserQuery({
+    variables: { userId: currentUser.id },
+    onCompleted: ({ user }: GetUserQuery) => {
+      if (user) {
+        setDraftUser(user);
+      }
+    },
+  });
 
   const actions: DraftTaskActions = {
     createDraft: (draft: DraftTask) => {
@@ -40,7 +49,7 @@ export default function useDraftTask(
         await taskActions.addTask({
           ...draft,
           _id: new BSON.ObjectId(),
-          assignee: draftAssignee ?? undefined,
+          assignee: draftUser,
           _partition: "My Project",
         });
         setDraft(null);
@@ -50,24 +59,24 @@ export default function useDraftTask(
   return [draft, actions];
 }
 
-function useDraftAssignee(draft: DraftTask | null): User | undefined {
-  const [draftAssignee, setDraftAssignee] = React.useState<User | undefined>(
-    undefined
-  );
-  const [getUserQuery] = useGetUserLazyQuery({
-    onCompleted: ({ user }: GetUserQuery) => {
-      console.log("user", user);
-      if (user) {
-        setDraftAssignee(user);
-      }
-    },
-  });
+// function useDraftAssignee(draft: DraftTask | null): User | undefined {
+//   const [draftAssignee, setDraftAssignee] = React.useState<User | undefined>(
+//     undefined
+//   );
+//   const [getUserQuery] = useGetUserLazyQuery({
+//     onCompleted: ({ user }: GetUserQuery) => {
+//       console.log("user", user);
+//       if (user) {
+//         setDraftAssignee(user);
+//       }
+//     },
+//   });
 
-  React.useEffect(() => {
-    if (draft?.assignee) {
-      getUserQuery({ variables: { userId: draft.assignee } });
-    }
-  }, [draft, getUserQuery]);
+//   React.useEffect(() => {
+//     if (draft?.assignee) {
+//       getUserQuery({ variables: { userId: draft.assignee } });
+//     }
+//   }, [draft, getUserQuery]);
 
-  return draftAssignee;
-}
+//   return draftAssignee;
+// }

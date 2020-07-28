@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Task, User } from "../types";
 
-import { GetAllTasksQuery } from "./../types";
+import { GetAllTasksQuery, AddTaskMutationVariables } from "./../types";
 import {
   useGetAllTasksQuery,
   useAddTaskMutation,
@@ -48,14 +48,16 @@ export function useTasks(): {
   const [deleteTaskMutation] = useDeleteTaskMutation();
 
   const addTask = async (task: Task) => {
-    const variables = {
+    const variables: AddTaskMutationVariables = {
       task: {
         status: task.status,
         name: task.name,
-        assignee: task.assignee ? { link: task.assignee.user_id } : undefined,
         _partition: "My Project",
       },
     };
+    if(task.assignee) {
+      variables.task.assignee = { link: task.assignee._id }
+    }
     const currentTasks = [...tasks];
     try {
       const result = await addTaskMutation({ variables });
@@ -74,7 +76,7 @@ export function useTasks(): {
         status: updated?.status ?? undefined,
         name: updated?.name ?? undefined,
         assignee: updated.assignee
-          ? { link: updated.assignee.user_id }
+          ? { link: updated.assignee._id }
           : undefined,
       },
     };
