@@ -58,25 +58,3 @@ export default function useDraftTask(
   };
   return [draft, actions];
 }
-
-// function useDraftAssignee(draft: DraftTask | null): User | undefined {
-//   const [draftAssignee, setDraftAssignee] = React.useState<User | undefined>(
-//     undefined
-//   );
-//   const [getUserQuery] = useGetUserLazyQuery({
-//     onCompleted: ({ user }: GetUserQuery) => {
-//       console.log("user", user);
-//       if (user) {
-//         setDraftAssignee(user);
-//       }
-//     },
-//   });
-
-//   React.useEffect(() => {
-//     if (draft?.assignee) {
-//       getUserQuery({ variables: { userId: draft.assignee } });
-//     }
-//   }, [draft, getUserQuery]);
-
-//   return draftAssignee;
-// }
