@@ -83,7 +83,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
 
         // First in table is always your project
         if (indexPath.row == 0) {
-            navigationController!.pushViewController(TasksViewController(realm: userRealm), animated: true);
+            navigationController!.pushViewController(TasksViewController(realm: userRealm, title: "My Tasks"), animated: true);
             return;
         }
 
@@ -98,9 +98,11 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                 guard error == nil else {
                     fatalError("Failed to open realm: \(error!)")
                 }
+                let projectName = project?.name ?? "Unknown"
+                
                 // For the second phase of the tutorial, go to the Projects management page.
                 // This is where you can manage permissions and collaborators.
-                self?.navigationController?.pushViewController(TasksViewController(realm: realm!), animated: true);
+                self?.navigationController?.pushViewController(TasksViewController(realm: realm!, title: "\(projectName)'s Tasks"), animated: true);
 
             })
     }

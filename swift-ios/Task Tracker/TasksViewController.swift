@@ -17,7 +17,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     let tableView = UITableView()
     var notificationToken: NotificationToken?
 
-    required init(realm: Realm) {
+    required init(realm: Realm, title: String) {
 
         // Ensure the realm was opened with sync.
         guard let syncConfiguration = realm.configuration.syncConfiguration else {
@@ -34,6 +34,8 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tasks = realm.objects(Task.self).sorted(byKeyPath: "_id")
 
         super.init(nibName: nil, bundle: nil)
+
+        self.title = title
 
         // Observe the tasks for changes.
         notificationToken = tasks.observe { [weak self] (changes) in
@@ -75,20 +77,24 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         // Configure the view.
         super.viewDidLoad()
 
-        title = "My Tasks"
-        // navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(logOutButtonDidClick))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonDidClick))
-
         tableView.dataSource = self
         tableView.delegate = self
         tableView.frame = self.view.frame
         view.addSubview(tableView)
-        
-        toolbarItems = [
-            UIBarButtonItem(title: "Manage Team", style: .plain, target: self, action: #selector(manageTeamButtonDidClick))
-        ]
-        navigationController?.isToolbarHidden = false
-        
+
+        if (isOwnTasks()) {
+            // Only set up the add task and manage team buttons if these are tasks the user owns.
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonDidClick))
+            
+            toolbarItems = [
+                UIBarButtonItem(title: "Manage Team", style: .plain, target: self, action: #selector(manageTeamButtonDidClick))
+            ]
+            navigationController?.isToolbarHidden = false
+        } else {
+            
+            
+            
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -120,6 +126,9 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
         
+        // You can't delete tasks you don't own
+        guard isOwnTasks() else { return }
+        
         // User can swipe to delete items.
         let task = tasks[indexPath.row]
         
@@ -131,6 +140,9 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // You can't edit tasks you don't own
+        guard isOwnTasks() else { return }
+
         // User selected a task in the table. We will present a list of actions that the user can perform on this task.
         let task = tasks[indexPath.row]
 
@@ -218,5 +230,10 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @objc func manageTeamButtonDidClick() {
         present(UINavigationController(rootViewController: ManageTeamViewController()), animated: true)
+    }
+    
+    // Returns true if these are the user's own tasks.
+    func isOwnTasks() -> Bool {
+        return partitionValue == app.currentUser()?.identity
     }
 }
