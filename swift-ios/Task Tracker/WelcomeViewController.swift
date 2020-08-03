@@ -10,8 +10,8 @@ import UIKit
 import RealmSwift
 
 // This flag is for tutorial-purposes only. It determines if the app should go the Projects
-// list page after login or directly into the Tasks page for a placeholder project. 
-let USE_PROJECTS_PAGE = false
+// list page after login or directly into the Tasks page for a placeholder project.
+let USE_PROJECTS_PAGE = true
 
 // The WelcomeViewController handles login and account creation.
 class WelcomeViewController: UIViewController {
@@ -112,7 +112,7 @@ class WelcomeViewController: UIViewController {
 
     @objc func signUp() {
         setLoading(true);
-        app.usernamePasswordProviderClient().registerEmail(username!, password: password!, completion: {[weak self](error) in
+        app.usernamePasswordProviderClient().registerEmail(username!, password: password!, completion: { [weak self](error) in
             // Completion handlers are not necessarily called on the UI thread.
             // This call to DispatchQueue.main.sync ensures that any changes to the UI,
             // namely disabling the loading indicator and navigating to the next page,
@@ -125,8 +125,8 @@ class WelcomeViewController: UIViewController {
                     return
                 }
                 print("Signup successful!")
-                
-                // Registering just registers. Now we need to sign in, but we can reuse the existing username and password. 
+
+                // Registering just registers. Now we need to sign in, but we can reuse the existing username and password.
                 self!.errorLabel.text = "Signup successful! Signing in..."
                 self!.signIn()
             }
@@ -136,7 +136,7 @@ class WelcomeViewController: UIViewController {
     @objc func signIn() {
         print("Log in as user: \(username!)");
         setLoading(true);
-        
+
         app.login(withCredential: AppCredentials(username: username!, password: password!)) { [weak self](maybeUser, error) in
             // Completion handlers are not necessarily called on the UI thread.
             // This call to DispatchQueue.main.sync ensures that any changes to the UI,
@@ -150,31 +150,26 @@ class WelcomeViewController: UIViewController {
                     self!.errorLabel.text = "Login failed: \(error!.localizedDescription)"
                     return
                 }
-                
+
                 guard let user = maybeUser else {
                     fatalError("Invalid user object?")
                 }
 
                 print("Login succeeded!");
-                
-                if (!USE_PROJECTS_PAGE) {
-    
-                    // For the first phase of the tutorial, go directly to the Tasks page
-                    // for the hardcoded project ID "My Project".
-                    // This will use a common project and demonstrate sync.
-                    let partitionValue = "My Project"
 
-                    // Open a realm.
-                    let projectRealm = try! Realm(configuration: user.configuration(partitionValue: partitionValue))
+                self!.setLoading(true);
 
-                    self!.navigationController!.pushViewController(TasksViewController(project: nil, projectRealm: projectRealm), animated: true);
-
-                } else {
-                    // For the second phase of the tutorial, go to the Projects management page. 
+                // Open a realm.
+                Realm.asyncOpen(configuration: user.configuration(partitionValue: user.identity!)) { [weak self](userRealm, error) in
+                    self!.setLoading(false);
+                    guard error == nil else {
+                        fatalError("Failed to open realm: \(error!)")
+                    }
+                    // For the second phase of the tutorial, go to the Projects management page.
                     // This is where you can manage permissions and collaborators.
-                    self!.navigationController!.pushViewController(ProjectsViewController(), animated: true);
+                    self!.navigationController!.pushViewController(ProjectsViewController(userRealm: userRealm!), animated: true);
                 }
-                
+
             }
         };
     }
