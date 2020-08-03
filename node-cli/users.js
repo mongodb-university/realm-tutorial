@@ -68,7 +68,10 @@ async function registerUser() {
       input.email,
       input.password
     );
-    output.result(result);
+    const credentials = Realm.Credentials.emailPassword(
+      input.email,
+      input.password
+    );
     const user = await app.logIn(credentials);
     if (user) {
       output.result(
