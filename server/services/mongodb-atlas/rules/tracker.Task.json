@@ -1,44 +1,49 @@
 {
+    "collection": "Task",
     "database": "tracker",
-    "collection": "users",
+    "id": "5f235c9757c22b6ae59bce15",
+    "relationships": {
+        "owner": {
+            "ref": "#/relationship/mongodb-atlas/tracker/User",
+            "source_key": "owner",
+            "foreign_key": "_id",
+            "is_list": false
+        }
+    },
     "roles": [
         {
             "name": "default",
             "apply_when": {},
-            "write": true,
             "insert": true,
             "delete": true,
             "additional_fields": {}
         }
     ],
     "schema": {
-        "title": "User",
         "bsonType": "object",
-        "required": [
-            "_id",
-            "_partition",
-            "name",
-            "projects"
-        ],
         "properties": {
             "_id": {
                 "bsonType": "objectId"
             },
             "_partition": {
-                "bsonType": "objectId"
+                "bsonType": "string"
             },
             "name": {
                 "bsonType": "string"
             },
-            "image": {
+            "owner": {
                 "bsonType": "string"
             },
-            "projects": {
-                "bsonType": "array",
-                "items": {
-                    "bsonType": "objectId"
-                }
+            "status": {
+                "bsonType": "string"
             }
-        }
+        },
+        "required": [
+            "_id",
+            "_partition",
+            "name",
+            "status"
+        ],
+        "title": "Task"
     }
 }
