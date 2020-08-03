@@ -21,10 +21,7 @@ exports.getTask = async () => {
         message: "What is the task ID (_id)?",
       },
     ]);
-    let result = realm.objectForPrimaryKey(
-      "Task",
-      new bson.ObjectID(task.id)
-    );
+    let result = realm.objectForPrimaryKey("Task", new bson.ObjectID(task.id));
     if (result !== undefined) {
       output.header("Here is the task you requested:");
       output.result(JSON.stringify(result, null, 2));
@@ -58,7 +55,7 @@ exports.createTask = async () => {
     realm.write(() => {
       result = realm.create("Task", {
         _id: new bson.ObjectID(),
-        _partition: "myPartition",
+        _partition: "My Project",
         name: task.name,
         status: task.status,
       });
@@ -88,10 +85,7 @@ exports.deleteTask = async () => {
   ]);
 
   if (answers.confirm) {
-    let task = realm.objectForPrimaryKey(
-      "Task",
-      new bson.ObjectID(answers.id)
-    );
+    let task = realm.objectForPrimaryKey("Task", new bson.ObjectID(answers.id));
     realm.write(() => {
       realm.delete(task);
       output.result("Task deleted.");
