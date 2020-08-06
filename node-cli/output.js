@@ -7,7 +7,7 @@ module.exports.intro = function () {
   console.log(
     chalk.green.bold(
       figlet.textSync("Realm Tasks", {
-        font: "colossal",
+        font: "Colossal",
       })
     )
   );
