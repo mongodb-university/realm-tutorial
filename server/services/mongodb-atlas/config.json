@@ -13,10 +13,24 @@
                 "required": true,
                 "permissions": {
                     "read": {
-                        "%%user.custom_data.readable_partitions": "%%partition"
+                        "%%true": {
+                            "%function": {
+                                "name": "canReadPartition",
+                                "arguments": [
+                                    "%%partition"
+                                ]
+                            }
+                        }
                     },
                     "write": {
-                        "%%user.custom_data.writeable_partitions": "%%partition"
+                        "%%true": {
+                            "%function": {
+                                "name": "canWritePartition",
+                                "arguments": [
+                                    "%%partition"
+                                ]
+                            }
+                        }
                     }
                 }
             }

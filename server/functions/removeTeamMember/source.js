@@ -11,19 +11,24 @@ exports = async function(email) {
     return {error: "You cannot remove yourself from your team"};
   }
   
-  if (!memberToRemove.readable_partitions.includes(callingUser.id)) {
+  const {canWritePartitions} = memberToRemove.custom_data;
+  
+  const projectPartition = `project=${callingUser.id}`;
+
+  if ((canWritePartitions == null) || !canWritePartitions.includes(projectPartition)) {
     return {error: `User ${email} is not a member of your team`};
   }
   
   try {
     return await collection.updateOne(
-      filter,
+      {_id: memberToRemove._id},
       {$pull: {
-          readable_partitions: callingUser.id,
-          member_of: {
-              partition: callingUser.id,
+          canWritePartitions: projectPartition,
+          memberOf: {
+              partition: projectPartition,
           }
-      }});
+        }
+      });
   } catch (error) {
     return {error: error.toString()};
   }

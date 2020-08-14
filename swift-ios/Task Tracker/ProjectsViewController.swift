@@ -53,8 +53,9 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("User count: \(usersInRealm.count)")
         // You always have at least one project (your own) plus any projects you are a member of
-        return 1 + (usersInRealm.first?.member_of.count ?? 0)
+        return 1 + (usersInRealm.first?.memberOf.count ?? 0)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -69,7 +70,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
 
         // List is offset by 1 to make room for your project
         let row = indexPath.row - 1
-        let project = usersInRealm.first?.member_of[row]
+        let project = usersInRealm.first?.memberOf[row]
 
         cell.textLabel?.text = "\(project!.name!)'s Project"
         return cell
@@ -81,16 +82,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
             return;
         }
 
-        // First in table is always your project
-        if (indexPath.row == 0) {
-            navigationController!.pushViewController(TasksViewController(realm: userRealm, title: "My Tasks"), animated: true);
-            return;
-        }
-
-        // List is offset by 1 to make room for your project
-        let row = indexPath.row - 1
-
-        let project = usersInRealm.first?.member_of[row]
+        let project = indexPath.row == 0 ? Project(partition: "project=\(user.identity!)", name: "My Project") : usersInRealm.first?.memberOf[indexPath.row - 1]
 
         Realm.asyncOpen(
             configuration: user.configuration(partitionValue: project!.partition!),

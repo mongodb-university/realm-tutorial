@@ -11,9 +11,9 @@ import RealmSwift
 
 class User: Object {
     @objc dynamic var _id: String = ""
-    @objc dynamic var _partition: String? = ""
+    @objc dynamic var _partition: String = ""
     @objc dynamic var name: String = ""
-    let member_of = RealmSwift.List<Project>()
+    let memberOf = RealmSwift.List<Project>()
     override static func primaryKey() -> String? {
         return "_id"
     }
@@ -22,6 +22,11 @@ class User: Object {
 class Project: EmbeddedObject {
     @objc dynamic var name: String? = nil
     @objc dynamic var partition: String? = nil
+    convenience init(partition: String, name: String) {
+        self.init()
+        self.partition = partition
+        self.name = name
+    }
 }
 
 enum TaskStatus: String {
@@ -32,9 +37,9 @@ enum TaskStatus: String {
 
 class Task: Object {
     @objc dynamic var _id: ObjectId = ObjectId.generate()
-    @objc dynamic var _partition: ProjectId? = nil
+    @objc dynamic var _partition: String = ""
     @objc dynamic var name: String = ""
-    @objc dynamic var owner: User?
+    @objc dynamic var owner: String? = nil
     @objc dynamic var status: String = ""
     override static func primaryKey() -> String? {
         return "_id"

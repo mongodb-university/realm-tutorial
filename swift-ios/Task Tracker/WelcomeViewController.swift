@@ -159,17 +159,22 @@ class WelcomeViewController: UIViewController {
 
                 self!.setLoading(true);
 
-                // Open a realm.
-                Realm.asyncOpen(configuration: user.configuration(partitionValue: user.identity!)) { [weak self](userRealm, error) in
+                // Configure the synced realm.
+                var configuration = user.configuration(partitionValue: "user=\(user.identity!)")
+                // Only allow User objects in this partition.
+                // configuration.objectTypes = [User.self, Project.self] // doesn't work?
+                // Open the realm asynchronously so that it downloads the remote copy before
+                // opening the local copy.
+                Realm.asyncOpen(configuration: configuration) { [weak self](userRealm, error) in
                     self!.setLoading(false);
                     guard error == nil else {
                         fatalError("Failed to open realm: \(error!)")
                     }
+
                     // For the second phase of the tutorial, go to the Projects management page.
                     // This is where you can manage permissions and collaborators.
                     self!.navigationController!.pushViewController(ProjectsViewController(userRealm: userRealm!), animated: true);
                 }
-
             }
         };
     }

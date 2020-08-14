@@ -19,7 +19,7 @@
             "_partition": {
                 "bsonType": "string"
             },
-            "member_of": {
+            "memberOf": {
                 "bsonType": "array",
                 "items": {
                     "bsonType": "object",
@@ -40,8 +40,8 @@
         },
         "required": [
             "_id",
-            "name",
-            "_partition"
+            "_partition",
+            "name"
         ],
         "title": "User"
     }

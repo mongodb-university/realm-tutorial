@@ -8,23 +8,26 @@ exports = async function(email) {
   const callingUser = context.user;
   
   if (newMember._id === callingUser.id) {
-    return {error: "You are already on your own team, of course!"};
+    return {error: "You are already on your own team!"};
   }
   
-  if (newMember.readable_partitions.includes(callingUser.id)) {
+  if (callingUser.team && callingUser.team.includes(callingUser.id)) {
     return {error: `User ${email} is already a member of your team`};
   }
   
+  const projectPartition = `project=${callingUser.id}`;
+
   try {
     return await collection.updateOne(
-      filter, 
+      {_id: newMember._id},
       {$addToSet: {
-          readable_partitions: callingUser.id,
-          member_of: {
+          canWritePartitions: projectPartition,
+          memberOf: {
             name: callingUser.custom_data.name,
-            partition: callingUser.id,
+            partition: projectPartition,
           }
-      }});
+        }
+      });
   } catch (error) {
     return {error: error.toString()};
   }

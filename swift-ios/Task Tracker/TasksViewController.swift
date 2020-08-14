@@ -82,18 +82,14 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.frame = self.view.frame
         view.addSubview(tableView)
 
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonDidClick))
+
         if (isOwnTasks()) {
-            // Only set up the add task and manage team buttons if these are tasks the user owns.
-            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonDidClick))
-            
+            // Only set up the manage team button if these are tasks the user owns.
             toolbarItems = [
                 UIBarButtonItem(title: "Manage Team", style: .plain, target: self, action: #selector(manageTeamButtonDidClick))
             ]
             navigationController?.isToolbarHidden = false
-        } else {
-            
-            
-            
         }
     }
 
@@ -125,10 +121,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
-        
-        // You can't delete tasks you don't own
-        guard isOwnTasks() else { return }
-        
+
         // User can swipe to delete items.
         let task = tasks[indexPath.row]
         
@@ -140,8 +133,6 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // You can't edit tasks you don't own
-        guard isOwnTasks() else { return }
 
         // User selected a task in the table. We will present a list of actions that the user can perform on this task.
         let task = tasks[indexPath.row]
@@ -234,6 +225,6 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     // Returns true if these are the user's own tasks.
     func isOwnTasks() -> Bool {
-        return partitionValue == app.currentUser()?.identity
+        return partitionValue == "project=\(app.currentUser()!.identity!)"
     }
 }
