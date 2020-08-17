@@ -12,18 +12,19 @@ import RealmSwift
 class ProjectsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let tableView = UITableView()
     let userRealm: Realm
-    let usersInRealm: Results<User>
     var notificationToken: NotificationToken?
+    var userData: User?
 
     init(userRealm: Realm) {
         self.userRealm = userRealm
 
-        // There should only be one user in my realm - that is myself
-        usersInRealm = userRealm.objects(User.self)
-
         super.init(nibName: nil, bundle: nil)
 
-        notificationToken = usersInRealm.observe { [weak self] (changes) in
+        // There should only be one user in my realm - that is myself
+        let usersInRealm = userRealm.objects(User.self)
+
+        notificationToken = usersInRealm.observe { [weak self, usersInRealm] (changes) in
+            self?.userData = usersInRealm.first
             guard let tableView = self?.tableView else { return }
             tableView.reloadData()
         }
@@ -53,9 +54,8 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("User count: \(usersInRealm.count)")
         // You always have at least one project (your own) plus any projects you are a member of
-        return 1 + (usersInRealm.first?.memberOf.count ?? 0)
+        return 1 + (userData?.memberOf.count ?? 0)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -70,9 +70,9 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
 
         // List is offset by 1 to make room for your project
         let row = indexPath.row - 1
-        let project = usersInRealm.first?.memberOf[row]
+        let project = userData!.memberOf[row]
 
-        cell.textLabel?.text = "\(project!.name!)'s Project"
+        cell.textLabel?.text = "\(project.name!)'s Project"
         return cell
     }
 
@@ -82,7 +82,9 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
             return;
         }
 
-        let project = indexPath.row == 0 ? Project(partition: "project=\(user.identity!)", name: "My Project") : usersInRealm.first?.memberOf[indexPath.row - 1]
+        let project = indexPath.row == 0
+            ? Project(partition: "project=\(user.identity!)", name: "My Project") 
+            : userData?.memberOf[indexPath.row - 1]
 
         Realm.asyncOpen(
             configuration: user.configuration(partitionValue: project!.partition!),
