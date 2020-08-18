@@ -208,7 +208,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         alertController.addAction(UIAlertAction(title: "Yes, Log Out", style: .destructive, handler: {
             alert -> Void in
             print("Logging out...");
-            app.logOut(completion: { (error) in
+            app.currentUser()?.logOut(completion: { (error) in
                 DispatchQueue.main.sync {
                     print("Logged out!");
                     self.navigationController?.setViewControllers([WelcomeViewController()], animated: true)
