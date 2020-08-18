@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import RealmSwift
 
+
 class ProjectsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let tableView = UITableView()
     let userRealm: Realm
@@ -54,25 +55,18 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // You always have at least one project (your own) plus any projects you are a member of
-        return 1 + (userData?.memberOf.count ?? 0)
+        // You always have at least one project (your own)
+        return userData?.memberOf.count ?? 1
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") ?? UITableViewCell(style: .default, reuseIdentifier: "Cell")
         cell.selectionStyle = .none
 
-        if (indexPath.row == 0) {
-            // First in list is always your own project
-            cell.textLabel?.text = "My Project"
-            return cell;
-        }
+        // User data may not have loaded yet. You always have your own project.
+        let project = userData?.memberOf[indexPath.row] ?? Project(partition: "project=\(app.currentUser()!.identity!)", name: "My Project")
 
-        // List is offset by 1 to make room for your project
-        let row = indexPath.row - 1
-        let project = userData!.memberOf[row]
-
-        cell.textLabel?.text = "\(project.name!)'s Project"
+        cell.textLabel?.text = project.name!
         return cell
     }
 
@@ -82,9 +76,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
             return;
         }
 
-        let project = indexPath.row == 0
-            ? Project(partition: "project=\(user.identity!)", name: "My Project") 
-            : userData?.memberOf[indexPath.row - 1]
+        let project = userData?.memberOf[indexPath.row]
 
         Realm.asyncOpen(
             configuration: user.configuration(partitionValue: project!.partition!),

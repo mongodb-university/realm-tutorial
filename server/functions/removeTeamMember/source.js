@@ -11,7 +11,7 @@ exports = async function(email) {
     return {error: "You cannot remove yourself from your team"};
   }
   
-  const {canWritePartitions} = memberToRemove.custom_data;
+  const {canWritePartitions} = memberToRemove;
   
   const projectPartition = `project=${callingUser.id}`;
 
