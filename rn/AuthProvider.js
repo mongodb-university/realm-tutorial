@@ -21,7 +21,7 @@ const AuthProvider = ({children}) => {
     const creds = Realm.Credentials.emailPassword(email, password);
     const newUser = await app.logIn(creds);
     setUser(newUser);
-    console.log(`Logged in as ${newUser.identity}`);
+    console.log(`Logged in as ${newUser.id}`);
   };
 
   // The register function takes an email and password and uses the emailPassword

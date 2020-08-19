@@ -43,7 +43,7 @@ const TasksProvider = ({children, projectId}) => {
 
     console.log(
       `Attempting to open Realm ${projectId} for user ${
-        user.identity
+        user.id
       } with config: ${JSON.stringify(config)}...`,
     );
 
