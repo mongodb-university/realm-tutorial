@@ -21,8 +21,9 @@ function listener(tasks, changes) {
 
 async function watchForChanges() {
   const realm = await index.getRealm();
-  const tasks = realm.objects("Task");
-  tasks.addListener(listener);
+
+  // TODO: Get all of the objects in the Task collection,
+  // and then add the listener function defined above.
 }
 
 module.exports.watchForChanges = watchForChanges;

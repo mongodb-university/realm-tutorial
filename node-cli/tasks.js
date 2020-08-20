@@ -1,12 +1,11 @@
 const inquirer = require("inquirer");
-const Realm = require("realm");
 const bson = require("bson");
 const index = require("./index");
 const output = require("./output");
 
 exports.getTasks = async () => {
   const realm = await index.getRealm();
-  const tasks = realm.objects("Task");
+  //TODO: Get all objects in the "Task" collection
   output.header("MY TASKS:");
   output.result(JSON.stringify(tasks, null, 2));
 };
@@ -21,10 +20,9 @@ exports.getTask = async () => {
         message: "What is the task ID (_id)?",
       },
     ]);
-    let result = realm.objectForPrimaryKey(
-      "Task",
-      new bson.ObjectID(task.id)
-    );
+
+    // TODO: Use `objectForPrimaryKey` to retrieve a specific task
+
     if (result !== undefined) {
       output.header("Here is the task you requested:");
       output.result(JSON.stringify(result, null, 2));
@@ -55,14 +53,7 @@ exports.createTask = async () => {
       },
     ]);
     let result;
-    realm.write(() => {
-      result = realm.create("Task", {
-        _id: new bson.ObjectID(),
-        _partition: "myPartition",
-        name: task.name,
-        status: task.status,
-      });
-    });
+    //TODO: Call realm.create() within a realm.write() function
 
     output.header("New task created");
     output.result(JSON.stringify(result, null, 2));
@@ -88,14 +79,12 @@ exports.deleteTask = async () => {
   ]);
 
   if (answers.confirm) {
-    let task = realm.objectForPrimaryKey(
+    let task = await realm.objectForPrimaryKey(
       "Task",
       new bson.ObjectID(answers.id)
     );
-    realm.write(() => {
-      realm.delete(task);
-      output.result("Task deleted.");
-    });
+    //TODO: Within a realm.write() function, delete the task
+
     return;
   }
 };
@@ -153,10 +142,8 @@ async function modifyTask(answers) {
   const realm = await index.getRealm();
   let task;
   try {
-    realm.write(() => {
-      task = realm.objectForPrimaryKey("Task", new bson.ObjectID(answers.id));
-      task[answers.key] = answers.value;
-    });
+    //TODO: Fetch the task and change the specified property
+
     return JSON.stringify(task, null, 2);
   } catch (err) {
     return output.error(err);

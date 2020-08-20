@@ -25,6 +25,6 @@ const RealmApolloProvider: React.FC = ({ children }) => {
 export default RealmApolloProvider;
 
 // TODO: Implement createApolloClient()
-function createApolloClient(realmAppId: string, user: Realm.User) {
+function createApolloClient(realmAppId: string, user: RealmWeb.User) {
   
 }
