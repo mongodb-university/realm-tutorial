@@ -1,34 +1,41 @@
 {
+    "collection": "Task",
     "database": "tracker",
-    "collection": "projects",
+    "id": "5f235c9757c22b6ae59bce15",
     "roles": [
         {
             "name": "default",
             "apply_when": {},
-            "write": true,
             "insert": true,
             "delete": true,
             "additional_fields": {}
         }
     ],
     "schema": {
-        "title": "Project",
         "bsonType": "object",
-        "required": [
-            "_id",
-            "_partition",
-            "name"
-        ],
         "properties": {
             "_id": {
                 "bsonType": "objectId"
             },
             "_partition": {
-                "bsonType": "objectId"
+                "bsonType": "string"
             },
             "name": {
                 "bsonType": "string"
+            },
+            "owner": {
+                "bsonType": "string"
+            },
+            "status": {
+                "bsonType": "string"
             }
-        }
+        },
+        "required": [
+            "_id",
+            "_partition",
+            "name",
+            "status"
+        ],
+        "title": "Task"
     }
 }

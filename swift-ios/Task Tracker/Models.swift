@@ -9,30 +9,23 @@
 import Foundation
 import RealmSwift
 
-typealias ProjectId = String
-
-class Project: Object {
-    @objc dynamic var _id: ObjectId = ObjectId.generate()
-    @objc dynamic var _partition: String? = nil
+class User: Object {
+    @objc dynamic var _id: String = ""
+    @objc dynamic var _partition: String = ""
     @objc dynamic var name: String = ""
+    let memberOf = RealmSwift.List<Project>()
     override static func primaryKey() -> String? {
         return "_id"
-    }
-    
-    convenience init(partition: String, name: String) {
-        self.init()
-        self._partition = partition
-        self.name = name
     }
 }
 
-class User: Object {
-    @objc dynamic var _id: String = ""
-    @objc dynamic var _partition: String? = nil
-    @objc dynamic var image: String? = nil
-    @objc dynamic var name: String = ""
-    override static func primaryKey() -> String? {
-        return "_id"
+class Project: EmbeddedObject {
+    @objc dynamic var name: String? = nil
+    @objc dynamic var partition: String? = nil
+    convenience init(partition: String, name: String) {
+        self.init()
+        self.partition = partition
+        self.name = name
     }
 }
 
@@ -44,10 +37,13 @@ enum TaskStatus: String {
 
 class Task: Object {
     @objc dynamic var _id: ObjectId = ObjectId.generate()
-    @objc dynamic var _partition: ProjectId? = nil
-    @objc dynamic var assignee: User?
-    @objc dynamic var name = ""
-    @objc dynamic var status = TaskStatus.Open.rawValue
+    @objc dynamic var _partition: String = ""
+    @objc dynamic var name: String = ""
+    @objc dynamic var owner: String? = nil
+    @objc dynamic var status: String = ""
+    override static func primaryKey() -> String? {
+        return "_id"
+    }
 
     var statusEnum: TaskStatus {
         get {
@@ -57,10 +53,6 @@ class Task: Object {
             status = newValue.rawValue
         }
     }
-
-    override static func primaryKey() -> String? {
-        return "_id"
-    }
     
     convenience init(partition: String, name: String) {
         self.init()
@@ -68,3 +60,13 @@ class Task: Object {
         self.name = name
     }
 }
+
+struct Member {
+    let id: String
+    let name: String
+    init(document: Document) {
+        self.id = document["_id"]!!.stringValue!
+        self.name = document["name"]!!.stringValue!
+    }
+}
+

@@ -11,22 +11,20 @@ import RealmSwift
 
 class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    let project: Project?
     let partitionValue: String
     let realm: Realm
     let tasks: Results<Task>
     let tableView = UITableView()
     var notificationToken: NotificationToken?
 
-    required init(project: Project?, projectRealm: Realm) {
+    required init(realm: Realm, title: String) {
+
         // Ensure the realm was opened with sync.
-        guard let syncConfiguration = projectRealm.configuration.syncConfiguration else {
+        guard let syncConfiguration = realm.configuration.syncConfiguration else {
             fatalError("Sync configuration not found! Realm not opened with sync?");
         }
 
-        self.project = project
-        
-        realm = projectRealm
+        self.realm = realm
 
         // Partition value must be of string type.
         partitionValue = syncConfiguration.partitionValue.stringValue!
@@ -36,6 +34,8 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tasks = realm.objects(Task.self).sorted(byKeyPath: "_id")
 
         super.init(nibName: nil, bundle: nil)
+
+        self.title = title
 
         // Observe the tasks for changes.
         notificationToken = tasks.observe { [weak self] (changes) in
@@ -77,21 +77,20 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         // Configure the view.
         super.viewDidLoad()
 
-        if (project == nil) {
-            // TUTORIAL ONLY:
-            // If project was not set, we do not have the Projects page.
-            // We must be using the default project for tutorial purposes.
-            // That means instead of letting the left bar button go back to the
-            // previous page, we will set it as the Log Out button.
-            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(logOutButtonDidClick))
-        }
-
-        title = project?.name ?? "My Project"
         tableView.dataSource = self
         tableView.delegate = self
-        view.addSubview(tableView)
         tableView.frame = self.view.frame
+        view.addSubview(tableView)
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonDidClick))
+
+        if (isOwnTasks()) {
+            // Only set up the manage team button if these are tasks the user owns.
+            toolbarItems = [
+                UIBarButtonItem(title: "Manage Team", style: .plain, target: self, action: #selector(manageTeamButtonDidClick))
+            ]
+            navigationController?.isToolbarHidden = false
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -122,7 +121,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
-        
+
         // User can swipe to delete items.
         let task = tasks[indexPath.row]
         
@@ -132,18 +131,15 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
             realm.delete(task)
         }
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
         // User selected a task in the table. We will present a list of actions that the user can perform on this task.
         let task = tasks[indexPath.row]
 
         // Create the AlertController and add its actions.
         let actionSheet: UIAlertController = UIAlertController(title: task.name, message: "Select an action", preferredStyle: .actionSheet)
-
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
-                print("Cancel")
-            })
-
+ 
         // If the task is not in the Open state, we can set it to open. Otherwise, that action will not be available.
         // We do this for the other two states -- InProgress and Complete.
         if (task.statusEnum != .Open) {
@@ -171,6 +167,10 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     }
                 })
         }
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                actionSheet.dismiss(animated: true)
+            })
 
         // Show the actions list.
         self.present(actionSheet, animated: true, completion: nil)
@@ -194,7 +194,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 self.realm.add(task)
             }
         }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alertController.addTextField(configurationHandler: { (textField: UITextField!) -> Void in
             textField.placeholder = "New Task Name"
         })
@@ -217,5 +217,14 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(alertController, animated: true, completion: nil)
+    }
+    
+    @objc func manageTeamButtonDidClick() {
+        present(UINavigationController(rootViewController: ManageTeamViewController()), animated: true)
+    }
+    
+    // Returns true if these are the user's own tasks.
+    func isOwnTasks() -> Bool {
+        return partitionValue == "project=\(app.currentUser()!.identity!)"
     }
 }
