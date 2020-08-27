@@ -3,30 +3,40 @@ import { StyleSheet, Text, View, Button } from "react-native";
 import { useAuth } from "../providers/AuthProvider";
 import styles from "../stylesheet";
 
-// Define the collection notification listener
-function listener(users, changes) {
-  // Update UI in response to deleted objects
-  changes.deletions.forEach((index) => {
-    // Deleted objects cannot be accessed directly,
-    // but we can update a UI list, etc. knowing the index.
-  });
-
-  // Update UI in response to inserted objects
-  changes.insertions.forEach((index) => {
-    let insertedUser = users[index];
-    // ...
-  });
-
-  // Update UI in response to modified objects
-  changes.modifications.forEach((index) => {
-    let modifiedUser = users[index];
-    // ...
-  });
-}
-
 export function ProjectsView({ navigation, route }) {
   const { userRealm } = route.params;
   const { user } = useAuth();
+  const listener = (users, changes) => {
+    // Update UI in response to deleted objects
+    changes.deletions.forEach((index) => {
+      // Deleted objects cannot be accessed directly,
+      // but we can update a UI list, etc. knowing the index.
+    });
+
+    // Update UI in response to inserted objects
+    changes.insertions.forEach((index) => {
+      let insertedUser = users[index];
+      // ...
+    });
+
+    // Update UI in response to modified objects
+    changes.modifications.forEach((index) => {
+      let modifiedUser = users[index];
+      // ...
+    });
+  };
+
+  const onClickProject = async (project) => {
+    console.log("project:::", project);
+    const config = {
+      sync: {
+        user: user,
+        partitionValue: project.partition,
+      },
+    };
+    const projectRealm = await Realm.open(config);
+    navigation.navigate("Task List", { projectRealm, name: project.name });
+  };
 
   const users = userRealm.objects("User");
   users.addListener(listener);
@@ -37,21 +47,11 @@ export function ProjectsView({ navigation, route }) {
   for (let project of memberOf) {
     userData.push(project);
   }
-
-  const onClickProject = async (project) => {
-    const config = {
-      sync: {
-        user: user,
-        partitionValue: `project=${user.id}`,
-      },
-    };
-    const projectRealm = await Realm.open(config);
-    navigation.navigate("Task List", { projectRealm, name: project.name });
-  };
+  // setUserData(myUserData);
 
   return (
     <View>
-      <Text>Click a project that you're a member of 2:</Text>
+      <Text>Click a project that you're a member of:</Text>
       {userData.map((project) => (
         <View style={styles.projectButtonWrapper}>
           <Button
