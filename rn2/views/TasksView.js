@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 
-import { Text, View, Button } from "react-native";
+import { View, Button } from "react-native";
 import styles from "../stylesheet";
+
+import { Overlay, Text } from "react-native-elements";
+import { ManageTeam } from "../components/ManageTeam";
 
 export function TasksView({ navigation, route }) {
   const { name, projectRealm } = route.params;
   const [projectTasks, setProjectTasks] = useState([]);
+  const [overlayVisible, setOverlayVisible] = useState(false);
   const tasks = projectRealm.objects("Task");
 
   const listener = (projects, changes) => {
@@ -62,6 +66,15 @@ export function TasksView({ navigation, route }) {
           />
         </View>
       ))}
+
+      <Button title="Manage Team" onPress={() => setOverlayVisible(true)} />
+
+      <Overlay
+        isVisible={overlayVisible}
+        onBackdropPress={() => setOverlayVisible(false)}
+      >
+        <ManageTeam />
+      </Overlay>
     </View>
   );
 }
