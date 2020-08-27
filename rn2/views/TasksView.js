@@ -7,27 +7,47 @@ export function TasksView({ navigation, route }) {
   const { name, projectRealm } = route.params;
   const [projectTasks, setProjectTasks] = useState([]);
   const tasks = projectRealm.objects("Task");
-  console.log("tasks:", tasks);
+
+  const listener = (projects, changes) => {
+    console.log("proj:::", projects);
+
+    const projTasks = [];
+    for (task of projects) {
+      projTasks.push(task);
+    }
+
+    if (projectTasks.length < projTasks.length) {
+      setProjectTasks(myTasks);
+    }
+
+    // Update UI in response to deleted objects
+    changes.deletions.forEach((index) => {
+      // Deleted objects cannot be accessed directly,
+      // but we can update a UI list, etc. knowing the index.
+    });
+
+    // Update UI in response to inserted objects
+    changes.insertions.forEach((index) => {
+      let insertedProject = projects[index];
+      // ...
+    });
+
+    // Update UI in response to modified objects
+    changes.modifications.forEach((index) => {
+      let modifiedProject = projects[index];
+      // ...
+    });
+  };
 
   const myTasks = [];
   for (task of tasks) {
-    console.log(task);
     myTasks.push(task);
   }
-
   if (projectTasks.length < myTasks.length) {
     setProjectTasks(myTasks);
   }
 
-  console.log(projectTasks);
-  // setProjectTasks(myTasks);
-
-  //   let memberOf = users[0].memberOf;
-
-  // const userData = [];
-  // for (let project of memberOf) {
-  //   userData.push(project);
-  // }
+  tasks.addListener(listener);
 
   return (
     <View>
