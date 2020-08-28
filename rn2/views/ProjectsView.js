@@ -27,7 +27,6 @@ export function ProjectsView({ navigation, route }) {
   };
 
   const onClickProject = async (project) => {
-    console.log("project:::", project);
     const config = {
       sync: {
         user: user,

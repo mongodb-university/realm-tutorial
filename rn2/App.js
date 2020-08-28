@@ -13,6 +13,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import { AuthProvider, useAuth } from "./providers/AuthProvider";
+import { TasksProvider, useTasks } from "./providers/TasksProvider";
+
 import { WelcomeView } from "./views/WelcomeView";
 import { ProjectsView } from "./views/ProjectsView";
 import { TasksView } from "./views/TasksView";
@@ -50,7 +52,17 @@ const AppBody = () => {
               headerLeft: ({ navigation }) => <Logout />,
             }}
           />
-          <Stack.Screen name="Task List" component={TasksView} />
+          <Stack.Screen
+            name="Task List"
+            component={({ route }) => {
+              const { projectRealm } = route.params;
+              return (
+                <TasksProvider projectRealm={projectRealm}>
+                  <TasksView route={route} />
+                </TasksProvider>
+              );
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </>

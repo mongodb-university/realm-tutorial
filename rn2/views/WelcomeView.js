@@ -10,7 +10,6 @@ export function WelcomeView({ navigation, route }) {
   const { signUp, signIn } = useAuth();
 
   const onPressSignIn = async () => {
-    const signInResult = await signIn(username, password);
     const authedUser = await signIn(username, password);
 
     const config = {
