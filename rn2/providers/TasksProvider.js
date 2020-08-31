@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import Realm from "realm";
 import { getRealmApp } from "../getRealmApp";
+import { Task } from "../schemas";
 
 // Access the Realm App.
 const app = getRealmApp();
@@ -19,13 +20,44 @@ const convertTasksLiveObjectToArray = (liveTaskObject) => {
 // The TaskProvider is responsible for user management and provides the
 // TaskContext value to its descendants. Components under an TaskProvider can
 // use the useTask() hook to access the task value.
-const TasksProvider = ({ children, projectRealm }) => {
-  const createTask = () => null;
-  const setTaskStatus = () => {
-    console.log("set status");
+const TasksProvider = ({ children, projectRealm, projectPartition }) => {
+  console.log("my projectPartition", projectPartition);
+  const createTask = (newTaskName) => {
+    projectRealm.write(() => {
+      // Create a new task in the same partition -- that is, in the same project.
+      projectRealm.create(
+        "Task",
+        new Task({
+          name: newTaskName || "New Task",
+          partition: projectPartition,
+        })
+      );
+    });
   };
-  const deleteTask = () => {
-    console.log("delete");
+
+  const setTaskStatus = (task, status) => {
+    // One advantage of centralizing the realm functionality in this provider is
+    // that we can check to make sure a valid status was passed in here.
+    if (
+      ![
+        Task.STATUS_OPEN,
+        Task.STATUS_IN_PROGRESS,
+        Task.STATUS_COMPLETE,
+      ].includes(status)
+    ) {
+      throw new Error(`Invalid Status ${status}`);
+    }
+
+    projectRealm.write(() => {
+      task.status = status;
+    });
+  };
+
+  // Define the function for deleting a task.
+  const deleteTask = (task) => {
+    projectRealm.write(() => {
+      projectRealm.delete(task);
+    });
   };
   const [tasks, setTasks] = useState([]);
   const projectId = null;

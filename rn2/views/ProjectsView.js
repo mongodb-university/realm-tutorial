@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { useAuth } from "../providers/AuthProvider";
 import styles from "../stylesheet";
@@ -6,25 +6,7 @@ import styles from "../stylesheet";
 export function ProjectsView({ navigation, route }) {
   const { userRealm } = route.params;
   const { user } = useAuth();
-  const listener = (users, changes) => {
-    // Update UI in response to deleted objects
-    changes.deletions.forEach((index) => {
-      // Deleted objects cannot be accessed directly,
-      // but we can update a UI list, etc. knowing the index.
-    });
-
-    // Update UI in response to inserted objects
-    changes.insertions.forEach((index) => {
-      let insertedUser = users[index];
-      // ...
-    });
-
-    // Update UI in response to modified objects
-    changes.modifications.forEach((index) => {
-      let modifiedUser = users[index];
-      // ...
-    });
-  };
+  const [userData, setUserData] = useState([]);
 
   const onClickProject = async (project) => {
     const config = {
@@ -33,20 +15,32 @@ export function ProjectsView({ navigation, route }) {
         partitionValue: project.partition,
       },
     };
+
     const projectRealm = await Realm.open(config);
-    navigation.navigate("Task List", { projectRealm, name: project.name });
+    navigation.navigate("Task List", {
+      projectRealm,
+      name: project.name,
+      projectPartition: project.partition,
+    });
   };
 
-  const users = userRealm.objects("User");
-  users.addListener(listener);
+  const createUserData = (arrayOfProjectsTheUserIsAMemberOf) => {
+    const myUserData = [];
+    for (let project of arrayOfProjectsTheUserIsAMemberOf) {
+      myUserData.push(project);
+    }
+    setUserData(myUserData);
+  };
 
-  let memberOf = users[0].memberOf;
+  useEffect(() => {
+    const users = userRealm.objects("User");
+    let memberOf = users[0].memberOf;
+    createUserData(memberOf);
 
-  const userData = [];
-  for (let project of memberOf) {
-    userData.push(project);
-  }
-  // setUserData(myUserData);
+    userRealm.addListener("change", () => {
+      createUserData(memberOf);
+    });
+  }, []);
 
   return (
     <View>
