@@ -8,23 +8,28 @@ const app = getRealmApp();
 // Create a new Context object that will be provided to descendants of the TaskProvider.
 const TasksContext = React.createContext(null);
 
+const convertTasksLiveObjectToArray = (liveTaskObject) => {
+  const taskArray = [];
+  for (task of liveTaskObject) {
+    taskArray.push(task);
+  }
+  return taskArray;
+};
+
 // The TaskProvider is responsible for user management and provides the
 // TaskContext value to its descendants. Components under an TaskProvider can
 // use the useTask() hook to access the task value.
 const TasksProvider = ({ children, projectRealm }) => {
   const createTask = () => null;
-  const setTaskStatus = () => null;
-  const deleteTask = () => null;
+  const setTaskStatus = () => {
+    console.log("set status");
+  };
+  const deleteTask = () => {
+    console.log("delete");
+  };
   const [tasks, setTasks] = useState([]);
   const projectId = null;
 
-  const convertTasksLiveObjectToArray = (liveTaskObject) => {
-    const taskArray = [];
-    for (task of liveTaskObject) {
-      taskArray.push(task);
-    }
-    return taskArray;
-  };
   useEffect(() => {
     const syncTasks = projectRealm.objects("Task");
     setTasks(convertTasksLiveObjectToArray(syncTasks));

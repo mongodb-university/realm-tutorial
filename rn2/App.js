@@ -54,11 +54,11 @@ const AppBody = () => {
           />
           <Stack.Screen
             name="Task List"
-            component={({ route }) => {
+            component={({ navigation, route }) => {
               const { projectRealm } = route.params;
               return (
                 <TasksProvider projectRealm={projectRealm}>
-                  <TasksView route={route} />
+                  <TasksView navigation={navigation} route={route} />
                 </TasksProvider>
               );
             }}
