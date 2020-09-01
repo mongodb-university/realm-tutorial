@@ -25,8 +25,6 @@ export function TasksView({ navigation, route }) {
 
   return (
     <View>
-      <Text>View the tasks for {name}:</Text>
-
       {tasks.map((task) =>
         task ? <TaskItem key={`${task._id}`} task={task} /> : null
       )}

@@ -53,12 +53,6 @@ export function ProjectsView({ navigation, route }) {
             bottomDivider
             key={project.name}
           />
-          {/* <Button
-            onPress={() => onClickProject(project)}
-            title={`${project.name}'s Tasks`}
-            style={styles.projectButton}
-            color="black"
-          /> */}
         </View>
       ))}
     </View>
