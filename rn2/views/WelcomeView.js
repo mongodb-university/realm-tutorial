@@ -8,18 +8,21 @@ export function WelcomeView({ navigation, route }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { signUp, signIn } = useAuth();
-
   const onPressSignIn = async () => {
-    const authedUser = await signIn(username, password);
+    try {
+      const authedUser = await signIn(username, password);
 
-    const config = {
-      sync: {
-        user: authedUser,
-        partitionValue: `user=${authedUser.id}`,
-      },
-    };
-    const userRealm = await Realm.open(config);
-    navigation.navigate("Project List", { userRealm });
+      const config = {
+        sync: {
+          user: authedUser,
+          partitionValue: `user=${authedUser.id}`,
+        },
+      };
+      const userRealm = await Realm.open(config);
+      navigation.navigate("Projects", { userRealm });
+    } catch (err) {
+      throw `an error occurred while signing in ${err}`;
+    }
   };
 
   const onPressSignUp = async () => {

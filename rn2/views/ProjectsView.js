@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { useAuth } from "../providers/AuthProvider";
 import styles from "../stylesheet";
+import { ListItem } from "react-native-elements";
 
 export function ProjectsView({ navigation, route }) {
   const { userRealm } = route.params;
@@ -44,15 +45,20 @@ export function ProjectsView({ navigation, route }) {
 
   return (
     <View>
-      <Text>Click a project that you're a member of:</Text>
-      {userData.map((project) => (
-        <View style={styles.projectButtonWrapper}>
-          <Button
+      {userData.map((project, i) => (
+        <View key={project.name}>
+          <ListItem
+            title={project.name}
+            onPress={() => onClickProject(project)}
+            bottomDivider
+            key={project.name}
+          />
+          {/* <Button
             onPress={() => onClickProject(project)}
             title={`${project.name}'s Tasks`}
             style={styles.projectButton}
             color="black"
-          />
+          /> */}
         </View>
       ))}
     </View>

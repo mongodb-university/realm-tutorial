@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import Realm from "realm";
+import { Alert } from "react-native";
 import { getRealmApp } from "../getRealmApp";
 
 // Access the Realm App.
@@ -18,12 +19,15 @@ const AuthProvider = ({ children }) => {
   // authentication provider to log in.
   const signIn = async (email, password) => {
     try {
-      console.log(`Logging in as ${email}...`);
       const creds = Realm.Credentials.emailPassword(email, password);
       const newUser = await app.logIn(creds);
       setUser(newUser);
-      return user;
+      return newUser;
     } catch (err) {
+      Alert.alert(
+        "An error occured while signing in",
+        JSON.stringify(err, null, 2)
+      );
       throw `An error occured while signing in ${JSON.stringify(err, null, 2)}`;
     }
   };
@@ -34,10 +38,13 @@ const AuthProvider = ({ children }) => {
     try {
       console.log(`Registering as ${email}...`);
       const signUp = await app.emailPasswordAuth.registerUser(email, password);
-      // const signIn = await signIn(email, password);
-      // console.log("signIn", signIn);
+      const signIn = await signIn(email, password);
       return signIn;
     } catch (err) {
+      Alert.alert(
+        "An error occured while signing up",
+        JSON.stringify(err, null, 2)
+      );
       throw `An error occured while signing up ${JSON.stringify(err, null, 2)}`;
     }
   };
@@ -72,7 +79,7 @@ const AuthProvider = ({ children }) => {
 const useAuth = () => {
   const auth = useContext(AuthContext);
   if (auth == null) {
-    throw new Error("useAuth() called outside of a AuthProvider?");
+    throw new Error("useAuth() called outside of a AuthProvider?"); // an alert is not placed because this is an error for the developer not the user
   }
   return auth;
 };

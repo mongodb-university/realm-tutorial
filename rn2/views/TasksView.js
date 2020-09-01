@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { View, Button } from "react-native";
 import styles from "../stylesheet";
@@ -12,13 +12,16 @@ import { AddTask } from "../components/AddTask";
 
 export function TasksView({ navigation, route }) {
   const { name } = route.params;
+
   const [overlayVisible, setOverlayVisible] = useState(false);
 
   const { tasks, createTask } = useTasks();
-
-  navigation.setOptions({
-    headerRight: () => <AddTask createTask={createTask} />,
-  });
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <AddTask createTask={createTask} />,
+      title: `${name}'s Tasks`,
+    });
+  }, []);
 
   return (
     <View>
@@ -28,14 +31,22 @@ export function TasksView({ navigation, route }) {
         task ? <TaskItem key={`${task._id}`} task={task} /> : null
       )}
 
-      <Button title="Manage Team" onPress={() => setOverlayVisible(true)} />
-
-      <Overlay
-        isVisible={overlayVisible}
-        onBackdropPress={() => setOverlayVisible(false)}
-      >
-        <ManageTeam />
-      </Overlay>
+      {name === "My Project" ? (
+        <>
+          <View style={styles.manageTeamButtonContainer}>
+            <Button
+              title="Manage Team"
+              onPress={() => setOverlayVisible(true)}
+            />
+          </View>
+          <Overlay
+            isVisible={overlayVisible}
+            onBackdropPress={() => setOverlayVisible(false)}
+          >
+            <ManageTeam />
+          </Overlay>
+        </>
+      ) : null}
     </View>
   );
 }

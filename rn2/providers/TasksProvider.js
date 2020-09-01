@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { Alert } from "react-native";
 import Realm from "realm";
 import { getRealmApp } from "../getRealmApp";
 import { Task } from "../schemas";
@@ -21,7 +22,6 @@ const convertTasksLiveObjectToArray = (liveTaskObject) => {
 // TaskContext value to its descendants. Components under an TaskProvider can
 // use the useTask() hook to access the task value.
 const TasksProvider = ({ children, projectRealm, projectPartition }) => {
-  console.log("my projectPartition", projectPartition);
   const createTask = (newTaskName) => {
     projectRealm.write(() => {
       // Create a new task in the same partition -- that is, in the same project.
@@ -45,7 +45,7 @@ const TasksProvider = ({ children, projectRealm, projectPartition }) => {
         Task.STATUS_COMPLETE,
       ].includes(status)
     ) {
-      throw new Error(`Invalid Status ${status}`);
+      throw new Error(`Invalid Status ${status}`); // an alert is not placed because this is an error for the developer not the user
     }
 
     projectRealm.write(() => {
@@ -64,9 +64,10 @@ const TasksProvider = ({ children, projectRealm, projectPartition }) => {
 
   useEffect(() => {
     const syncTasks = projectRealm.objects("Task");
-    setTasks(convertTasksLiveObjectToArray(syncTasks));
+    let sortedTasks = syncTasks.sorted("name");
+    setTasks(convertTasksLiveObjectToArray(sortedTasks));
     projectRealm.addListener("change", () => {
-      setTasks(convertTasksLiveObjectToArray(syncTasks));
+      setTasks(convertTasksLiveObjectToArray(sortedTasks));
     });
   }, []);
 
@@ -95,7 +96,7 @@ const TasksProvider = ({ children, projectRealm, projectPartition }) => {
 const useTasks = () => {
   const task = useContext(TasksContext);
   if (task == null) {
-    throw new Error("useTasks() called outside of a TasksProvider?");
+    throw new Error("useTasks() called outside of a TasksProvider?"); // an alert is not placed because this is an error for the developer not the user
   }
   return task;
 };

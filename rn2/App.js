@@ -44,7 +44,7 @@ const AppBody = () => {
             title="WelcomeView"
           />
           <Stack.Screen
-            name="Project List"
+            name="Projects"
             component={ProjectsView}
             title="ProjectsView"
             headerBackTitle="log out"
@@ -52,7 +52,32 @@ const AppBody = () => {
               headerLeft: ({ navigation }) => <Logout />,
             }}
           />
-          <Stack.Screen
+          <Stack.Screen name="Task List">
+            {(props) => {
+              const { navigation, route } = props;
+              const { projectRealm, projectPartition } = route.params;
+              return (
+                <TasksProvider
+                  projectRealm={projectRealm}
+                  projectPartition={projectPartition}
+                >
+                  <TasksView navigation={navigation} route={route} />
+                </TasksProvider>
+              );
+            }}
+          </Stack.Screen>
+
+          {/* <Stack.Screen name="Task List">
+            {(navigation, route) => (
+              <TasksProvider
+                projectRealm={route.params.projectRealm}
+                projectPartition={route.params.projectPartition}
+              >
+                <TasksView navigation={navigation} route={route} />
+              </TasksProvider>
+            )}
+          </Stack.Screen> */}
+          {/* <Stack.Screen
             name="Task List"
             component={({ navigation, route }) => {
               const { projectRealm, projectPartition } = route.params;
@@ -65,7 +90,7 @@ const AppBody = () => {
                 </TasksProvider>
               );
             }}
-          />
+          /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </>

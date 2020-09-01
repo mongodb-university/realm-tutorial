@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "react-native";
+import { Button, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../providers/AuthProvider";
 
@@ -9,10 +9,19 @@ export function Logout({ screenName }) {
 
   return (
     <Button
-      title={`log out`}
+      title="Log Out"
       onPress={() => {
-        signOut();
-        navigation.navigate("Welcome View");
+        Alert.alert("Log Out", null, [
+          {
+            text: "Yes, Log Out",
+            style: "destructive",
+            onPress: () => {
+              signOut();
+              navigation.navigate("Welcome View");
+            },
+          },
+          { text: "Cancel", style: "cancel" },
+        ]);
       }}
     />
   );
