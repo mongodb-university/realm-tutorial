@@ -26,8 +26,10 @@ export function WelcomeView({ navigation, route }) {
   };
 
   const onPressSignUp = async () => {
-    const signUpResult = await signUp(username, password);
-    onPressSignIn();
+    await signUp(username, password);
+    setTimeout(() => {
+      onPressSignIn();
+    }, 3000); // 3 second timeout to allow for realm to receive the user object, so the next screen can retrieve it via  userRealm.objects("User");
   };
   return (
     <View>

@@ -36,10 +36,7 @@ const AuthProvider = ({ children }) => {
   // authentication provider to register the user.
   const signUp = async (email, password) => {
     try {
-      console.log(`Registering as ${email}...`);
-      const signUp = await app.emailPasswordAuth.registerUser(email, password);
-      const signIn = await signIn(email, password);
-      return signIn;
+      await app.emailPasswordAuth.registerUser(email, password);
     } catch (err) {
       Alert.alert(
         "An error occured while signing up",
