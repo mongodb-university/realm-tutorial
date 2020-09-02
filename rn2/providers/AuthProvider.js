@@ -22,6 +22,7 @@ const AuthProvider = ({ children }) => {
     if (!user) {
       return;
     }
+
     const openRealm = async () => {
       const config = {
         sync: {
@@ -60,7 +61,8 @@ const AuthProvider = ({ children }) => {
       const userRealm = realmRef.current;
       if (userRealm) {
         userRealm.close();
-        userRealm = null;
+        realmRef.current = null;
+        setProjectData([]); // set project data to an empty array (this prevents the array from staying in state on logout)
       }
     };
   }, [user]);
@@ -106,7 +108,6 @@ const AuthProvider = ({ children }) => {
       console.warn("Not logged in, can't log out!");
       return;
     }
-    console.log("Logging out...");
     user.logOut();
     setUser(null);
   };

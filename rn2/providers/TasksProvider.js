@@ -75,9 +75,9 @@ const TasksProvider = ({ children, projectPartition }) => {
     // If there is an open realm, we must close it.
     const projectRealm = realmRef.current;
     if (projectRealm) {
-      projectRealm.removeAllListeners();
       projectRealm.close();
       realmRef.current = null;
+      setTasks([]);
     }
   }, []);
 
