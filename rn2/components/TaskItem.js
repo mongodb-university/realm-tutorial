@@ -50,7 +50,11 @@ export function TaskItem({ task }) {
     <>
       <ActionSheet
         visible={actionSheetVisible}
-        closeOverlay={() => setActionSheetVisible(false)}
+        closeOverlay={() => {
+          if (task.status) {
+            setActionSheetVisible(false);
+          }
+        }}
         actions={actions}
       />
       <ListItem
