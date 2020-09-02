@@ -15,10 +15,13 @@ let userRealm;
 // AuthContext value to its descendants. Components under an AuthProvider can
 // use the useAuth() hook to access the auth value.
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
   const [projectData, setProjectData] = useState([]);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     const openRealm = async () => {
       const config = {
         sync: {
