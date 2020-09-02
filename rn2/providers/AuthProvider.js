@@ -23,7 +23,6 @@ const AuthProvider = ({ children }) => {
       const creds = Realm.Credentials.emailPassword(email, password);
       const newUser = await app.logIn(creds);
       setUser(newUser);
-      return newUser;
     } catch (err) {
       Alert.alert(
         "An error occured while signing in",
