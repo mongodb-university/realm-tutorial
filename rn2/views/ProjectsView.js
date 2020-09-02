@@ -4,7 +4,7 @@ import { useAuth } from "../providers/AuthProvider";
 import { ListItem } from "react-native-elements";
 
 export function ProjectsView({ navigation, route }) {
-  const { user, projectData } = useAuth();
+  const { projectData } = useAuth();
 
   // the onClickProject navigates to the Task List with the project name
   // and project partition value

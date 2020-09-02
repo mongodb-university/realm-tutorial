@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import Realm from "realm";
 import { Alert } from "react-native";
 import { getRealmApp } from "../getRealmApp";
@@ -10,13 +10,13 @@ const app = getRealmApp();
 // the AuthProvider.
 const AuthContext = React.createContext(null);
 
-let userRealm;
 // The AuthProvider is responsible for user management and provides the
 // AuthContext value to its descendants. Components under an AuthProvider can
 // use the useAuth() hook to access the auth value.
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [projectData, setProjectData] = useState([]);
+  const realmRef = useRef(null);
 
   useEffect(() => {
     if (!user) {
@@ -31,7 +31,9 @@ const AuthProvider = ({ children }) => {
       };
       // open a realm with the logged in user's partition value in order
       // to get the projects that the logged in users is a member of
-      userRealm = await Realm.open(config);
+
+      const userRealm = await Realm.open(config);
+      realmRef.current = userRealm;
       const users = userRealm.objects("User");
 
       if (users[0]) {
@@ -55,6 +57,7 @@ const AuthProvider = ({ children }) => {
 
     return () => {
       // cleanup function
+      const userRealm = realmRef.current;
       if (userRealm) {
         userRealm.close();
         userRealm = null;

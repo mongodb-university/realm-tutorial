@@ -1,18 +1,17 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import Realm from "realm";
 import { Task } from "../schemas";
 import { useAuth } from "./AuthProvider";
 
 const TasksContext = React.createContext(null);
 
-// declared a projectRealm variable to be defined later, with an open realm
-let projectRealm;
-
 const TasksProvider = ({ children, projectPartition }) => {
   const [tasks, setTasks] = useState([]);
   const { user } = useAuth();
+  const realmRef = useRef(null);
 
   const createTask = (newTaskName) => {
+    const projectRealm = realmRef.current;
     projectRealm.write(() => {
       // Create a new task in the same partition -- that is, in the same project.
       projectRealm.create(
@@ -37,6 +36,7 @@ const TasksProvider = ({ children, projectPartition }) => {
     ) {
       throw new Error(`Invalid Status ${status}`);
     }
+    const projectRealm = realmRef.current;
     projectRealm.write(() => {
       task.status = status;
     });
@@ -44,6 +44,7 @@ const TasksProvider = ({ children, projectPartition }) => {
 
   // Define the function for deleting a task.
   const deleteTask = (task) => {
+    const projectRealm = realmRef.current;
     projectRealm.write(() => {
       projectRealm.delete(task);
       setTasks([...projectRealm.objects("Task").sorted("name")]);
@@ -59,7 +60,8 @@ const TasksProvider = ({ children, projectPartition }) => {
         },
       };
       // open a realm for this particular project
-      projectRealm = await Realm.open(config);
+      const projectRealm = await Realm.open(config);
+      realmRef.current = projectRealm;
 
       const syncTasks = projectRealm.objects("Task");
       let sortedTasks = syncTasks.sorted("name");
@@ -70,13 +72,13 @@ const TasksProvider = ({ children, projectPartition }) => {
     };
     openRealm();
 
-    return () => {
-      // cleanup function
-      if (projectRealm) {
-        projectRealm.close();
-        projectRealm = null;
-      }
-    };
+    // If there is an open realm, we must close it.
+    const projectRealm = realmRef.current;
+    if (projectRealm) {
+      projectRealm.removeAllListeners();
+      projectRealm.close();
+      realmRef.current = null;
+    }
   }, []);
 
   // Render the children within the TaskContext's provider. The value contains
