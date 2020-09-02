@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, ListItem, BottomSheet } from "react-native-elements";
+import { Text, ListItem } from "react-native-elements";
 import { useTasks } from "../providers/TasksProvider";
 import { ActionSheet } from "./ActionSheet";
 import { Task } from "../schemas";
