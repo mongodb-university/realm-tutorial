@@ -1,19 +1,10 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from "react";
-import { SafeAreaView, StyleSheet, Text, Button } from "react-native";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { AuthProvider, useAuth } from "./providers/AuthProvider";
-import { TasksProvider, useTasks } from "./providers/TasksProvider";
+import { AuthProvider } from "./providers/AuthProvider";
+import { TasksProvider } from "./providers/TasksProvider";
 
 import { WelcomeView } from "./views/WelcomeView";
 import { ProjectsView } from "./views/ProjectsView";
@@ -32,8 +23,6 @@ const App: () => React$Node = () => {
 };
 
 const AppBody = () => {
-  const { signOut } = useAuth();
-
   return (
     <>
       <NavigationContainer>
@@ -49,54 +38,24 @@ const AppBody = () => {
             title="ProjectsView"
             headerBackTitle="log out"
             options={{
-              headerLeft: ({ navigation }) => <Logout />,
+              headerLeft: () => <Logout />,
             }}
           />
           <Stack.Screen name="Task List">
             {(props) => {
               const { navigation, route } = props;
-              const { projectRealm, projectPartition } = route.params;
+              const { user, projectPartition } = route.params;
               return (
-                <TasksProvider
-                  projectRealm={projectRealm}
-                  projectPartition={projectPartition}
-                >
+                <TasksProvider user={user} projectPartition={projectPartition}>
                   <TasksView navigation={navigation} route={route} />
                 </TasksProvider>
               );
             }}
           </Stack.Screen>
-
-          {/* <Stack.Screen name="Task List">
-            {(navigation, route) => (
-              <TasksProvider
-                projectRealm={route.params.projectRealm}
-                projectPartition={route.params.projectPartition}
-              >
-                <TasksView navigation={navigation} route={route} />
-              </TasksProvider>
-            )}
-          </Stack.Screen> */}
-          {/* <Stack.Screen
-            name="Task List"
-            component={({ navigation, route }) => {
-              const { projectRealm, projectPartition } = route.params;
-              return (
-                <TasksProvider
-                  projectRealm={projectRealm}
-                  projectPartition={projectPartition}
-                >
-                  <TasksView navigation={navigation} route={route} />
-                </TasksProvider>
-              );
-            }}
-          /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default App;

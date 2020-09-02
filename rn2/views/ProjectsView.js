@@ -5,22 +5,13 @@ import styles from "../stylesheet";
 import { ListItem } from "react-native-elements";
 
 export function ProjectsView({ navigation, route }) {
-  const { userRealm } = route.params;
   const { user } = useAuth();
+
   const [userData, setUserData] = useState([]);
 
   const onClickProject = async (project) => {
     try {
-      const config = {
-        sync: {
-          user: user,
-          partitionValue: project.partition,
-        },
-      };
-
-      const projectRealm = await Realm.open(config);
       navigation.navigate("Task List", {
-        projectRealm,
         name: project.name,
         projectPartition: project.partition,
       });
@@ -38,13 +29,24 @@ export function ProjectsView({ navigation, route }) {
   };
 
   useEffect(() => {
-    const users = userRealm.objects("User");
-    let memberOf = users[0].memberOf;
-    createUserData(memberOf);
+    const openRealm = async () => {
+      const config = {
+        sync: {
+          user,
+          partitionValue: `user=${user.id}`,
+        },
+      };
+      const userRealm = await Realm.open(config);
+      const users = userRealm.objects("User");
 
-    userRealm.addListener("change", () => {
+      let memberOf = users[0].memberOf;
       createUserData(memberOf);
-    });
+      userRealm.addListener("change", () => {
+        createUserData(memberOf);
+      });
+    };
+
+    openRealm();
   }, []);
 
   return (

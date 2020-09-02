@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { View, Button } from "react-native";
 import styles from "../stylesheet";
 
-import { Overlay, Text } from "react-native-elements";
+import { Overlay } from "react-native-elements";
 import { ManageTeam } from "../components/ManageTeam";
 
 import { useTasks } from "../providers/TasksProvider";

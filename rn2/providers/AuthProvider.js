@@ -6,7 +6,8 @@ import { getRealmApp } from "../getRealmApp";
 // Access the Realm App.
 const app = getRealmApp();
 
-// Create a new Context object that will be provided to descendants of the AuthProvider.
+// Create a new Context object that will be provided to descendants of
+// the AuthProvider.
 const AuthContext = React.createContext(null);
 
 // The AuthProvider is responsible for user management and provides the
@@ -15,8 +16,8 @@ const AuthContext = React.createContext(null);
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // The signIn function takes an email and password and uses the emailPassword
-  // authentication provider to log in.
+  // The signIn function takes an email and password and uses the
+  // emailPassword authentication provider to log in.
   const signIn = async (email, password) => {
     try {
       const creds = Realm.Credentials.emailPassword(email, password);
@@ -32,8 +33,8 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // The signUp function takes an email and password and uses the emailPassword
-  // authentication provider to register the user.
+  // The signUp function takes an email and password and uses the
+  // emailPassword authentication provider to register the user.
   const signUp = async (email, password) => {
     try {
       await app.emailPasswordAuth.registerUser(email, password);
@@ -46,10 +47,11 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // signOut of the current user.
+  // The signUp function calls the logOut function on the currently
+  // logged in user
   const signOut = () => {
     if (user == null) {
-      console.warn("Not logged in -- can't log out!");
+      console.warn("Not logged in, can't log out!");
       return;
     }
     console.log("Logging out...");
@@ -71,12 +73,12 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// The useAuth hook can be used by components under an AuthProvider to access
-// the auth context value.
+// The useAuth hook can be used by components under an AuthProvider to
+// access the auth context value.
 const useAuth = () => {
   const auth = useContext(AuthContext);
   if (auth == null) {
-    throw new Error("useAuth() called outside of a AuthProvider?"); // an alert is not placed because this is an error for the developer not the user
+    throw new Error("useAuth() called outside of a AuthProvider?");
   }
   return auth;
 };

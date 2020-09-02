@@ -1,27 +1,21 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Alert } from "react-native";
 import Realm from "realm";
 import { getRealmApp } from "../getRealmApp";
 import { Task } from "../schemas";
-
+import { useAuth } from "./AuthProvider";
+import { convertLiveObjectToArray } from "../convertLiveObjectToArray";
 // Access the Realm App.
 const app = getRealmApp();
 
-// Create a new Context object that will be provided to descendants of the TaskProvider.
 const TasksContext = React.createContext(null);
 
-const convertTasksLiveObjectToArray = (liveTaskObject) => {
-  const taskArray = [];
-  for (task of liveTaskObject) {
-    taskArray.push(task);
-  }
-  return taskArray;
-};
+// declared a projectRealm variable to be defined later, with an open realm
+let projectRealm;
 
-// The TaskProvider is responsible for user management and provides the
-// TaskContext value to its descendants. Components under an TaskProvider can
-// use the useTask() hook to access the task value.
-const TasksProvider = ({ children, projectRealm, projectPartition }) => {
+const TasksProvider = ({ children, projectPartition }) => {
+  const [tasks, setTasks] = useState([]);
+  const { user } = useAuth();
+
   const createTask = (newTaskName) => {
     projectRealm.write(() => {
       // Create a new task in the same partition -- that is, in the same project.
@@ -45,9 +39,8 @@ const TasksProvider = ({ children, projectRealm, projectPartition }) => {
         Task.STATUS_COMPLETE,
       ].includes(status)
     ) {
-      throw new Error(`Invalid Status ${status}`); // an alert is not placed because this is an error for the developer not the user
+      throw new Error(`Invalid Status ${status}`);
     }
-
     projectRealm.write(() => {
       task.status = status;
     });
@@ -59,16 +52,26 @@ const TasksProvider = ({ children, projectRealm, projectPartition }) => {
       projectRealm.delete(task);
     });
   };
-  const [tasks, setTasks] = useState([]);
-  const projectId = null;
 
   useEffect(() => {
-    const syncTasks = projectRealm.objects("Task");
-    let sortedTasks = syncTasks.sorted("name");
-    setTasks(convertTasksLiveObjectToArray(sortedTasks));
-    projectRealm.addListener("change", () => {
-      setTasks(convertTasksLiveObjectToArray(sortedTasks));
-    });
+    const openRealm = async () => {
+      const config = {
+        sync: {
+          user: user,
+          partitionValue: projectPartition,
+        },
+      };
+      // open a realm for this particular project
+      projectRealm = await Realm.open(config);
+
+      const syncTasks = projectRealm.objects("Task");
+      let sortedTasks = syncTasks.sorted("name");
+      setTasks(convertLiveObjectToArray(sortedTasks));
+      projectRealm.addListener("change", () => {
+        setTasks(convertLiveObjectToArray(sortedTasks));
+      });
+    };
+    openRealm();
   }, []);
 
   // Render the children within the TaskContext's provider. The value contains
@@ -82,7 +85,6 @@ const TasksProvider = ({ children, projectRealm, projectPartition }) => {
         deleteTask,
         setTaskStatus,
         tasks,
-        projectId,
       }}
     >
       {children}
