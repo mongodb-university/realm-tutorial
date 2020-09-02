@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { useAuth } from "../providers/AuthProvider";
 import { ListItem } from "react-native-elements";
-import { convertLiveObjectToArray } from "../convertLiveObjectToArray";
 
 export function ProjectsView({ navigation, route }) {
   const { user } = useAuth();
@@ -21,14 +20,6 @@ export function ProjectsView({ navigation, route }) {
     }
   };
 
-  // the createProjectData method takes a live object of projects that
-  // the logged in user is a member of, and sets the projectData state
-  // variable with those projects info as an array
-  const createProjectData = (projectsTheUserIsAMemberOf) => {
-    const myprojectData = convertLiveObjectToArray(projectsTheUserIsAMemberOf);
-    setProjectData(myprojectData);
-  };
-
   useEffect(() => {
     const openRealm = async () => {
       const config = {
@@ -45,16 +36,16 @@ export function ProjectsView({ navigation, route }) {
       if (users[0]) {
         const users = userRealm.objects("User");
         let memberOf = users[0].memberOf;
-        createProjectData(memberOf);
+        setProjectData([...memberOf]);
       } else {
-        createProjectData([
+        setProjectData([
           { name: "My Project", partition: `project=${user.id}` },
         ]);
       }
 
       users.addListener(() => {
         let memberOf = users[0].memberOf;
-        createProjectData(memberOf);
+        setProjectData([...memberOf]);
       });
     };
 

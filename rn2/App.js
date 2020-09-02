@@ -28,9 +28,9 @@ const AppBody = () => {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name="Welcome View"
+            name="WelcomeView"
             component={WelcomeView}
-            title="WelcomeView"
+            title="Task Tracker"
           />
           <Stack.Screen
             name="Projects"

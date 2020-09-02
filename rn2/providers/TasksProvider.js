@@ -3,7 +3,6 @@ import Realm from "realm";
 import { getRealmApp } from "../getRealmApp";
 import { Task } from "../schemas";
 import { useAuth } from "./AuthProvider";
-import { convertLiveObjectToArray } from "../convertLiveObjectToArray";
 // Access the Realm App.
 const app = getRealmApp();
 
@@ -66,9 +65,9 @@ const TasksProvider = ({ children, projectPartition }) => {
 
       const syncTasks = projectRealm.objects("Task");
       let sortedTasks = syncTasks.sorted("name");
-      setTasks(convertLiveObjectToArray(sortedTasks));
-      projectRealm.addListener("change", () => {
-        setTasks(convertLiveObjectToArray(sortedTasks));
+      setTasks([...sortedTasks]);
+      sortedTasks.addListener(() => {
+        setTasks([...sortedTasks]);
       });
     };
     openRealm();
