@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { View } from "react-native";
 import { useAuth } from "../providers/AuthProvider";
-import styles from "../stylesheet";
 import { ListItem } from "react-native-elements";
+import { convertLiveObjectToArray } from "../convertLiveObjectToArray";
 
 export function ProjectsView({ navigation, route }) {
   const { user } = useAuth();
+  const [projectData, setProjectData] = useState([]);
 
-  const [userData, setUserData] = useState([]);
-
+  // the onClickProject navigates to the Task List with the project name
+  // and project partition value
   const onClickProject = async (project) => {
     try {
       navigation.navigate("Task List", {
@@ -20,12 +21,12 @@ export function ProjectsView({ navigation, route }) {
     }
   };
 
-  const createUserData = (arrayOfProjectsTheUserIsAMemberOf) => {
-    const myUserData = [];
-    for (let project of arrayOfProjectsTheUserIsAMemberOf) {
-      myUserData.push(project);
-    }
-    setUserData(myUserData);
+  // the createProjectData method takes a live object of projects that
+  // the logged in user is a member of, and sets the projectData state
+  // variable with those projects info as an array
+  const createProjectData = (projectsTheUserIsAMemberOf) => {
+    const myprojectData = convertLiveObjectToArray(projectsTheUserIsAMemberOf);
+    setProjectData(myprojectData);
   };
 
   useEffect(() => {
@@ -36,13 +37,14 @@ export function ProjectsView({ navigation, route }) {
           partitionValue: `user=${user.id}`,
         },
       };
+      // open a realm with the logged in user's partition value in order
+      // to get the projects that the logged in users is a member of
       const userRealm = await Realm.open(config);
       const users = userRealm.objects("User");
-
       let memberOf = users[0].memberOf;
-      createUserData(memberOf);
+      createProjectData(memberOf);
       userRealm.addListener("change", () => {
-        createUserData(memberOf);
+        createProjectData(memberOf);
       });
     };
 
@@ -51,7 +53,7 @@ export function ProjectsView({ navigation, route }) {
 
   return (
     <View>
-      {userData.map((project, i) => (
+      {projectData.map((project, i) => (
         <View key={project.name}>
           <ListItem
             title={project.name}

@@ -8,7 +8,6 @@
 // [ObjectId], "name": "grocery shopping"}]
 
 export const convertLiveObjectToArray = (liveObject) => {
-  console.log(liveObject);
   const arr = [];
   for (item of liveObject) {
     arr.push(item);

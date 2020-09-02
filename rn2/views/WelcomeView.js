@@ -1,29 +1,36 @@
 import React, { useState } from "react";
-import Realm from "realm";
 import { View, Text, TextInput, Button } from "react-native";
 import { useAuth } from "../providers/AuthProvider";
 import styles from "../stylesheet";
 
-export function WelcomeView({ navigation, route }) {
+export function WelcomeView({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { signUp, signIn } = useAuth();
 
+  // the onPressSignIn method calls AuthProvider.signIn with the
+  // username/password in state and then navigates to the Projects
+  // screen once the user is signed in
   const onPressSignIn = async () => {
     try {
-      const authedUser = await signIn(username, password);
-
+      await signIn(username, password);
       navigation.navigate("Projects");
     } catch (err) {
       throw `an error occurred while signing in ${err}`;
     }
   };
 
+  // the onPressSignUp method calls AuthProvider.signUp with the
+  // username/password in state and then calls onPressSignIn once a user
+  // is registered
   const onPressSignUp = async () => {
     await signUp(username, password);
+    // 1 second timeout to allow for realm to receive the user object,
+    // so the next screen can retrieve it via
+    // userRealm.objects("User");
     setTimeout(() => {
       onPressSignIn();
-    }, 1000); // 3 second timeout to allow for realm to receive the user object, so the next screen can retrieve it via  userRealm.objects("User");
+    }, 1000);
   };
   return (
     <View>
