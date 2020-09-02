@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Text, ListItem, BottomSheet } from "react-native-elements";
 import { useTasks } from "../providers/TasksProvider";
-import { View, Button } from "react-native";
 import { ActionSheet } from "./ActionSheet";
 import { Task } from "../schemas";
 
@@ -46,8 +45,6 @@ export function TaskItem({ task }) {
       },
     });
   }
-
-  const [isVisible, setIsVisible] = useState(false);
 
   return (
     <>

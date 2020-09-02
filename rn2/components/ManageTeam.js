@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-
 import { View, Button, TextInput, Alert } from "react-native";
 import styles from "../stylesheet";
-
-import { Overlay, Text, ListItem } from "react-native-elements";
+import { Text, ListItem } from "react-native-elements";
 
 import { useAuth } from "../providers/AuthProvider";
 
@@ -12,6 +10,8 @@ export function ManageTeam({}) {
   const [newTeamMember, setNewTeamMember] = useState(null);
   const [teamMemberList, setTeamMemberList] = useState([]);
 
+  // getTeam calls the backend function getMyTeamMembers to retrieve the
+  // team members of the logged in user's project
   const getTeam = async () => {
     try {
       const teamMembers = await user.functions.getMyTeamMembers([]);
@@ -23,11 +23,11 @@ export function ManageTeam({}) {
   };
   getTeam();
 
+  // addTeamMember calls the backend function addTeamMember to add a
+  // team member to the logged in user's project
   const addTeamMember = async () => {
     try {
-      const addTeamMemberResult = await user.functions.addTeamMember(
-        newTeamMember
-      );
+      await user.functions.addTeamMember(newTeamMember);
       getTeam();
     } catch (err) {
       Alert.alert("An error occurred while adding a team member", err.message);
@@ -39,6 +39,8 @@ export function ManageTeam({}) {
     }
   };
 
+  // removeTeamMember calls the backend function removeTeamMember to remove a
+  // team member from the logged in user's project
   const removeTeamMember = async (email) => {
     try {
       const removeTeamMemberResult = await user.functions.removeTeamMember(
