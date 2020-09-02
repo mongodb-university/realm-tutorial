@@ -41,9 +41,19 @@ export function ProjectsView({ navigation, route }) {
       // to get the projects that the logged in users is a member of
       const userRealm = await Realm.open(config);
       const users = userRealm.objects("User");
-      let memberOf = users[0].memberOf;
-      createProjectData(memberOf);
-      userRealm.addListener("change", () => {
+
+      if (users[0]) {
+        const users = userRealm.objects("User");
+        let memberOf = users[0].memberOf;
+        createProjectData(memberOf);
+      } else {
+        createProjectData([
+          { name: "My Project", partition: `project=${user.id}` },
+        ]);
+      }
+
+      users.addListener(() => {
+        let memberOf = users[0].memberOf;
         createProjectData(memberOf);
       });
     };
