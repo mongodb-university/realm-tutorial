@@ -54,7 +54,7 @@ export function ProjectsView({ navigation, route }) {
 
   return (
     <View>
-      {projectData.map((project, i) => (
+      {projectData.map((project) => (
         <View key={project.name}>
           <ListItem
             title={project.name}

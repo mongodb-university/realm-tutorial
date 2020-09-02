@@ -1,10 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import Realm from "realm";
-import { getRealmApp } from "../getRealmApp";
 import { Task } from "../schemas";
 import { useAuth } from "./AuthProvider";
-// Access the Realm App.
-const app = getRealmApp();
 
 const TasksContext = React.createContext(null);
 
@@ -71,6 +68,14 @@ const TasksProvider = ({ children, projectPartition }) => {
       });
     };
     openRealm();
+
+    return () => {
+      // cleanup function
+      if (projectRealm) {
+        projectRealm.close();
+        projectRealm = null;
+      }
+    };
   }, []);
 
   // Render the children within the TaskContext's provider. The value contains

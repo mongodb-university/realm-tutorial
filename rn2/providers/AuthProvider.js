@@ -28,7 +28,9 @@ const AuthProvider = ({ children }) => {
         "An error occured while signing in",
         JSON.stringify(err, null, 2)
       );
-      throw `An error occured while signing in ${JSON.stringify(err, null, 2)}`;
+      console.warn(
+        `An error occured while signing in ${JSON.stringify(err, null, 2)}`
+      );
     }
   };
 
@@ -42,7 +44,9 @@ const AuthProvider = ({ children }) => {
         "An error occured while signing up",
         JSON.stringify(err, null, 2)
       );
-      throw `An error occured while signing up ${JSON.stringify(err, null, 2)}`;
+      console.warn(
+        `An error occured while signing up ${JSON.stringify(err, null, 2)}`
+      );
     }
   };
 
