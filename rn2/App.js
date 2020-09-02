@@ -30,7 +30,7 @@ const AppBody = () => {
           <Stack.Screen
             name="Welcome View"
             component={WelcomeView}
-            title="Task Tracker"
+            options={{ title: "Task Tracker" }}
           />
           <Stack.Screen
             name="Projects"
