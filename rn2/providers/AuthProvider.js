@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Realm from "realm";
 import { Alert } from "react-native";
 import { getRealmApp } from "../getRealmApp";
@@ -10,11 +10,54 @@ const app = getRealmApp();
 // the AuthProvider.
 const AuthContext = React.createContext(null);
 
+let userRealm;
 // The AuthProvider is responsible for user management and provides the
 // AuthContext value to its descendants. Components under an AuthProvider can
 // use the useAuth() hook to access the auth value.
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [projectData, setProjectData] = useState([]);
+
+  useEffect(() => {
+    const openRealm = async () => {
+      const config = {
+        sync: {
+          user,
+          partitionValue: `user=${user.id}`,
+        },
+      };
+      // open a realm with the logged in user's partition value in order
+      // to get the projects that the logged in users is a member of
+      userRealm = await Realm.open(config);
+      const users = userRealm.objects("User");
+
+      if (users[0]) {
+        const users = userRealm.objects("User");
+        let memberOf = users[0].memberOf;
+
+        setProjectData([...memberOf]);
+      } else {
+        setProjectData([
+          { name: "My Project", partition: `project=${user.id}` },
+        ]);
+      }
+
+      users.addListener(() => {
+        let memberOf = users[0].memberOf;
+        setProjectData([...memberOf]);
+      });
+    };
+
+    openRealm();
+
+    return () => {
+      // cleanup function
+      if (userRealm) {
+        userRealm.close();
+        userRealm = null;
+      }
+    };
+  }, [user]);
 
   // The signIn function takes an email and password and uses the
   // emailPassword authentication provider to log in.
@@ -69,6 +112,7 @@ const AuthProvider = ({ children }) => {
         signIn,
         signOut,
         user,
+        projectData, // list of projects the user is a memberOf
       }}
     >
       {children}

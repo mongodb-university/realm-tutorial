@@ -46,6 +46,7 @@ const TasksProvider = ({ children, projectPartition }) => {
   const deleteTask = (task) => {
     projectRealm.write(() => {
       projectRealm.delete(task);
+      setTasks([...projectRealm.objects("Task").sorted("name")]);
     });
   };
 
