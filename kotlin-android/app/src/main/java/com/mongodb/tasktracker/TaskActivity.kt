@@ -43,8 +43,13 @@ class TaskActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
         else {
-            // configure realm to use the current user and the partition corresponding to "My Project"
-            val config = SyncConfiguration.Builder(user!!, "My Project")
+            // get the partition value and name of the project we are currently viewing
+            val partition = intent.extras?.getString(PARTITION_EXTRA_KEY)
+            val projectName = intent.extras?.getString(PROJECT_NAME_EXTRA_KEY)
+
+            // display the name of the project in the action bar
+            title = projectName
+            val config = SyncConfiguration.Builder(user!!, partition)
                 .waitForInitialRemoteData()
                 .build()
 

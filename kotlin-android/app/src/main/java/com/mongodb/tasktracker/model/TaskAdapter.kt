@@ -77,7 +77,8 @@ internal class TaskAdapter(data: OrderedRealmCollection<Task>) : RealmRecyclerVi
                     true
                 }
                 popup.show()
-            }}
+            }
+        }
     }
 
     private fun changeStatus(status: TaskStatus, _id: ObjectId?) {

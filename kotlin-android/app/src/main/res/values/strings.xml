@@ -6,5 +6,7 @@
     <string name="login">Login</string>
     <string name="more">\u22EE</string>
     <string name="new_task">Create new task</string>
+    <string name="new_project">Create new project</string>
     <string name="logout">Log Out</string>
+    <string name="remove">REMOVE</string>
 </resources>
