@@ -7,6 +7,7 @@
         "readPreference": "primary",
         "sync": {
             "state": "enabled",
+            "database_name": "tracker",
             "partition": {
                 "key": "_partition",
                 "type": "string",
@@ -33,7 +34,8 @@
                         }
                     }
                 }
-            }
+            },
+            "last_disabled": 1597777393
         },
         "wireProtocolEnabled": false
     },

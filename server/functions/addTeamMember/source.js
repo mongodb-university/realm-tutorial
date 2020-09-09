@@ -11,11 +11,11 @@ exports = async function(email) {
     return {error: "You are already on your own team!"};
   }
   
-  if (callingUser.team && callingUser.team.includes(callingUser.id)) {
-    return {error: `User ${email} is already a member of your team`};
-  }
-  
   const projectPartition = `project=${callingUser.id}`;
+
+  if (newMember.canWritePartitions && newMember.canWritePartitions.includes(projectPartition)) {
+     return {error: `User ${email} is already a member of your team`};
+  }
 
   try {
     return await collection.updateOne(
