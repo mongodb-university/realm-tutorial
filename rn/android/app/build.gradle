@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.phase2"
+        applicationId "com.rn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -301,7 +301,7 @@ PODS:
     - React-Core (= 0.63.2)
     - React-cxxreact (= 0.63.2)
     - React-jsi (= 0.63.2)
-  - RealmJS (10.0.0-beta.9):
+  - RealmJS (10.0.0-beta.12):
     - GCDWebServer
     - React
   - RNCMaskedView (0.1.10):
@@ -497,7 +497,7 @@ SPEC CHECKSUMS:
   React-RCTText: 1b6773e776e4b33f90468c20fe3b16ca3e224bb8
   React-RCTVibration: 4d2e726957f4087449739b595f107c0d4b6c2d2d
   ReactCommon: a0a1edbebcac5e91338371b72ffc66aa822792ce
-  RealmJS: 61689a0aefda5ba30c9f21a447a0348ba4b0cdee
+  RealmJS: c241a1f3f11f20509c1a866c2e5cdaf37ea4a877
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
   RNGestureHandler: b6b359bb800ae399a9c8b27032bdbf7c18f08a08
   RNReanimated: 89f5e0a04d1dd52fbf27e7e7030d8f80a646a3fc
@@ -506,6 +506,6 @@ SPEC CHECKSUMS:
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: d3d4470894d369b9bbf2afbb392f526643b343a5
+PODFILE CHECKSUM: 87d4a5e098ecf1e699fec390959a22a3484629c1
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.9.1
