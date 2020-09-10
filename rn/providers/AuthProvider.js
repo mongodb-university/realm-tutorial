@@ -39,7 +39,7 @@ const AuthProvider = ({ children }) => {
 
       if (users[0]) {
         const users = userRealm.objects("User");
-        let memberOf = users[0].memberOf;
+        const { memberOf } = users[0];
 
         setProjectData([...memberOf]);
       } else {
