@@ -34,7 +34,7 @@ const TasksProvider = ({ children, projectPartition }) => {
         Task.STATUS_COMPLETE,
       ].includes(status)
     ) {
-      throw new Error(`Invalid Status ${status}`);
+      throw new Error(`Invalid status: ${status}`);
     }
     const projectRealm = realmRef.current;
     projectRealm.write(() => {
