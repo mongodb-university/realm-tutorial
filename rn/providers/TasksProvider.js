@@ -72,13 +72,15 @@ const TasksProvider = ({ children, projectPartition }) => {
     };
     openRealm();
 
-    // If there is an open realm, we must close it.
-    const projectRealm = realmRef.current;
-    if (projectRealm) {
-      projectRealm.close();
-      realmRef.current = null;
-      setTasks([]);
-    }
+    return () => {
+      // cleanup function
+      const projectRealm = realmRef.current;
+      if (projectRealm) {
+        projectRealm.close();
+        realmRef.current = null;
+        setTasks([]);
+      }
+    };
   }, [user, projectPartition]);
 
   // Render the children within the TaskContext's provider. The value contains
