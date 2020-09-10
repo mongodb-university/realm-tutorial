@@ -43,9 +43,7 @@ export function ManageTeam({}) {
   // team member from the logged in user's project
   const removeTeamMember = async (email) => {
     try {
-      const removeTeamMemberResult = await user.functions.removeTeamMember(
-        email
-      );
+      await user.functions.removeTeamMember(email);
       getTeam();
     } catch (err) {
       Alert.alert("An error occurred while removing a team member", err);
