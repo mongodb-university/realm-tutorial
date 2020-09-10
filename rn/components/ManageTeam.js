@@ -18,7 +18,6 @@ export function ManageTeam({}) {
       setTeamMemberList(teamMembers);
     } catch (err) {
       Alert.alert("An error occurred while getting team members", err);
-      throw `an error occurred while getting team members: ${err}`;
     }
   };
   getTeam();
@@ -31,11 +30,6 @@ export function ManageTeam({}) {
       getTeam();
     } catch (err) {
       Alert.alert("An error occurred while adding a team member", err.message);
-      throw `an error occurred while adding a team member: ${JSON.stringify(
-        null,
-        err,
-        2
-      )}`;
     }
   };
 
@@ -47,11 +41,6 @@ export function ManageTeam({}) {
       getTeam();
     } catch (err) {
       Alert.alert("An error occurred while removing a team member", err);
-      throw `an error occurred while removing a team member: ${JSON.stringify(
-        null,
-        err,
-        2
-      )}`;
     }
   };
 
