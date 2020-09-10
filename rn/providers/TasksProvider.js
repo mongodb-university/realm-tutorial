@@ -79,7 +79,7 @@ const TasksProvider = ({ children, projectPartition }) => {
       realmRef.current = null;
       setTasks([]);
     }
-  }, []);
+  }, [user, projectPartition]);
 
   // Render the children within the TaskContext's provider. The value contains
   // everything that should be made available to descendants that use the
