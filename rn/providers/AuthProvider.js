@@ -96,7 +96,7 @@ const AuthProvider = ({ children }) => {
         JSON.stringify(err, null, 2)
       );
       console.warn(
-        `An error occured while signing up ${JSON.stringify(err, null, 2)}`
+        `An error occured while signing up: ${JSON.stringify(err, null, 2)}`
       );
     }
   };
