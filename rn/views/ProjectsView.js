@@ -9,14 +9,10 @@ export function ProjectsView({ navigation, route }) {
   // the onClickProject navigates to the Task List with the project name
   // and project partition value
   const onClickProject = async (project) => {
-    try {
-      navigation.navigate("Task List", {
-        name: project.name,
-        projectPartition: project.partition,
-      });
-    } catch (err) {
-      throw `error opening user realm ${err}`;
-    }
+    navigation.navigate("Task List", {
+      name: project.name,
+      projectPartition: project.partition,
+    });
   };
 
   return (
