@@ -1,32 +1,31 @@
 package com.mongodb.tasktracker
 
-import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mongodb.tasktracker.model.Project
 import com.mongodb.tasktracker.model.ProjectAdapter
 import com.mongodb.tasktracker.model.User
 import io.realm.Realm
-import io.realm.RealmList
 import io.realm.kotlin.where
 import io.realm.mongodb.sync.SyncConfiguration
-import java.util.*
 
+/*
+* ProjectActivity: allows a user to view a collection of Projects. Clicking on a project launches a
+* view of tasks in that project. Clicking on the options button for a project launches a view
+* that allows the user to add or remove members from the project. All projects are stored in a
+* read-only realm on the logged in user's User object.
+*/
 class ProjectActivity : AppCompatActivity() {
     private var user: io.realm.mongodb.User? = null
     private lateinit var realm: Realm
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ProjectAdapter
-    private lateinit var fab: FloatingActionButton
 
     override fun onStart() {
         super.onStart()
@@ -39,13 +38,10 @@ class ProjectActivity : AppCompatActivity() {
             // if no user is currently logged in, start the login activity so the user can authenticate
             startActivity(Intent(this, LoginActivity::class.java))
         } else {
-            // configure realm to use the current user and the partition corresponding to "My Project"
+            // configure realm to use the current user and the partition corresponding to the user's project
             val config = SyncConfiguration.Builder(user!!, "user=${user!!.id}")
                 .waitForInitialRemoteData()
                 .build()
-
-            // save this configuration as the default for this entire app so other activities and threads can open their own realm instances
-            Realm.setDefaultConfiguration(config)
 
             // Sync all realm changes via a new instance, and when that instance has been successfully created connect it to an on-screen list (a recycler view)
             Realm.getInstanceAsync(config, object: Realm.Callback() {
@@ -65,8 +61,16 @@ class ProjectActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.project_list)
     }
 
+    override fun onStop() {
+        super.onStop()
+        user.run {
+            realm.close()
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        realm.close()
         recyclerView.adapter = null
     }
 
@@ -96,13 +100,12 @@ class ProjectActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerView(realm: Realm) {
-        Log.e(TAG(), "User id: " + user?.id)
         val syncedUser = realm.where<User>().sort("_id").findFirstAsync()
 
-        // hacky solution for findFirst not actually blocking until it returns a valid result
+        // when a user object is found, create the recycler view and the corresponding adapter
         syncedUser.addChangeListener { syncedUserData : User ->
-            if (syncedUserData.isLoaded()) {
-                val projectsList = syncedUserData?.memberOf ?: RealmList<Project>(Project("My Project", "user=${user?.id}"))
+            if (syncedUserData.isLoaded) {
+                val projectsList = syncedUserData.memberOf
                 adapter = ProjectAdapter(projectsList, user!!)
                 recyclerView.layoutManager = LinearLayoutManager(this)
                 recyclerView.adapter = adapter

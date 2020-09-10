@@ -12,14 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mongodb.tasktracker.model.*
-import io.realm.Realm
 import io.realm.mongodb.functions.Functions
 import org.bson.Document
 import java.util.*
 
+/*
+* MemberActivity: allows a user to view, add, and remove the members of their project.
+*/
 class MemberActivity : AppCompatActivity() {
     private var user: io.realm.mongodb.User? = null
-    private lateinit var realm: Realm
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MemberAdapter
     private lateinit var fab: FloatingActionButton
@@ -36,7 +37,7 @@ class MemberActivity : AppCompatActivity() {
             // if no user is currently logged in, start the login activity so the user can authenticate
             startActivity(Intent(this, LoginActivity::class.java))
         } else {
-            // display the name of the project whose membership we're viewing in the action bar
+            // display the name of the project whose membership we're viewing in the action bar via the title member variable of the Activity
             val projectName = intent.extras?.getString(PROJECT_NAME_EXTRA_KEY)
             title = projectName
             setUpRecyclerView()
@@ -56,26 +57,22 @@ class MemberActivity : AppCompatActivity() {
             dialogBuilder.setMessage("Add user to project by email:")
                 .setCancelable(true)
                 .setPositiveButton("Add User") { dialog, _ ->
-                    run {
-                        dialog.dismiss()
-                        val functionsManager: Functions = taskApp.getFunctions(user)
-                        functionsManager.callFunctionAsync(
-                            "addTeamMember",
-                            listOf(input.text.toString()),
-                            Document::class.java
-                        ) { result ->
-                            run {
-                                if (result.isSuccess) {
-                                    Log.v(
-                                        TAG(),
-                                        "Attempted to add team member. Result: ${result.get()}"
-                                    )
-                                    setUpRecyclerView()
-                                } else {
-                                    Log.e(TAG(), "failed to add team member with: " + result.error)
-                                    Toast.makeText(this, result.error.toString(), Toast.LENGTH_LONG).show()
-                                }
-                            }
+                    dialog.dismiss()
+                    val functionsManager: Functions = taskApp.getFunctions(user)
+                    functionsManager.callFunctionAsync(
+                        "addTeamMember",
+                        listOf(input.text.toString()),
+                        Document::class.java
+                    ) { result ->
+                        if (result.isSuccess) {
+                            Log.v(
+                                TAG(),
+                                "Attempted to add team member. Result: ${result.get()}"
+                            )
+                            setUpRecyclerView()
+                        } else {
+                            Log.e(TAG(), "failed to add team member with: " + result.error)
+                            Toast.makeText(this, result.error.toString(), Toast.LENGTH_LONG).show()
                         }
                     }
                 }
@@ -97,19 +94,18 @@ class MemberActivity : AppCompatActivity() {
 
     private fun setUpRecyclerView() {
         val functionsManager: Functions = taskApp.getFunctions(user)
+        // get team members by calling a Realm Function which returns a list of members
         functionsManager.callFunctionAsync("getMyTeamMembers", ArrayList<String>(), ArrayList::class.java) { result ->
-            run {
-                if (result.isSuccess) {
-                    Log.v(TAG(), "team members value: ${result.get()}")
-                    this.members = ArrayList(result.get().map { item -> Member(item as Document) })
-                    adapter = MemberAdapter(members, user!!)
-                    recyclerView.layoutManager = LinearLayoutManager(this)
-                    recyclerView.adapter = adapter
-                    recyclerView.setHasFixedSize(true)
-                    recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-                } else {
-                    Log.e(TAG(), "failed to get team members with: " + result.error)
-                }
+            if (result.isSuccess) {
+                Log.v(TAG(), "team members value: ${result.get()}")
+                this.members = ArrayList(result.get().map { item -> Member(item as Document) })
+                adapter = MemberAdapter(members, user!!)
+                recyclerView.layoutManager = LinearLayoutManager(this)
+                recyclerView.adapter = adapter
+                recyclerView.setHasFixedSize(true)
+                recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+            } else {
+                Log.e(TAG(), "failed to get team members with: " + result.error)
             }
         }
     }

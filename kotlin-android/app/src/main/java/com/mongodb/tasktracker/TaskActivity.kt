@@ -22,7 +22,7 @@ import com.mongodb.tasktracker.model.Task
 /*
 * TaskActivity: allows a user to view a collection of Tasks, edit the status of those tasks,
 * create new tasks, and delete existing tasks from the collection. All tasks are stored in a realm
-* and synced across devices using the partition "My Project", which is shared by all users.
+* and synced across devices using the partition "project=<user id>".
 */
 class TaskActivity : AppCompatActivity() {
     private lateinit var realm: Realm
@@ -30,6 +30,7 @@ class TaskActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TaskAdapter
     private lateinit var fab: FloatingActionButton
+    private lateinit var partition: String
 
     override fun onStart() {
         super.onStart()
@@ -44,17 +45,14 @@ class TaskActivity : AppCompatActivity() {
         }
         else {
             // get the partition value and name of the project we are currently viewing
-            val partition = intent.extras?.getString(PARTITION_EXTRA_KEY)
+            partition = intent.extras?.getString(PARTITION_EXTRA_KEY)!!
             val projectName = intent.extras?.getString(PROJECT_NAME_EXTRA_KEY)
 
-            // display the name of the project in the action bar
+            // display the name of the project in the action bar via the title member variable of the Activity
             title = projectName
             val config = SyncConfiguration.Builder(user!!, partition)
                 .waitForInitialRemoteData()
                 .build()
-
-            // save this configuration as the default for this entire app so other activities and threads can open their own realm instances
-            Realm.setDefaultConfiguration(config)
 
             // Sync all realm changes via a new instance, and when that instance has been successfully created connect it to an on-screen list (a recycler view)
             Realm.getInstanceAsync(config, object: Realm.Callback() {
@@ -77,9 +75,6 @@ class TaskActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
-
-        // default instance uses the configuration created in the login activity
-        realm = Realm.getDefaultInstance()
         recyclerView = findViewById(R.id.task_list)
         fab = findViewById(R.id.floating_action_button)
 
