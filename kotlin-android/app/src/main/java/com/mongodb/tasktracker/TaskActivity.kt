@@ -25,7 +25,7 @@ import com.mongodb.tasktracker.model.Task
 * and synced across devices using the partition "project=<user id>".
 */
 class TaskActivity : AppCompatActivity() {
-    private lateinit var realm: Realm
+    private lateinit var projectRealm: Realm
     private var user: User? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TaskAdapter
@@ -34,11 +34,7 @@ class TaskActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        try {
-            user = taskApp.currentUser()
-        } catch (e: IllegalStateException) {
-            Log.w(TAG(), e)
-        }
+        user = taskApp.currentUser()
         if (user == null) {
             // if no user is currently logged in, start the login activity so the user can authenticate
             startActivity(Intent(this, LoginActivity::class.java))
@@ -58,7 +54,7 @@ class TaskActivity : AppCompatActivity() {
             Realm.getInstanceAsync(config, object: Realm.Callback() {
                 override fun onSuccess(realm: Realm) {
                     // since this realm should live exactly as long as this activity, assign the realm to a member variable
-                    this@TaskActivity.realm = realm
+                    this@TaskActivity.projectRealm = realm
                     setUpRecyclerView(realm)
                 }
             })
@@ -68,7 +64,7 @@ class TaskActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         user.run {
-            realm.close()
+            projectRealm.close()
         }
     }
 
@@ -88,7 +84,7 @@ class TaskActivity : AppCompatActivity() {
                     dialog.dismiss()
                     val task = Task(input.text.toString())
                     // all realm writes need to occur inside of a transaction
-                    realm.executeTransactionAsync { realm ->
+                    projectRealm.executeTransactionAsync { realm ->
                         realm.insert(task)
                     }
                 }
@@ -107,7 +103,7 @@ class TaskActivity : AppCompatActivity() {
         super.onDestroy()
         recyclerView.adapter = null
         // if a user hasn't logged out when the activity exits, still need to explicitly close the realm
-        realm.close()
+        projectRealm.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -121,7 +117,7 @@ class TaskActivity : AppCompatActivity() {
                 user?.logOutAsync {
                     if (it.isSuccess) {
                         // always close the realm when finished interacting to free up resources
-                        realm.close()
+                        projectRealm.close()
                         user = null
                         Log.v(TAG(), "user logged out")
                         startActivity(Intent(this, LoginActivity::class.java))

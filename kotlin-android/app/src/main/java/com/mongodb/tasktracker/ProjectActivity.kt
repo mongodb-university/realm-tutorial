@@ -23,17 +23,13 @@ import io.realm.mongodb.sync.SyncConfiguration
 */
 class ProjectActivity : AppCompatActivity() {
     private var user: io.realm.mongodb.User? = null
-    private lateinit var realm: Realm
+    private var userRealm: Realm? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ProjectAdapter
 
     override fun onStart() {
         super.onStart()
-        try {
-            user = taskApp.currentUser()
-        } catch (e: IllegalStateException) {
-            Log.w(TAG(), e)
-        }
+        user = taskApp.currentUser()
         if (user == null) {
             // if no user is currently logged in, start the login activity so the user can authenticate
             startActivity(Intent(this, LoginActivity::class.java))
@@ -47,7 +43,7 @@ class ProjectActivity : AppCompatActivity() {
             Realm.getInstanceAsync(config, object: Realm.Callback() {
                 override fun onSuccess(realm: Realm) {
                     // since this realm should live exactly as long as this activity, assign the realm to a member variable
-                    this@ProjectActivity.realm = realm
+                    this@ProjectActivity.userRealm = realm
                     setUpRecyclerView(realm)
                 }
             })
@@ -64,13 +60,13 @@ class ProjectActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         user.run {
-            realm.close()
+            userRealm?.close()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        realm.close()
+        userRealm?.close()
         recyclerView.adapter = null
     }
 

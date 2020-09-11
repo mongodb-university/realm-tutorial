@@ -28,18 +28,14 @@ class MemberActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        try {
-            user = taskApp.currentUser()
-        } catch (e: IllegalStateException) {
-            Log.w(TAG(), e)
-        }
+        user = taskApp.currentUser()
         if (user == null) {
             // if no user is currently logged in, start the login activity so the user can authenticate
             startActivity(Intent(this, LoginActivity::class.java))
         } else {
-            // display the name of the project whose membership we're viewing in the action bar via the title member variable of the Activity
+            // display a descriptive title for the activity in the action bar via the title member variable of the Activity
             val projectName = intent.extras?.getString(PROJECT_NAME_EXTRA_KEY)
-            title = projectName
+            title = "Manage Team"
             setUpRecyclerView()
         }
     }
