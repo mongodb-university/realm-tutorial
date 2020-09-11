@@ -68,7 +68,7 @@ class MemberActivity : AppCompatActivity() {
                             setUpRecyclerView()
                         } else {
                             Log.e(TAG(), "failed to add team member with: " + result.error)
-                            Toast.makeText(this, result.error.toString(), Toast.LENGTH_LONG).show()
+                            Toast.makeText(this, result.error.errorMessage, Toast.LENGTH_LONG).show()
                         }
                     }
                 }

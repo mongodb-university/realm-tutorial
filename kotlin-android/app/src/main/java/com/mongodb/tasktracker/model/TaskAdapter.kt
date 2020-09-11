@@ -86,7 +86,6 @@ internal class TaskAdapter(data: OrderedRealmCollection<Task>, val user: io.real
         // need to create a separate instance of realm to issue an update, since this event is
         // handled by a background thread and realm instances cannot be shared across threads
         val config = SyncConfiguration.Builder(user, partition)
-            .waitForInitialRemoteData()
             .build()
 
         // Sync all realm changes via a new instance, and when that instance has been successfully created connect it to an on-screen list (a recycler view)
@@ -105,7 +104,6 @@ internal class TaskAdapter(data: OrderedRealmCollection<Task>, val user: io.real
         // need to create a separate instance of realm to issue an update, since this event is
         // handled by a background thread and realm instances cannot be shared across threads
         val config = SyncConfiguration.Builder(user, partition)
-            .waitForInitialRemoteData()
             .build()
 
         // Sync all realm changes via a new instance, and when that instance has been successfully created connect it to an on-screen list (a recycler view)

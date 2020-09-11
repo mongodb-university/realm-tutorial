@@ -9,9 +9,14 @@ import android.view.MenuItem
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mongodb.tasktracker.model.Project
 import com.mongodb.tasktracker.model.ProjectAdapter
 import com.mongodb.tasktracker.model.User
+import io.realm.OrderedRealmCollection
+import io.realm.OrderedRealmCollectionChangeListener
 import io.realm.Realm
+import io.realm.RealmList
+import io.realm.RealmResults
 import io.realm.kotlin.where
 import io.realm.mongodb.sync.SyncConfiguration
 
@@ -36,7 +41,6 @@ class ProjectActivity : AppCompatActivity() {
         } else {
             // configure realm to use the current user and the partition corresponding to the user's project
             val config = SyncConfiguration.Builder(user!!, "user=${user!!.id}")
-                .waitForInitialRemoteData()
                 .build()
 
             // Sync all realm changes via a new instance, and when that instance has been successfully created connect it to an on-screen list (a recycler view)
@@ -96,18 +100,33 @@ class ProjectActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerView(realm: Realm) {
-        val syncedUser = realm.where<User>().sort("_id").findFirstAsync()
+        // query for a user object in our user realm, which should only contain our user object
+        val syncedUsers : RealmResults<User> = realm.where<User>().sort("_id").findAll()
+        val syncedUser : User? = syncedUsers.getOrNull(0) // since there might be no user objects in the results, default to "null"
 
-        // when a user object is found, create the recycler view and the corresponding adapter
-        syncedUser.addChangeListener { syncedUserData : User ->
-            if (syncedUserData.isLoaded) {
-                val projectsList = syncedUserData.memberOf
-                adapter = ProjectAdapter(projectsList, user!!)
-                recyclerView.layoutManager = LinearLayoutManager(this)
-                recyclerView.adapter = adapter
-                recyclerView.setHasFixedSize(true)
-                recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        // if a user object exists, create the recycler view and the corresponding adapter
+        if (syncedUser != null) {
+            val projectsList = syncedUser.memberOf
+            adapter = ProjectAdapter(projectsList, user!!)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = adapter
+            recyclerView.setHasFixedSize(true)
+            recyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    this,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
+        } else {
+            // since a trigger creates our user object after initial signup, the object might not exist immediately upon first login.
+            // if the user object doesn't yet exist (that is, if there are no users in the user realm), call this function again when it is created
+            Log.i(TAG(), "User object not yet initialized, waiting for initialization via Trigger before displaying projects.")
+            // change listener on a query for our user object lets us know when the user object has been created by the auth trigger
+            val changeListener = OrderedRealmCollectionChangeListener<RealmResults<User>> { results, changeSet ->
+                Log.i(TAG(), "User object initialized, displaying project list.")
+                setUpRecyclerView(realm)
             }
+            syncedUsers?.addChangeListener(changeListener)
         }
     }
 }

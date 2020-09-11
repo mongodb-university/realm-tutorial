@@ -47,7 +47,6 @@ class TaskActivity : AppCompatActivity() {
             // display the name of the project in the action bar via the title member variable of the Activity
             title = projectName
             val config = SyncConfiguration.Builder(user!!, partition)
-                .waitForInitialRemoteData()
                 .build()
 
             // Sync all realm changes via a new instance, and when that instance has been successfully created connect it to an on-screen list (a recycler view)
