@@ -27,7 +27,7 @@ exports.getTask = async () => {
       output.result(JSON.stringify(result, null, 2));
     }
   } catch (err) {
-    output.error(err);
+    output.error(JSON.stringify(err));
   }
 };
 
@@ -52,10 +52,11 @@ exports.createTask = async () => {
       },
     ]);
     let result;
+    output.result(`project=${getAuthedUser().id}`);
     realm.write(() => {
       result = realm.create("Task", {
         _id: new bson.ObjectID(),
-        _partition: "My Project",
+        _partition: `project=${getAuthedUser().id}`,
         name: task.name,
         status: task.status,
       });
@@ -64,7 +65,7 @@ exports.createTask = async () => {
     output.header("New task created");
     output.result(JSON.stringify(result, null, 2));
   } catch (err) {
-    output.error(err);
+    output.error("Lisbeth" + JSON.stringify(err));
   }
 };
 

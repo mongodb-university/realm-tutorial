@@ -6,6 +6,7 @@ const index = require("./index");
 const watch = require("./watch");
 const users = require("./users");
 const output = require("./output");
+const manageTeam = require("./manageTeam");
 
 const Choices = {
   CreateTask: "Create a task",
@@ -15,6 +16,7 @@ const Choices = {
   EditTask: "Edit a task",
   DeleteTask: "Delete a task",
   WatchForChanges: "Watch for changes",
+  GetTeamMembers: "Get my team members",
   LogOut: "Log out / Quit",
 };
 
@@ -69,6 +71,10 @@ async function mainMenu() {
             */
         // return mainMenu();
         break;
+      }
+      case Choices.GetTeamMembers: {
+        await manageTeam.getTeam();
+        return mainMenu();
       }
       case Choices.LogOut: {
         const loggedOut = await users.logOut();
