@@ -55,7 +55,7 @@ class TaskActivity : AppCompatActivity() {
                 override fun onSuccess(realm: Realm) {
                     // since this realm should live exactly as long as this activity, assign the realm to a member variable
                     this@TaskActivity.projectRealm = realm
-                    setUpRecyclerView(realm)
+                    setUpRecyclerView(realm, user, partition)
                 }
             })
         }
@@ -133,12 +133,12 @@ class TaskActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpRecyclerView(realm: Realm) {
+    private fun setUpRecyclerView(realm: Realm, user: User?, partition: String) {
         // a recyclerview requires an adapter, which feeds it items to display.
         // Realm provides RealmRecyclerViewAdapter, which you can extend to customize for your application
         // pass the adapter a collection of Tasks from the realm
         // sort this collection so that the displayed order of Tasks remains stable across updates
-        adapter = TaskAdapter(realm.where<Task>().sort("_id").findAll())
+        adapter = TaskAdapter(realm.where<Task>().sort("_id").findAll(), user!!, partition)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)
