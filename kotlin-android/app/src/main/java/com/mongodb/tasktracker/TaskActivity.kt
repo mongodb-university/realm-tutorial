@@ -105,33 +105,6 @@ class TaskActivity : AppCompatActivity() {
         projectRealm.close()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.activity_task_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_logout -> {
-                user?.logOutAsync {
-                    if (it.isSuccess) {
-                        // always close the realm when finished interacting to free up resources
-                        projectRealm.close()
-                        user = null
-                        Log.v(TAG(), "user logged out")
-                        startActivity(Intent(this, LoginActivity::class.java))
-                    } else {
-                        Log.e(TAG(), "log out failed! Error: ${it.error}")
-                    }
-                }
-                true
-            }
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
-        }
-    }
-
     private fun setUpRecyclerView(realm: Realm, user: User?, partition: String) {
         // a recyclerview requires an adapter, which feeds it items to display.
         // Realm provides RealmRecyclerViewAdapter, which you can extend to customize for your application
