@@ -82,7 +82,7 @@ async function mainMenu() {
       }
     }
   } catch (err) {
-    output.error(err);
+    output.error(JSON.stringify(err));
     return;
   }
 }

@@ -17,7 +17,7 @@ async function openRealm() {
     schema: [schemas.TaskSchema, schemas.UserSchema, schemas.ProjectSchema],
     sync: {
       user: users.getAuthedUser(),
-      partitionValue: "My Project",
+      partitionValue: "myPartition",
     },
   };
   realm = Realm.open(config);
@@ -60,7 +60,6 @@ async function getRealm() {
 
 async function closeRealm() {
   if (realm != undefined) {
-    realm.close();
     realm = undefined;
   }
 }

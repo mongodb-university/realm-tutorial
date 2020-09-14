@@ -15,7 +15,6 @@ const UserSchema = {
   properties: {
     _id: "string",
     _partition: "string?",
-    image: "string?",
     name: "string",
   },
   primaryKey: "_id",
