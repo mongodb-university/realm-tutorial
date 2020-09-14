@@ -4,6 +4,8 @@ const index = require("./index");
 const config = require("./config");
 const main = require("./main");
 const output = require("./output");
+const projects = require("./projects")
+const { ProjectSchema } = require("./schemas");
 
 const REALM_APP_ID = config.realmAppId;
 const appConfig = {
@@ -36,7 +38,7 @@ async function logIn() {
     const user = await app.logIn(credentials);
     if (user) {
       output.result("You have successfully logged in as " + app.currentUser.id);
-      return main.mainMenu();
+      return projects.projectMenu();
     } else {
       output.error("There was an error logging you in");
       return logIn();

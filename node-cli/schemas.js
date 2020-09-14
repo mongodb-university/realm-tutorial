@@ -1,13 +1,13 @@
 const TaskSchema = {
-  name: "Task",
+  name: 'Task',
   properties: {
-    _id: "objectId",
-    _partition: "string?",
-    assignee: "User",
-    name: "string",
-    status: "string",
+    _id: 'objectId',
+    _partition: 'string',
+    name: 'string',
+    owner: 'string?',
+    status: 'string',
   },
-  primaryKey: "_id",
+  primaryKey: '_id',
 };
 
 const UserSchema = {

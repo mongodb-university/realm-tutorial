@@ -3,6 +3,7 @@ const Realm = require("realm");
 const bson = require("bson");
 const index = require("./index");
 const output = require("./output");
+const users = require("./users");
 
 exports.getTasks = async () => {
   const realm = await index.getRealm();
@@ -52,11 +53,10 @@ exports.createTask = async () => {
       },
     ]);
     let result;
-    output.result(`project=${getAuthedUser().id}`);
     realm.write(() => {
       result = realm.create("Task", {
         _id: new bson.ObjectID(),
-        _partition: `project=${getAuthedUser().id}`,
+        _partition: `project=${users.getAuthedUser().id}`,
         name: task.name,
         status: task.status,
       });
@@ -65,7 +65,7 @@ exports.createTask = async () => {
     output.header("New task created");
     output.result(JSON.stringify(result, null, 2));
   } catch (err) {
-    output.error("Lisbeth" + JSON.stringify(err));
+    output.error(JSON.stringify(err));
   }
 };
 
