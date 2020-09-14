@@ -5,23 +5,21 @@ const index = require("./index");
 const output = require("./output");
 const users = require("./users");
 const main = require("./main");
+const team = require("./team");
 
 exports.getProjects = async () => {
-  const realm = await index.getRealm();
+  const realm = await index.getRealm(index.userPartition);
+  console.log(index.userPartition);
   const currentUser = users.getAuthedUser().id;
   const projects = currentUser.customData.memberOf;
-  console.log("The current user is: " + currentUser);
   output.header("MY PROJECTS:");
   output.result(JSON.stringify(projects, null, 2));
-  output.err(JSON.stringify(err));
 };
 
 
 const Choices = {
   ShowAllProjects: "Show all of my projects",
-  GetProject: "Get a specific project",
-  CreateProject: "Create a project",
-  DeleteProject: "Change a task status",
+  ManageTeam: "Manage my team",
   ReturnMainMenu: "Return to main menu",
   LogOut: "Log out / Quit",
 };
@@ -40,17 +38,8 @@ async function projectMenu() {
         await getProjects();
         return projectMenu();
       }
-      case Choices.GetProject: {
-        await getProject();
-        return projectMenu();
-      }
-      case Choices.CreateProject: {
-        await createProject();
-        return projectMenu();
-      }
-      case Choices.DeleteProject: {
-        await deleteProject();
-        return projectMenu();
+      case Choices.ManageTeam: {
+        return team.manageTeamMenu();
       }
       case Choices.ReturnMainMenu: {
         return main.mainMenu();

@@ -38,7 +38,7 @@ async function logIn() {
     const user = await app.logIn(credentials);
     if (user) {
       output.result("You have successfully logged in as " + app.currentUser.id);
-      return projects.projectMenu();
+      return main.mainMenu();
     } else {
       output.error("There was an error logging you in");
       return logIn();

@@ -6,14 +6,14 @@ const output = require("./output");
 const users = require("./users");
 
 exports.getTasks = async () => {
-  const realm = await index.getRealm();
+  const realm = await index.getRealm(index.projectPartition);
   const tasks = realm.objects("Task");
   output.header("MY TASKS:");
   output.result(JSON.stringify(tasks, null, 2));
 };
 
 exports.getTask = async () => {
-  const realm = await index.getRealm();
+  const realm = await index.getRealm(index.projectPartition);
   try {
     const task = await inquirer.prompt([
       {
@@ -33,7 +33,7 @@ exports.getTask = async () => {
 };
 
 exports.createTask = async () => {
-  const realm = await index.getRealm();
+  const realm = await index.getRealm(index.projectPartition);
   try {
     output.header("*** CREATE NEW TASK ***");
     const task = await inquirer.prompt([
@@ -70,7 +70,7 @@ exports.createTask = async () => {
 };
 
 exports.deleteTask = async () => {
-  const realm = await index.getRealm();
+  const realm = await index.getRealm(index.projectPartition);
   output.header("DELETE A TASK");
   const answers = await inquirer.prompt([
     {
@@ -145,7 +145,7 @@ exports.changeStatus = async () => {
 };
 
 async function modifyTask(answers) {
-  const realm = await index.getRealm();
+  const realm = await index.getRealm(index.projectPartition);
   let task;
   try {
     realm.write(() => {

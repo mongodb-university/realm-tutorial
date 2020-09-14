@@ -9,11 +9,11 @@ const tasks = require("./tasks");
 
 
 exports.getTeamMembers = async () => {
-  const realm = await index.getRealm();
-  const user = users.getAuthedUser();
+  const realm = await index.getRealm(index.projectPartition);
+  const currentUser = users.getAuthedUser();
   console.log(user.callFunction("getMyTeamMembers"));
   try {
-    const teamMembers = await user.callFunction("getMyTeamMembers");
+    const teamMembers = await currentUser.callFunction("getMyTeamMembers");
     output.result(JSON.stringify(teamMembers, null, 2));
   }
   catch (err) {
@@ -22,7 +22,7 @@ exports.getTeamMembers = async () => {
 };  
 
 exports.addTeamMember = async () => {
-  const realm = await index.getRealm();
+  const realm = await index.getRealm(index.projectPartition);
   try {
     output.header("*** ADD A TEAM MEMBER ***");
     const member = await inquirer.prompt([
@@ -41,7 +41,7 @@ exports.addTeamMember = async () => {
 };
 
 exports.removeTeamMember = async () => {
-  const realm = await index.getRealm();
+  const realm = await index.getRealm(index.projectPartition);
   try {
     output.header("*** REMOVE A TEAM MEMBER ***");
     const member = await inquirer.prompt([

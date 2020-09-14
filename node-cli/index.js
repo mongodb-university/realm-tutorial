@@ -11,13 +11,16 @@ const output = require("./output");
 */
 Realm.Sync.setLogLevel("error");
 
+const userPartition = `user=${users.getAuthedUser().id}`;
+const projectPartition = `project=${users.getAuthedUser().id}`;
+
 let realm;
-async function openRealm() {
+async function openRealm(partitionKey) {
   const config = {
     schema: [schemas.TaskSchema, schemas.UserSchema, schemas.ProjectSchema],
     sync: {
       user: users.getAuthedUser(),
-      partitionValue: `project=${users.getAuthedUser().id}`,
+      partitionValue: partitionKey,
     },
   };
   realm = Realm.open(config);
@@ -51,14 +54,14 @@ run().catch((err) => {
   output.error(err.message);
 });
 
-async function getRealm() {
+async function getRealm(partitionKey) {
   if (realm == undefined) {
-    await openRealm();
+    await openRealm(partitionKey);
   }
   return realm;
 }
 
-async function closeRealm() {
+async function closeRealm(partitionKey) {
   if (realm != undefined) {
     realm.close();
     realm = undefined;
@@ -68,3 +71,5 @@ async function closeRealm() {
 exports.getRealm = getRealm;
 exports.closeRealm = closeRealm;
 exports.run = run;
+exports.userPartition = userPartition;
+exports.projectPartition = projectPartition;
