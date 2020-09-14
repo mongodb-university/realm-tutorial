@@ -8,9 +8,9 @@ const main = require("./main");
 const team = require("./team");
 
 exports.getProjects = async () => {
-  const realm = await index.getRealm(index.userPartition);
-  console.log(index.userPartition);
+  const realm = await index.getRealm(`user=${users.getAuthedUser().id}`);
   const currentUser = users.getAuthedUser().id;
+  output.result("the current user is:" + currentUser);
   const projects = currentUser.customData.memberOf;
   output.header("MY PROJECTS:");
   output.result(JSON.stringify(projects, null, 2));

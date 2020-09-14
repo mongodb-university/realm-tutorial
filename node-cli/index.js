@@ -11,9 +11,6 @@ const output = require("./output");
 */
 Realm.Sync.setLogLevel("error");
 
-const userPartition = `user=${users.getAuthedUser().id}`;
-const projectPartition = `project=${users.getAuthedUser().id}`;
-
 let realm;
 async function openRealm(partitionKey) {
   const config = {
@@ -61,7 +58,7 @@ async function getRealm(partitionKey) {
   return realm;
 }
 
-async function closeRealm(partitionKey) {
+async function closeRealm() {
   if (realm != undefined) {
     realm.close();
     realm = undefined;
@@ -71,5 +68,3 @@ async function closeRealm(partitionKey) {
 exports.getRealm = getRealm;
 exports.closeRealm = closeRealm;
 exports.run = run;
-exports.userPartition = userPartition;
-exports.projectPartition = projectPartition;

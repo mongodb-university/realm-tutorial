@@ -75,7 +75,7 @@ async function mainMenu() {
         break;
       }
       case Choices.ShowProjects: {
-        await projects.GetMyProjects;
+        await projects.getProjects;
         return mainMenu();
       }
       case Choices.LogOut: {
