@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import LoginScreen from "./components/LoginScreen";
+import TaskApp from "./TaskApp";
+import RealmApolloProvider from "./graphql/RealmApolloProvider";
+import { useRealmApp, RealmAppProvider } from "./RealmApp";
 
-function App() {
+export const APP_ID = "tasktracker-huhcb";
+
+const LoggedIn = ({ children }) => {
+  // Only render children if there is a logged in user.
+  const {app} = useRealmApp();
+  return app.currentUser ? children : null;
+};
+
+const LoggedOut = ({ children }) => {
+  // Only render children if there is not a logged in user.
+  const {app} = useRealmApp();
+  return app.currentUser ? null : children;
+};
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <RealmAppProvider appId={APP_ID}>
+      <LoggedIn>
+        <RealmApolloProvider>
+          <TaskApp />
+        </RealmApolloProvider>
+      </LoggedIn>
+      <LoggedOut>
+        <LoginScreen />
+      </LoggedOut>
+    </RealmAppProvider>
   );
 }
-
-export default App;
