@@ -27,7 +27,7 @@ exports.getTask = async () => {
       output.result(JSON.stringify(result, null, 2));
     }
   } catch (err) {
-    output.error(err);
+    output.error(JSON.stringify(err));
   }
 };
 
@@ -55,7 +55,7 @@ exports.createTask = async () => {
     realm.write(() => {
       result = realm.create("Task", {
         _id: new bson.ObjectID(),
-        _partition: "My Project",
+        _partition: "myPartition",
         name: task.name,
         status: task.status,
       });
@@ -64,7 +64,7 @@ exports.createTask = async () => {
     output.header("New task created");
     output.result(JSON.stringify(result, null, 2));
   } catch (err) {
-    output.error(err);
+    output.error(JSON.stringify(err));
   }
 };
 
@@ -153,6 +153,6 @@ async function modifyTask(answers) {
     });
     return JSON.stringify(task, null, 2);
   } catch (err) {
-    return output.error(err);
+    return output.error(JSON.stringify(err));
   }
 }
