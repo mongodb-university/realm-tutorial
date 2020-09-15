@@ -11,14 +11,15 @@ const { ProjectSchema } = require("./schemas");
 const projects = require("./projects");
 
 const Choices = {
+  ShowProjects: "Show all of my projects",
   CreateTask: "Create a task",
   ShowAllTasks: "Show all of my tasks",
   GetTask: "Get a specific task",
   ChangeTaskStatus: "Change a task status",
   EditTask: "Edit a task",
   DeleteTask: "Delete a task",
+  ManageTeam: "Manage my team",
   WatchForChanges: "Watch for changes",
-  ShowProjects: "Show all of my projects",
   LogOut: "Log out / Quit",
 };
 
@@ -32,6 +33,10 @@ async function mainMenu() {
     });
 
     switch (answers.mainMenu) {
+      case Choices.ShowProjects: {
+        await projects.getProjects();
+        return mainMenu();
+      }
       case Choices.CreateTask: {
         await tasks.createTask();
         return mainMenu();
@@ -56,6 +61,9 @@ async function mainMenu() {
         await tasks.deleteTask();
         return mainMenu();
       }
+      case Choices.ManageTeam: {
+        return team.manageTeamMenu();
+      }
       case Choices.WatchForChanges: {
         await watch.watchForChanges();
         output.result(
@@ -73,10 +81,6 @@ async function mainMenu() {
             */
         // return mainMenu();
         break;
-      }
-      case Choices.ShowProjects: {
-        await projects.getProjects;
-        return mainMenu();
       }
       case Choices.LogOut: {
         const loggedOut = await users.logOut();

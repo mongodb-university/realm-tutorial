@@ -9,11 +9,12 @@ const tasks = require("./tasks");
 
 
 exports.getTeamMembers = async () => {
-  const realm = await index.getRealm(`user=${users.getAuthedUser().id}`);
+  // const realm = await index.getRealm(`user=${users.getAuthedUser().id}`);
   const currentUser = users.getAuthedUser();
   console.log(user.callFunction("getMyTeamMembers"));
   try {
     const teamMembers = await currentUser.callFunction("getMyTeamMembers");
+    console.log(teamMembers);
     output.result(JSON.stringify(teamMembers, null, 2));
   }
   catch (err) {
@@ -22,7 +23,7 @@ exports.getTeamMembers = async () => {
 };  
 
 exports.addTeamMember = async () => {
-  const realm = await index.getRealm(`user=${users.getAuthedUser().id}`);
+  // const realm = await index.getRealm(`user=${users.getAuthedUser().id}`);
   try {
     output.header("*** ADD A TEAM MEMBER ***");
     const member = await inquirer.prompt([
