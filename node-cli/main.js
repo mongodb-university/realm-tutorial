@@ -6,7 +6,7 @@ const index = require("./index");
 const watch = require("./watch");
 const users = require("./users");
 const output = require("./output");
-const team = require("./team");
+const manageTeam = require("./manageTeam");
 const { ProjectSchema } = require("./schemas");
 const projects = require("./projects");
 
@@ -62,7 +62,7 @@ async function mainMenu() {
         return mainMenu();
       }
       case Choices.ManageTeam: {
-        return team.manageTeamMenu();
+        return manageTeam.manageTeamMenu();
       }
       case Choices.WatchForChanges: {
         await watch.watchForChanges();
@@ -98,5 +98,6 @@ async function mainMenu() {
     return;
   }
 }
+
 
 exports.mainMenu = mainMenu;
