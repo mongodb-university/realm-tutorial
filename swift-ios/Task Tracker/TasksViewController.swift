@@ -74,6 +74,8 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         // Configure the view.
         super.viewDidLoad()
 
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(logOutButtonDidClick))
+
         title = "My Project"
         tableView.dataSource = self
         tableView.delegate = self
