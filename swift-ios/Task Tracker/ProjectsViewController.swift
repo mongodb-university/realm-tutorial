@@ -23,7 +23,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
         // Open a realm with the partition key set to the user.
         // TODO: When support for user data is available, use the user data's list of 
         // available projects.
-        realm = try! Realm(configuration: user.configuration(partitionValue: user.identity!))
+        realm = try! Realm(configuration: user.configuration(partitionValue: user.id!))
         
         // Access all objects in the realm, sorted by _id so that the ordering is defined.
         projects = realm.objects(Project.self).sorted(byKeyPath: "_id")
@@ -144,7 +144,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
         alertController.addAction(UIAlertAction(title: "Save", style: .default, handler: {
             alert -> Void in
                 let textField = alertController.textFields![0] as UITextField
-                let partition = app.currentUser()!.identity!
+                let partition = app.currentUser()!.id!
                 let project = Project(partition: partition, name: textField.text ?? "New Project")
                 
                 // All writes must happen in a write block. 
