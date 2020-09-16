@@ -12,13 +12,7 @@ const projects = require("./projects");
 
 const Choices = {
   ShowProjects: "Show all of my projects",
-  CreateTask: "Create a task",
-  ShowAllTasks: "Show all of my tasks",
-  GetTask: "Get a specific task",
-  ChangeTaskStatus: "Change a task status",
-  EditTask: "Edit a task",
-  DeleteTask: "Delete a task",
-  ManageTeam: "Manage my team",
+  SelectProject: "Select a project",
   WatchForChanges: "Watch for changes",
   LogOut: "Log out / Quit",
 };
@@ -37,32 +31,8 @@ async function mainMenu() {
         await projects.getProjects();
         return mainMenu();
       }
-      case Choices.CreateTask: {
-        await tasks.createTask();
-        return mainMenu();
-      }
-      case Choices.ShowAllTasks: {
-        await tasks.getTasks();
-        return mainMenu();
-      }
-      case Choices.GetTask: {
-        await tasks.getTask();
-        return mainMenu();
-      }
-      case Choices.ChangeTaskStatus: {
-        await tasks.changeStatus();
-        return mainMenu();
-      }
-      case Choices.EditTask: {
-        await tasks.editTask();
-        return mainMenu();
-      }
-      case Choices.DeleteTask: {
-        await tasks.deleteTask();
-        return mainMenu();
-      }
-      case Choices.ManageTeam: {
-        return manageTeam.manageTeamMenu();
+      case Choices.SelectProject: {
+        return projects.selectProject();
       }
       case Choices.WatchForChanges: {
         await watch.watchForChanges();

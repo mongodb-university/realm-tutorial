@@ -29,7 +29,6 @@ exports.addTeamMember = async () => {
     ]);
     let result = await currentUser.callFunction("addTeamMember", [member.email]);
     output.result("The user was added to your team.");
-    output.result(result);
   } catch (err) {
     output.error(JSON.stringify(err));
   }
@@ -47,7 +46,6 @@ exports.removeTeamMember = async () => {
     ]);
     let result = await users.getAuthedUser().callFunction("removeTeamMember", [member.email]);
     output.result("The user was removed from your team.");
-    output.result(result);
   } catch (err) {
     output.error(JSON.stringify(err));
   }
