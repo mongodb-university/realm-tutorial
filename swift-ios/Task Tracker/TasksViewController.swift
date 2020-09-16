@@ -161,7 +161,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
 
         // Show the actions list.
-        self.present(actionSheet, animated: true, completion: nil)
+        self.present(actionSheet, animated: true)
     }
 
 
@@ -188,7 +188,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         })
 
         // Show the dialog.
-        self.present(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true)
     }
 
     @objc func logOutButtonDidClick() {
@@ -196,14 +196,14 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         alertController.addAction(UIAlertAction(title: "Yes, Log Out", style: .destructive, handler: {
             alert -> Void in
             print("Logging out...");
-            app.currentUser()?.logOut(completion: { (error) in
+            app.currentUser()?.logOut { (error) in
                 DispatchQueue.main.sync {
                     print("Logged out!");
                     self.navigationController?.setViewControllers([WelcomeViewController()], animated: true)
                 }
-            })
+            }
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        self.present(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true)
     }
 }
