@@ -7,8 +7,6 @@ const users = require("./users");
 
 
 exports.getTasks = async (partition) => {
-  // //Extract callerUser id for the project partition
-  // const projectPartition = partition.slice(8);
   const realm = await index.getRealm(partition);
   const tasks = realm.objects("Task");
   output.header("MY TASKS:");
@@ -36,8 +34,7 @@ exports.getTask = async (partition) => {
 };
 
 exports.createTask = async (partition) => {
-  const projectPartition = partition.slice(8);
-  const realm = await index.getRealm(`user=${projectPartition}`);
+  const realm = await index.getRealm(partition);
   try {
     output.header("*** CREATE NEW TASK ***");
     const task = await inquirer.prompt([
@@ -60,7 +57,7 @@ exports.createTask = async (partition) => {
     realm.write(() => {
       result = realm.create("Task", {
         _id: new bson.ObjectID(),
-        _partition: `project=${projectPartition}`,
+        _partition: partition,
         name: task.name,
         status: task.status,
       });

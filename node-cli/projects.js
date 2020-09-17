@@ -59,27 +59,27 @@ async function projectMenu(partition) {
     switch (answers.projectMenu) {
       case Choices.CreateTask: {
         await tasks.createTask(projectPartition);
-        return projectMenu();
+        return projectMenu(projectPartition);
       }
       case Choices.ShowAllTasks: {
         await tasks.getTasks(projectPartition);
-        return projectMenu();
+        return projectMenu(projectPartition);
       }
       case Choices.GetTask: {
         await tasks.getTask(projectPartition);
-        return projectMenu();
+        return projectMenu(projectPartition);
       }
       case Choices.ChangeTaskStatus: {
         await tasks.changeStatus(projectPartition);
-        return projectMenu();
+        return projectMenu(projectPartition);
       }
       case Choices.EditTask: {
         await tasks.editTask();
-        return projectMenu();
+        return projectMenu(projectPartition);
       }
       case Choices.DeleteTask: {
         await tasks.deleteTask(projectPartition);
-        return projectMenu();
+        return projectMenu(projectPartition);
       }
       case Choices.ManageTeam: {
         return manageTeam.manageTeamMenu(projectPartition);

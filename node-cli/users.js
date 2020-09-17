@@ -4,7 +4,7 @@ const index = require("./index");
 const config = require("./config");
 const main = require("./main");
 const output = require("./output");
-const projects = require("./projects")
+const projects = require("./projects");
 const { ProjectSchema } = require("./schemas");
 
 const REALM_APP_ID = config.realmAppId;
