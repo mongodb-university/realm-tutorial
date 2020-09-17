@@ -6,17 +6,20 @@ import { useRealmApp, RealmAppProvider } from "./RealmApp";
 
 export const APP_ID = "tasktracker-huhcb";
 
+const RequireLoggedInUser = ({ children }) => {
+  // Only render children if there is a logged in user.
+  const { app } = useRealmApp();
+  return app.currentUser ? children : <LoginScreen />;
+};
+
 export default function App() {
-  const {app} = useRealmApp();
   return (
     <RealmAppProvider appId={APP_ID}>
-      {app.currentUser ? (
+      <RequireLoggedInUser>
         <RealmApolloProvider>
           <TaskApp />
         </RealmApolloProvider>
-      ) : (
-        <LoginScreen />
-      )}
+      </RequireLoggedInUser>
     </RealmAppProvider>
   );
 }
