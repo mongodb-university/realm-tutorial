@@ -41,6 +41,9 @@ function useDraftTask({ addTask }) {
   const createDraftTask = () => {
     setDraftTask({ name: "" });
   };
+  const deleteDraftTask = () => {
+    setDraftTask(null);
+  };
   const setDraftTaskName = (name) => {
     setDraftTask({ name });
   };
@@ -48,7 +51,7 @@ function useDraftTask({ addTask }) {
     await addTask(draftTask);
     setDraftTask(null);
   };
-  return { draftTask, createDraftTask, setDraftTaskName, submitDraftTask };
+  return { draftTask, createDraftTask, deleteDraftTask, setDraftTaskName, submitDraftTask };
 }
 
 function TaskList({ currentProject }) {
@@ -57,7 +60,13 @@ function TaskList({ currentProject }) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null);
   const selectedTask = getTaskById(selectedTaskId);
 
-  const { draftTask, createDraftTask, setDraftTaskName, submitDraftTask } = useDraftTask({ addTask })
+  const {
+    draftTask,
+    createDraftTask,
+    deleteDraftTask,
+    setDraftTaskName,
+    submitDraftTask,
+  } = useDraftTask({ addTask });
 
   return (
     <>
@@ -69,7 +78,7 @@ function TaskList({ currentProject }) {
             </Card>
           </ListItem>
         ))}
-        {draftTask && (
+        {draftTask ? (
           <ListItem>
             <Card>
               <TextInput
@@ -81,20 +90,31 @@ function TaskList({ currentProject }) {
                 value={draftTask.name}
               />
               <Button
+                variant="primary"
+                disabled={!draftTask.name}
                 onClick={() => {
-                  submitDraftTask()
+                  submitDraftTask();
                 }}
               >
                 Add
               </Button>
+              <Button
+                variant="danger"
+                onClick={() => {
+                  deleteDraftTask();
+                }}
+              >
+                Cancel
+              </Button>
+            </Card>
+          </ListItem>
+        ) : (
+          <ListItem>
+            <Card>
+              <Button onClick={() => createDraftTask()}>Add Task</Button>
             </Card>
           </ListItem>
         )}
-        <ListItem>
-          <Card>
-            <Button onClick={() => createDraftTask()}>Add Task</Button>
-          </Card>
-        </ListItem>
       </List>
       <TaskDetailModal
         project={currentProject}
