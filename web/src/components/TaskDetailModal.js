@@ -3,7 +3,7 @@ import TaskContent from "./TaskContent";
 import Button from "@leafygreen-ui/button";
 import Modal from "@leafygreen-ui/modal";
 
-import useProjectActions from "../graphql/useProjectActions";
+import useTaskMutations from "../graphql/useTaskMutations";
 
 export default function TaskDetailModal({ project, task, unselectTask }) {
   const TaskStatusButton = useTaskStatusButton(project);
@@ -38,7 +38,7 @@ export default function TaskDetailModal({ project, task, unselectTask }) {
   );
 }
 const useTaskStatusButton = (project) => {
-  const { updateTask } = useProjectActions(project);
+  const { updateTask } = useTaskMutations(project);
   const TaskStatusButton = ({ task, status, children }) => {
     return (
       <Button onClick={() => updateTask(task, { status })}>{children}</Button>

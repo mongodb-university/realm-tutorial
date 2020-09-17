@@ -78,9 +78,9 @@ const useDeleteTask = (project) => {
   return deleteTask;
 }
 
-const useProjectActions = (project) => ({
+const useTaskMutations = (project) => ({
   addTask: useAddTask(project),
   updateTask: useUpdateTask(project),
   deleteTask: useDeleteTask(project),
 });
-export default useProjectActions;
+export default useTaskMutations;
