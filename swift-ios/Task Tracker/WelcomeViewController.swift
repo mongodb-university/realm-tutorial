@@ -150,7 +150,7 @@ class WelcomeViewController: UIViewController {
                 print("Login succeeded!");
 
                 // Go directly to the Tasks page for the hardcoded project ID "My Project".
-                // This will use a common project and demonstrate sync.
+                // This tutorial uses a common project to demonstrate sync.
                 let partitionValue = "My Project"
 
                 // Open a realm.
@@ -164,4 +164,3 @@ class WelcomeViewController: UIViewController {
         };
     }
 }
-
