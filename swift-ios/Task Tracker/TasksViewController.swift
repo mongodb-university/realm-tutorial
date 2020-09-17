@@ -11,25 +11,22 @@ import RealmSwift
 
 class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    let project: Project?
     let partitionValue: String
     let realm: Realm
     let tasks: Results<Task>
     let tableView = UITableView()
     var notificationToken: NotificationToken?
 
-    required init(project: Project?, projectRealm: Realm) {
+    required init(projectRealm: Realm) {
         // Ensure the realm was opened with sync.
         guard let syncConfiguration = projectRealm.configuration.syncConfiguration else {
             fatalError("Sync configuration not found! Realm not opened with sync?");
         }
-
-        self.project = project
         
         realm = projectRealm
 
         // Partition value must be of string type.
-        partitionValue = syncConfiguration.partitionValue.stringValue!
+        partitionValue = syncConfiguration.partitionValue!.stringValue!
 
         // Access all tasks in the realm, sorted by _id so that the ordering is defined.
         // Only tasks with the project ID as the partition key value will be in the realm.
@@ -77,16 +74,9 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         // Configure the view.
         super.viewDidLoad()
 
-        if (project == nil) {
-            // TUTORIAL ONLY:
-            // If project was not set, we do not have the Projects page.
-            // We must be using the default project for tutorial purposes.
-            // That means instead of letting the left bar button go back to the
-            // previous page, we will set it as the Log Out button.
-            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(logOutButtonDidClick))
-        }
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(logOutButtonDidClick))
 
-        title = project?.name ?? "My Project"
+        title = "My Project"
         tableView.dataSource = self
         tableView.delegate = self
         view.addSubview(tableView)
@@ -173,7 +163,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
 
         // Show the actions list.
-        self.present(actionSheet, animated: true, completion: nil)
+        self.present(actionSheet, animated: true)
     }
 
 
@@ -200,7 +190,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         })
 
         // Show the dialog.
-        self.present(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true)
     }
 
     @objc func logOutButtonDidClick() {
@@ -208,14 +198,14 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         alertController.addAction(UIAlertAction(title: "Yes, Log Out", style: .destructive, handler: {
             alert -> Void in
             print("Logging out...");
-            app.currentUser()?.logOut(completion: { (error) in
+            app.currentUser()?.logOut { (error) in
                 DispatchQueue.main.sync {
                     print("Logged out!");
                     self.navigationController?.setViewControllers([WelcomeViewController()], animated: true)
                 }
-            })
+            }
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        self.present(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true)
     }
 }

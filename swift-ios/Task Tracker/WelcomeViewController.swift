@@ -9,22 +9,18 @@
 import UIKit
 import RealmSwift
 
-// This flag is for tutorial-purposes only. It determines if the app should go the Projects
-// list page after login or directly into the Tasks page for a placeholder project. 
-let USE_PROJECTS_PAGE = false
-
 // The WelcomeViewController handles login and account creation.
 class WelcomeViewController: UIViewController {
-    let usernameField = UITextField()
+    let emailField = UITextField()
     let passwordField = UITextField()
     let signInButton = UIButton(type: .roundedRect)
     let signUpButton = UIButton(type: .roundedRect)
     let errorLabel = UILabel()
     let activityIndicator = UIActivityIndicatorView(style: .medium)
 
-    var username: String? {
+    var email: String? {
         get {
-            return usernameField.text
+            return emailField.text
         }
     }
 
@@ -66,15 +62,15 @@ class WelcomeViewController: UIViewController {
         // Add some text at the top of the view to explain what to do.
         let infoLabel = UILabel()
         infoLabel.numberOfLines = 0
-        infoLabel.text = "Please enter a username and password."
+        infoLabel.text = "Please enter an email and password."
         container.addArrangedSubview(infoLabel)
 
-        // Configure the username and password text input fields.
-        usernameField.placeholder = "Username"
-        usernameField.borderStyle = .roundedRect
-        usernameField.autocapitalizationType = .none
-        usernameField.autocorrectionType = .no
-        container.addArrangedSubview(usernameField)
+        // Configure the email and password text input fields.
+        emailField.placeholder = "Email"
+        emailField.borderStyle = .roundedRect
+        emailField.autocapitalizationType = .none
+        emailField.autocorrectionType = .no
+        container.addArrangedSubview(emailField)
 
         passwordField.placeholder = "Password"
         passwordField.isSecureTextEntry = true
@@ -104,7 +100,7 @@ class WelcomeViewController: UIViewController {
         } else {
             activityIndicator.stopAnimating();
         }
-        usernameField.isEnabled = !loading
+        emailField.isEnabled = !loading
         passwordField.isEnabled = !loading
         signInButton.isEnabled = !loading
         signUpButton.isEnabled = !loading
@@ -112,7 +108,7 @@ class WelcomeViewController: UIViewController {
 
     @objc func signUp() {
         setLoading(true);
-        app.emailPasswordAuth().registerEmail(username!, password: password!, completion: {[weak self](error) in
+        app.emailPasswordAuth().registerUser(email: email!, password: password!) { [weak self](error) in
             // Completion handlers are not necessarily called on the UI thread.
             // This call to DispatchQueue.main.sync ensures that any changes to the UI,
             // namely disabling the loading indicator and navigating to the next page,
@@ -125,19 +121,19 @@ class WelcomeViewController: UIViewController {
                     return
                 }
                 print("Signup successful!")
-                
-                // Registering just registers. Now we need to sign in, but we can reuse the existing username and password. 
+
+                // Registering just registers. Now we need to sign in, but we can reuse the existing email and password.
                 self!.errorLabel.text = "Signup successful! Signing in..."
                 self!.signIn()
             }
-        })
+        }
     }
 
     @objc func signIn() {
-        print("Log in as user: \(username!)");
+        print("Log in as user: \(email!)");
         setLoading(true);
-        
-        app.login(credentials: Credentials(username: username!, password: password!)) { [weak self](maybeUser, error) in
+
+        app.login(credentials: Credentials(email: email!, password: password!)) { [weak self](user, error) in
             // Completion handlers are not necessarily called on the UI thread.
             // This call to DispatchQueue.main.sync ensures that any changes to the UI,
             // namely disabling the loading indicator and navigating to the next page,
@@ -150,33 +146,21 @@ class WelcomeViewController: UIViewController {
                     self!.errorLabel.text = "Login failed: \(error!.localizedDescription)"
                     return
                 }
-                
-                guard let user = maybeUser else {
-                    fatalError("Invalid user object?")
-                }
 
                 print("Login succeeded!");
-                
-                if (!USE_PROJECTS_PAGE) {
-    
-                    // For the first phase of the tutorial, go directly to the Tasks page
-                    // for the hardcoded project ID "My Project".
-                    // This will use a common project and demonstrate sync.
-                    let partitionValue = "My Project"
 
-                    // Open a realm.
-                    let projectRealm = try! Realm(configuration: user.configuration(partitionValue: partitionValue))
+                // Go directly to the Tasks page for the hardcoded project ID "My Project".
+                // This tutorial uses a common project to demonstrate sync.
+                let partitionValue = "My Project"
 
-                    self!.navigationController!.pushViewController(TasksViewController(project: nil, projectRealm: projectRealm), animated: true);
-
-                } else {
-                    // For the second phase of the tutorial, go to the Projects management page. 
-                    // This is where you can manage permissions and collaborators.
-                    self!.navigationController!.pushViewController(ProjectsViewController(), animated: true);
+                // Open a realm.
+                Realm.asyncOpen(configuration: user!.configuration(partitionValue: partitionValue)) { [weak self](realm, error) in
+                    guard let realm = realm else {
+                        fatalError("Failed to open realm: \(error!.localizedDescription)")
+                    }
+                    self!.navigationController!.pushViewController(TasksViewController(projectRealm: realm), animated: true);
                 }
-                
             }
         };
     }
 }
-
