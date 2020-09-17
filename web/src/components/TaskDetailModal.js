@@ -37,7 +37,8 @@ export default function TaskDetailModal({ project, task, unselectTask }) {
     </Modal>
   );
 }
-const useTaskStatusButton = (project) => {
+
+function useTaskStatusButton(project) {
   const { updateTask } = useTaskMutations(project);
   const TaskStatusButton = ({ task, status, children }) => {
     return (

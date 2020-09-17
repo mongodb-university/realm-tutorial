@@ -29,13 +29,13 @@ const getColorForStatus = (status) => {
       return "yellow";
     case "Complete":
       return "green";
-    default: {
-    }
+    default:
+      return "gray";
   }
 };
 
 const getTaskStatusDisplayName = (status) => {
-  const nbsp = String.fromCharCode(160);
+  const nbsp = String.fromCharCode(160); // Non-breaking space so that a badge is always one line
   if (status === "InProgress") {
     return `In${nbsp}Progress`;
   }

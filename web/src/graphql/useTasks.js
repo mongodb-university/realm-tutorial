@@ -5,7 +5,6 @@ import useTaskMutations from "./useTaskMutations"
 const useTasks = (project) => {
   const { tasks, loading } = useAllTasksInProject(project);
   const { addTask, updateTask } = useTaskMutations(project);
-  
   return {
     loading,
     tasks,
@@ -14,7 +13,6 @@ const useTasks = (project) => {
   };
 };
 export default useTasks
-
 
 function useAllTasksInProject(project) {
   const { data, loading, error } = useQuery(

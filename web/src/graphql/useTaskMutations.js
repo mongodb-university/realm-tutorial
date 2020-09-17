@@ -2,6 +2,25 @@ import { ObjectId } from "bson";
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 
+export default function useTaskMutations(project) {
+  return {
+    addTask: useAddTask(project),
+    updateTask: useUpdateTask(project),
+    deleteTask: useDeleteTask(project),
+  }
+}
+
+const AddTaskMutation = gql`
+  mutation AddTask($task: TaskInsertInput!) {
+    addedTask: insertOneTask(data: $task) {
+      _id
+      _partition
+      name
+      status
+    }
+  }
+`;
+
 const UpdateTaskMutation = gql`
   mutation UpdateTask($taskId: ObjectId!, $updates: TaskUpdateInput!) {
     updatedTask: updateOneTask(query: { _id: $taskId }, set: $updates) {
@@ -24,17 +43,6 @@ const DeleteTaskMutation = gql`
   }
 `
 
-const AddTaskMutation = gql`
-  mutation AddTask($task: TaskInsertInput!) {
-    addedTask: insertOneTask(data: $task) {
-      _id
-      _partition
-      name
-      status
-    }
-  }
-`;
-
 const cacheAddedTask = (cache, { data: { addedTask } }) => {
   cache.modify({
     fields: {
@@ -56,7 +64,7 @@ const cacheAddedTask = (cache, { data: { addedTask } }) => {
   });
 };
 
-const useAddTask = (project) => {
+function useAddTask(project) {
   const [addTaskMutation] = useMutation(AddTaskMutation, {
     update: cacheAddedTask,
   });
@@ -78,7 +86,7 @@ const useAddTask = (project) => {
   return addTask;
 };
 
-const useUpdateTask = (project) => {
+function useUpdateTask(project) {
   const [updateTaskMutation] = useMutation(UpdateTaskMutation);
 
   const updateTask = async (task, updates) => {
@@ -91,7 +99,7 @@ const useUpdateTask = (project) => {
   return updateTask;
 };
 
-const useDeleteTask = (project) => {
+function useDeleteTask(project) {
   const [deleteTaskMutation] = useMutation(DeleteTaskMutation);
 
   const deleteTask = async (task) => {
@@ -103,10 +111,3 @@ const useDeleteTask = (project) => {
   
   return deleteTask;
 };
-
-const useTaskMutations = (project) => ({
-  addTask: useAddTask(project),
-  updateTask: useUpdateTask(project),
-  deleteTask: useDeleteTask(project),
-});
-export default useTaskMutations;

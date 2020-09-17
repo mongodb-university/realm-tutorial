@@ -24,7 +24,7 @@ const createRealmApolloClient = (app) => {
   });
 };
 
-const RealmApolloProvider = ({ children }) => {
+export default function RealmApolloProvider({ children }) {
   const { app } = useRealmApp();
   const [client, setClient] = React.useState(createRealmApolloClient(app));
   React.useEffect(() => {
@@ -32,4 +32,3 @@ const RealmApolloProvider = ({ children }) => {
   }, [app]);
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
-export default RealmApolloProvider;

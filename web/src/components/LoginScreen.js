@@ -8,7 +8,7 @@ import LGCard from "./Card";
 import { uiColors } from "@leafygreen-ui/palette";
 import validator from "validator";
 
-const LoginScreen = () => {
+export default function LoginScreen() {
   const { app, refresh } = useRealmApp();
   // Toggle between logging users in and registering new users
   const [mode, setMode] = React.useState("login");
@@ -125,8 +125,6 @@ const LoginScreen = () => {
     </Container>
   );
 };
-
-export default LoginScreen;
 
 function handleAuthenticationError(err, setError) {
   const { status, message } = parseAuthenticationError(err);

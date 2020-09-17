@@ -92,6 +92,7 @@ function AddTeamMemberInput({ addTeamMember }) {
       <InputContainer>
         <TextInput
           type="email"
+          aria-labelledby="team member email address"
           placeholder="some.email@example.com"
           onChange={(e) => {
             setInputValue(e.target.value);

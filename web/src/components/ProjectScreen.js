@@ -83,6 +83,7 @@ function TaskList({ currentProject }) {
             <Card>
               <TextInput
                 type="text"
+                aria-labelledby="task description"
                 placeholder="Do the dishes"
                 onChange={(e) => {
                   setDraftTaskName(e.target.value);
