@@ -7,17 +7,16 @@ const users = require("./users");
 
 
 exports.getTasks = async (partition) => {
-  //Extract callerUser id for the project partition
-  const projectPartition = partition.slice(8);
-  const realm = await index.getRealm(`user=${projectPartition}`);
+  // //Extract callerUser id for the project partition
+  // const projectPartition = partition.slice(8);
+  const realm = await index.getRealm(partition);
   const tasks = realm.objects("Task");
   output.header("MY TASKS:");
   output.result(JSON.stringify(tasks, null, 2));
 };
 
 exports.getTask = async (partition) => {
-  const projectPartition = partition.slice(8);
-  const realm = await index.getRealm(`user=${projectPartition}`);
+  const realm = await index.getRealm(partition);
   try {
     const task = await inquirer.prompt([
       {
