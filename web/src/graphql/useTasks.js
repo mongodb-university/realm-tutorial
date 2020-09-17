@@ -3,10 +3,23 @@ import gql from "graphql-tag"
 import useTaskMutations from "./useTaskMutations"
 
 const useTasks = (project) => {
+  const { tasks, loading } = useAllTasksInProject(project);
   const { addTask, updateTask } = useTaskMutations(project);
-  const { data, loading, error, refetch } = useQuery(
+  
+  return {
+    loading,
+    tasks,
+    updateTask,
+    addTask
+  };
+};
+export default useTasks
+
+
+function useAllTasksInProject(project) {
+  const { data, loading, error } = useQuery(
     gql`
-      query GetTasksForProject($partition: String!) {
+      query GetAllTasksForProject($partition: String!) {
         tasks(query: { _partition: $partition }) {
           _id
           name
@@ -19,14 +32,6 @@ const useTasks = (project) => {
   if (error) {
     throw error;
   }
-  return {
-    loading,
-    tasks: data?.tasks ?? [],
-    updateTask,
-    addTask: async (task) => {
-      await addTask(task);
-      refetch();
-    },
-  };
-};
-export default useTasks
+  const tasks = data?.tasks ?? []
+  return { tasks, loading }
+}
