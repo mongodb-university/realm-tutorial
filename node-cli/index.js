@@ -21,7 +21,9 @@ async function openRealm() {
     },
     path: "localRealmDb/tracker"
   };
-  realm = Realm.open(config);
+
+  realm = new Realm(config);
+
 }
 
 output.intro();
