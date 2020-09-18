@@ -13,7 +13,6 @@ const projects = require("./projects");
 const Choices = {
   ShowProjects: "Show all of my projects",
   SelectProject: "Select a project",
-  // WatchForChanges: "Watch for changes",
   LogOut: "Log out / Quit",
 };
 
@@ -28,30 +27,12 @@ async function mainMenu() {
 
     switch (answers.mainMenu) {
       case Choices.ShowProjects: {
-        await projects.getProjects();
+        await projects.showProjects();
         return mainMenu();
       }
       case Choices.SelectProject: {
         return projects.selectProject();
       }
-      // case Choices.WatchForChanges: {
-      //   await watch.watchForChanges();
-      //   output.result(
-      //     "We are now watching for changes to the task collection."
-      //   );
-      //   await ora("Watching (use Ctrl-C to quit)").start();
-
-      //   /* Note: we've implemented this such that the console 
-      //       stays open and no further input is possible while
-      //       watching for changes. You can open a separate console
-      //       to do further work, or you can uncomment the next line
-      //       to continue working rather than waiting while watching. 
-      //       Changes will still be displayed in the console as they 
-      //       occur.
-      //       */
-      //   // return mainMenu();
-      //   break;
-      // }
       case Choices.LogOut: {
         const loggedOut = await users.logOut();
         if (!loggedOut) {

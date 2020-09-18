@@ -17,10 +17,11 @@ exports.getTeamMembers = async () => {
 
 exports.addTeamMember = async () => {
   let currentUser;
+  let member;
   try {
     output.header("*** ADD A TEAM MEMBER ***");
     currentUser = users.getAuthedUser();
-    const member = await inquirer.prompt([
+    member = await inquirer.prompt([
       {
         type: "input",
         name: "email",
@@ -30,24 +31,27 @@ exports.addTeamMember = async () => {
     let result = await currentUser.callFunction("addTeamMember", [member.email]);
     output.result("The user was added to your team.");
   } catch (err) {
-    output.error(JSON.stringify(err));
+    output.error(`No user exists with the email ${member.email}`);
   }
 };
 
 exports.removeTeamMember = async () => {
+  const user = users.getAuthedUser();
+  const teamMembers = await user.functions.getMyTeamMembers();
+  const teamMemberNames = teamMembers.map(t => t.name);
   try {
     output.header("*** REMOVE A TEAM MEMBER ***");
-    const member = await inquirer.prompt([
+    const { selectedTeamMember } = await inquirer.prompt([
       {
-        type: "input",
-        name: "email",
-        message: "Enter the email address of the member you want to remove:",
+        type: "rawlist",
+        name: "selectedTeamMember",
+        message: "Which team member do you want to remove?",
+        choices: [...teamMemberNames, new inquirer.Separator()],
       },
     ]);
-    let result = await users.getAuthedUser().callFunction("removeTeamMember", [member.email]);
+    let result = await user.callFunction("removeTeamMember", [selectedTeamMember]);
     output.result("The user was removed from your team.");
   } catch (err) {
     output.error(JSON.stringify(err));
   }
 };
-

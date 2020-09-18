@@ -8,26 +8,35 @@ const main = require("./main");
 const tasks = require("./tasks");
 const manageTeam = require("./manageTeam");
 
-exports.getProjects = async () => {
+async function getProjects() {
   const realm = await index.getRealm(`user=${users.getAuthedUser().id}`);
   const currentUser = users.getAuthedUser().id;
   const user = realm.objectForPrimaryKey("User", currentUser);
   const projects = user.memberOf;
+  return projects;
+};
+
+exports.showProjects = async () => {
+  const projects = await getProjects();
   output.header("MY PROJECTS:");
   output.result(JSON.stringify(projects, null, 2));
 };
 
 exports.selectProject = async () => {
-  const realm = await index.getRealm(`user=${users.getAuthedUser().id}`);
+  const projects = await getProjects();
+  // Get a list of all the valid project names to show in the menu
+  const projectNames = projects.map(p => p.name)
   try {
-    const project = await inquirer.prompt([
-      {
-        type: "input",
-        name: "partition",
-        message: "What is the project partition?",
-      },
-    ]);
-    return(projectMenu(project.partition));
+    // Let the user select a project by name
+    const { selectedProjectName } = await inquirer.prompt({
+      type: "rawlist",
+      name: "selectedProjectName",
+      message: "Which project do you want to access?",
+      choices: [...projectNames, new inquirer.Separator()],
+    });
+    // Find the corresponding project document so that we can get the partition value
+    const selectedProject = projects.find(p => p.name === selectedProjectName);
+    return(projectMenu(selectedProject.partition));
   } catch (err) {
     output.error(JSON.stringify(err));
   }
@@ -41,7 +50,6 @@ const Choices = {
   EditTask: "Edit a task",
   DeleteTask: "Delete a task",
   ManageTeam: "Manage my team",
-  WatchForChanges: "Watch for changes",
   MainMenu: "Return to main menu",
   LogOut: "Log out / Quit",
 };

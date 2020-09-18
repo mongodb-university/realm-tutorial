@@ -59,7 +59,7 @@ exports.createTask = async (partition) => {
         _id: new bson.ObjectID(),
         _partition: partition,
         name: task.name,
-        status: task.status,
+        status: task.status.replace(/\s/g, ''), // Removes space from "In Progress",
       });
     });
 
