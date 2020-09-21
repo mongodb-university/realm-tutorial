@@ -35,9 +35,10 @@ const getColorForStatus = (status) => {
 };
 
 const getTaskStatusDisplayName = (status) => {
-  const nbsp = String.fromCharCode(160); // Non-breaking space so that a badge is always one line
   if (status === "InProgress") {
-    return `In${nbsp}Progress`;
+    // Add a non-breaking space so that the string is always a single line
+    const nbsp = String.fromCharCode(160);
+    return `In${nbsp}Progress`; 
   }
   return status;
 };

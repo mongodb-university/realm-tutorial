@@ -28,7 +28,7 @@ function useAllTasksInProject(project) {
     { variables: { partition: project.partition } }
   );
   if (error) {
-    throw error;
+    throw new Error(`Failed to fetch tasks: ${error.message}`);
   }
   const tasks = data?.tasks ?? []
   return { tasks, loading }

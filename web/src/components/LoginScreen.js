@@ -31,7 +31,7 @@ export default function LoginScreen() {
   const [isLoggingIn, setIsLoggingIn] = React.useState(false);
   const handleLogin = async () => {
     setIsLoggingIn(true);
-    setError((e) => ({ ...e, password: undefined }));
+    setError((e) => ({ ...e, password: null }));
     try {
       await app.logIn(Realm.Credentials.emailPassword(email, password));
       // setIsLoggingIn(false);
@@ -43,7 +43,7 @@ export default function LoginScreen() {
 
   const handleRegistrationAndLogin = async () => {
     const isValidEmailAddress = validator.isEmail(email);
-    setError((e) => ({ ...e, password: undefined }));
+    setError((e) => ({ ...e, password: null }));
     if (isValidEmailAddress) {
       try {
         // Register the user and, if successful, log them in
@@ -74,7 +74,7 @@ export default function LoginScreen() {
               label="Email"
               placeholder="your.email@example.com"
               onChange={(e) => {
-                setError((e) => ({ ...e, email: undefined }));
+                setError((e) => ({ ...e, email: null }));
                 setEmail(e.target.value);
               }}
               value={email}
