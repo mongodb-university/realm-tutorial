@@ -17,13 +17,12 @@ async function openRealm() {
     schema: [schemas.TaskSchema, schemas.UserSchema, schemas.ProjectSchema],
     sync: {
       user: users.getAuthedUser(),
-      partitionValue: "myPartition"
+      partitionValue: "My Project",
     },
-    path: "localRealmDb/tracker"
+    path: "localRealmDb/tracker",
   };
 
   realm = new Realm(config);
-
 }
 
 output.intro();
