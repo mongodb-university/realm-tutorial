@@ -9,6 +9,9 @@ import Button from "@leafygreen-ui/button";
 import TextInput from "@leafygreen-ui/text-input";
 import { uiColors } from "@leafygreen-ui/palette";
 
+import Loading from "./Loading"
+
+
 export default function ProjectScreen({
   currentProject,
   isEditingPermissions,
@@ -55,7 +58,7 @@ function useDraftTask({ addTask }) {
 }
 
 function TaskList({ currentProject }) {
-  const { tasks, addTask } = useTasks(currentProject);
+  const { tasks, addTask, loading } = useTasks(currentProject);
   const getTaskById = (id) => tasks.find((task) => task._id === id);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null);
   const selectedTask = getTaskById(selectedTaskId);
@@ -67,8 +70,7 @@ function TaskList({ currentProject }) {
     setDraftTaskName,
     submitDraftTask,
   } = useDraftTask({ addTask });
-
-  return (
+  return loading ? (<Loading />) : (
     <>
       <List>
         {tasks.map((task) => (
@@ -122,8 +124,7 @@ function TaskList({ currentProject }) {
         task={selectedTask}
         unselectTask={setSelectedTaskId}
       />
-    </>
-  );
+    </>)
 }
 
 const List = styled.ul`

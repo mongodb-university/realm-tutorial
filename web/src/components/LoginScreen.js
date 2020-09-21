@@ -7,6 +7,7 @@ import TextInput from "@leafygreen-ui/text-input";
 import LGCard from "./Card";
 import { uiColors } from "@leafygreen-ui/palette";
 import validator from "validator";
+import Loading from "./Loading";
 
 export default function LoginScreen() {
   const { app, refresh } = useRealmApp();
@@ -27,12 +28,16 @@ export default function LoginScreen() {
     setError({});
   }, [mode]);
 
+  const [isLoggingIn, setIsLoggingIn] = React.useState(false);
   const handleLogin = async () => {
+    setIsLoggingIn(true);
     setError((e) => ({ ...e, password: undefined }));
     try {
       await app.logIn(Realm.Credentials.emailPassword(email, password));
+      setIsLoggingIn(false);
       refresh();
     } catch (err) {
+      setIsLoggingIn(false);
       handleAuthenticationError(err, setError);
     }
   };
@@ -55,76 +60,82 @@ export default function LoginScreen() {
 
   return (
     <Container>
-      <Card>
-        <LoginFormRow>
-          <LoginHeading>
-            {mode === "login" ? "Log In" : "Register an Account"}
-          </LoginHeading>
-        </LoginFormRow>
-        <LoginFormRow>
-          <TextInput
-            type="email"
-            label="Email"
-            placeholder="your.email@example.com"
-            onChange={(e) => {
-              setError((e) => ({ ...e, email: undefined }));
-              setEmail(e.target.value);
-            }}
-            value={email}
-            state={
-              error.email
-                ? "error"
-                : validator.isEmail(email)
-                ? "valid"
-                : "none"
-            }
-            errorMessage={error.email}
-          />
-        </LoginFormRow>
-        <LoginFormRow>
-          <TextInput
-            type="password"
-            label="Password"
-            placeholder="pa55w0rd"
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            value={password}
-            state={error.password ? "error" : error.password ? "valid" : "none"}
-            errorMessage={error.password}
-          />
-        </LoginFormRow>
-        {mode === "login" ? (
-          <Button variant="primary" onClick={() => handleLogin()}>
-            Log In
-          </Button>
-        ) : (
-          <Button
-            variant="primary"
-            onClick={() => handleRegistrationAndLogin()}
-          >
-            Register
-          </Button>
-        )}
-        <ToggleContainer>
-          <ToggleText>
-            {mode === "login"
-              ? "Don't have an account?"
-              : "Already have an account?"}
-          </ToggleText>
-          <ToggleLink
-            onClick={(e) => {
-              e.preventDefault();
-              toggleMode();
-            }}
-          >
-            {mode === "login" ? "Register one now." : "Log in instead."}
-          </ToggleLink>
-        </ToggleContainer>
-      </Card>
+      {isLoggingIn ? (
+        <Loading />
+      ) : (
+        <Card>
+          <LoginFormRow>
+            <LoginHeading>
+              {mode === "login" ? "Log In" : "Register an Account"}
+            </LoginHeading>
+          </LoginFormRow>
+          <LoginFormRow>
+            <TextInput
+              type="email"
+              label="Email"
+              placeholder="your.email@example.com"
+              onChange={(e) => {
+                setError((e) => ({ ...e, email: undefined }));
+                setEmail(e.target.value);
+              }}
+              value={email}
+              state={
+                error.email
+                  ? "error"
+                  : validator.isEmail(email)
+                  ? "valid"
+                  : "none"
+              }
+              errorMessage={error.email}
+            />
+          </LoginFormRow>
+          <LoginFormRow>
+            <TextInput
+              type="password"
+              label="Password"
+              placeholder="pa55w0rd"
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              value={password}
+              state={
+                error.password ? "error" : error.password ? "valid" : "none"
+              }
+              errorMessage={error.password}
+            />
+          </LoginFormRow>
+          {mode === "login" ? (
+            <Button variant="primary" onClick={() => handleLogin()}>
+              Log In
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              onClick={() => handleRegistrationAndLogin()}
+            >
+              Register
+            </Button>
+          )}
+          <ToggleContainer>
+            <ToggleText>
+              {mode === "login"
+                ? "Don't have an account?"
+                : "Already have an account?"}
+            </ToggleText>
+            <ToggleLink
+              onClick={(e) => {
+                e.preventDefault();
+                toggleMode();
+              }}
+            >
+              {mode === "login" ? "Register one now." : "Log in instead."}
+            </ToggleLink>
+          </ToggleContainer>
+        </Card>
+      )}
     </Container>
   );
-};
+}
 
 function handleAuthenticationError(err, setError) {
   const { status, message } = parseAuthenticationError(err);
@@ -166,7 +177,7 @@ function parseAuthenticationError(err) {
 
 const Card = styled(LGCard)`
   width: 420px;
-`
+`;
 const ToggleContainer = styled.div`
   margin-top: 8px;
   font-size: 12px;
