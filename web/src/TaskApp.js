@@ -6,7 +6,7 @@ import ProjectScreen from "./components/ProjectScreen";
 import Sidebar from "./components/Sidebar";
 
 export default function TaskApp() {
-  const { app } = useRealmApp();
+  const app = useRealmApp();
   const [currentProject, setCurrentProject] = React.useState(
     app.currentUser.customData.memberOf[0]
   );

@@ -10,7 +10,7 @@ import { uiColors } from "@leafygreen-ui/palette";
 
 export default function Sidebar({ currentProject, setCurrentProject, setIsEditingPermissions }) {
   const projects = useProjects();
-  const { app, refresh } = useRealmApp();
+  const app = useRealmApp();
   return (
     <SidebarContainer>
       <Card>
@@ -28,10 +28,7 @@ export default function Sidebar({ currentProject, setCurrentProject, setIsEditin
         </SectionList>
         <UserDetails
           user={app.currentUser}
-          handleLogout={async () => {
-            await app.currentUser.logOut();
-            refresh();
-          }}
+          handleLogout={() => { app.logOut() }}
           handleEditPermissions={() => {
             setIsEditingPermissions(true)
           }}

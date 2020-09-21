@@ -10,7 +10,7 @@ import validator from "validator";
 import Loading from "./Loading";
 
 export default function LoginScreen() {
-  const { app, refresh } = useRealmApp();
+  const app = useRealmApp();
   // Toggle between logging users in and registering new users
   const [mode, setMode] = React.useState("login");
   const toggleMode = () => {
@@ -34,10 +34,9 @@ export default function LoginScreen() {
     setError((e) => ({ ...e, password: undefined }));
     try {
       await app.logIn(Realm.Credentials.emailPassword(email, password));
-      setIsLoggingIn(false);
-      refresh();
+      // setIsLoggingIn(false);
     } catch (err) {
-      setIsLoggingIn(false);
+      // setIsLoggingIn(false);
       handleAuthenticationError(err, setError);
     }
   };

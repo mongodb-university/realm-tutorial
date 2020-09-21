@@ -14,7 +14,7 @@ import { useRealmApp } from "../RealmApp";
 function useTeamMembers() {
   const [teamMembers, setTeamMembers] = React.useState(null);
   const [newUserEmailError, setNewUserEmailError] = React.useState(null);
-  const { app } = useRealmApp();
+  const app = useRealmApp();
   const { addTeamMember, removeTeamMember, getMyTeamMembers } = app.functions;
   const updateTeamMembers = async () => {
     const team = await getMyTeamMembers();

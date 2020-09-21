@@ -19,11 +19,19 @@ export const RealmAppProvider = ({ appId, children }) => {
     setApp(new Realm.App(appId));
   }, [appId]);
   // Define count and refresh to hack around 
-  const [count, setCount] = React.useState(0);
-  function refresh() {
-    setCount(c => c + 1);
+  const [currentUser, setCurrentUser] = React.useState(app.currentUser);
+
+  async function logIn(credentials) {
+    await app.logIn(credentials);
+    setCurrentUser(app.currentUser);
   }
+  async function logOut() {
+    await app.currentUser?.logOut();
+    setCurrentUser(app.currentUser);
+  }
+  
+  const wrapped = { ...app, currentUser, logIn, logOut }
   return (
-    <RealmAppContext.Provider value={{app, refresh, count}}>{children}</RealmAppContext.Provider>
+    <RealmAppContext.Provider value={wrapped}>{children}</RealmAppContext.Provider>
   );
 };
