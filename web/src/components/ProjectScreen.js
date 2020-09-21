@@ -21,7 +21,6 @@ export default function ProjectScreen({
     <Container>
       {currentProject && <TaskList currentProject={currentProject} />}
       <EditPermissionsModal
-        project={currentProject}
         isEditingPermissions={isEditingPermissions}
         setIsEditingPermissions={setIsEditingPermissions}
       />

@@ -13,6 +13,7 @@ import { useRealmApp } from "../RealmApp";
 
 function useTeamMembers() {
   const [teamMembers, setTeamMembers] = React.useState(null);
+  const [newUserEmailError, setNewUserEmailError] = React.useState(null);
   const { app } = useRealmApp();
   const { addTeamMember, removeTeamMember, getMyTeamMembers } = app.functions;
   const updateTeamMembers = async () => {
@@ -26,9 +27,15 @@ function useTeamMembers() {
   /* eslint-enable react-hooks/exhaustive-deps */
   return {
     teamMembers,
+    errorMessage: newUserEmailError,
     addTeamMember: async (email) => {
-      await addTeamMember(email);
-      updateTeamMembers();
+      const { error } = await addTeamMember(email);
+      if(error) {
+        setNewUserEmailError(error)
+        return { error }
+      } else {
+        updateTeamMembers();
+      }
     },
     removeTeamMember: async (email) => {
       await removeTeamMember(email);
@@ -38,11 +45,10 @@ function useTeamMembers() {
 }
 
 export default function EditPermissionsModal({
-  project,
   isEditingPermissions,
   setIsEditingPermissions,
 }) {
-  const { teamMembers, addTeamMember, removeTeamMember } = useTeamMembers();
+  const { teamMembers, errorMessage, addTeamMember, removeTeamMember } = useTeamMembers();
   return (
     <Modal
       open={isEditingPermissions}
@@ -55,7 +61,7 @@ export default function EditPermissionsModal({
           These users can access your project and read any of your tasks
         </ModalText>
         <ModalText>Add a new user by email:</ModalText>
-        <AddTeamMemberInput addTeamMember={addTeamMember} />
+        <AddTeamMemberInput addTeamMember={addTeamMember} errorMessage={errorMessage} />
         <List>
           {teamMembers?.length ?
             teamMembers.map((teamMember) => {
@@ -85,7 +91,7 @@ export default function EditPermissionsModal({
   );
 }
 
-function AddTeamMemberInput({ addTeamMember }) {
+function AddTeamMemberInput({ addTeamMember, errorMessage }) {
   const [inputValue, setInputValue] = React.useState("");
   return (
     <Row>
@@ -94,6 +100,8 @@ function AddTeamMemberInput({ addTeamMember }) {
           type="email"
           aria-labelledby="team member email address"
           placeholder="some.email@example.com"
+          state={errorMessage ? "error" : "none"}
+          errorMessage={errorMessage ?? "Foo"}
           onChange={(e) => {
             setInputValue(e.target.value);
           }}
@@ -103,8 +111,10 @@ function AddTeamMemberInput({ addTeamMember }) {
       <Button
         disabled={!inputValue}
         onClick={async () => {
-          await addTeamMember(inputValue);
-          setInputValue("");
+          const { error } = await addTeamMember(inputValue);
+          if(!error) {
+            setInputValue("");
+          }
         }}
         styles={{ height: "36px" }}
       >
@@ -121,7 +131,7 @@ const Button = styled(LGButton)`
 
 const Row = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: end;
 `;
 const InputContainer = styled.div`
   flex-grow: 1;
