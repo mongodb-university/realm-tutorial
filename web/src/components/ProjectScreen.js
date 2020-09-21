@@ -6,6 +6,7 @@ import TaskDetailModal from "./TaskDetailModal";
 import EditPermissionsModal from "./EditPermissionsModal";
 import Card from "./Card";
 import Button from "@leafygreen-ui/button";
+import ButtonGroup from "./ButtonGroup";
 import TextInput from "@leafygreen-ui/text-input";
 import { uiColors } from "@leafygreen-ui/palette";
 
@@ -106,23 +107,25 @@ function TaskList({ currentProject }) {
                 }}
                 value={draftTask.name}
               />
-              <Button
-                variant="primary"
-                disabled={!draftTask.name}
-                onClick={() => {
-                  submitDraftTask();
-                }}
-              >
-                Add
-              </Button>
-              <Button
-                variant="danger"
-                onClick={() => {
-                  deleteDraftTask();
-                }}
-              >
-                Cancel
-              </Button>
+              <ButtonGroup>
+                <Button
+                  variant="primary"
+                  disabled={!draftTask.name}
+                  onClick={() => {
+                    submitDraftTask();
+                  }}
+                >
+                  Add
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    deleteDraftTask();
+                  }}
+                >
+                  Cancel
+                </Button>
+              </ButtonGroup>
             </Card>
           </ListItem>
         ) : (

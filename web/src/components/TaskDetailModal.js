@@ -2,6 +2,7 @@ import React from "react";
 import TaskContent from "./TaskContent";
 import Button from "@leafygreen-ui/button";
 import Modal from "@leafygreen-ui/modal";
+import ButtonGroup from "./ButtonGroup";
 
 import useTaskMutations from "../graphql/useTaskMutations";
 
@@ -10,7 +11,7 @@ export default function TaskDetailModal({ project, task, unselectTask }) {
   return (
     <Modal open={Boolean(task)} setOpen={unselectTask}>
       {task && (
-        <>
+        <ButtonGroup>
           <TaskContent task={task} />
           {task.status === "Open" && (
             <TaskStatusButton task={task} status="InProgress">
@@ -32,7 +33,7 @@ export default function TaskDetailModal({ project, task, unselectTask }) {
               Resume Task
             </TaskStatusButton>
           )}
-        </>
+        </ButtonGroup>
       )}
     </Modal>
   );
