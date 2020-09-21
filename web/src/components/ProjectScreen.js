@@ -9,8 +9,7 @@ import Button from "@leafygreen-ui/button";
 import TextInput from "@leafygreen-ui/text-input";
 import { uiColors } from "@leafygreen-ui/palette";
 
-import Loading from "./Loading"
-
+import Loading from "./Loading";
 
 export default function ProjectScreen({
   currentProject,
@@ -53,7 +52,13 @@ function useDraftTask({ addTask }) {
     await addTask(draftTask);
     setDraftTask(null);
   };
-  return { draftTask, createDraftTask, deleteDraftTask, setDraftTaskName, submitDraftTask };
+  return {
+    draftTask,
+    createDraftTask,
+    deleteDraftTask,
+    setDraftTaskName,
+    submitDraftTask,
+  };
 }
 
 function TaskList({ currentProject }) {
@@ -69,16 +74,26 @@ function TaskList({ currentProject }) {
     setDraftTaskName,
     submitDraftTask,
   } = useDraftTask({ addTask });
-  return loading ? (<Loading />) : (
+
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <List>
-        {tasks.map((task) => (
-          <ListItem key={task._id}>
-            <Card onClick={() => setSelectedTaskId(task._id)}>
-              <TaskContent task={task} />
-            </Card>
-          </ListItem>
-        ))}
+        {tasks.length === 0 ? (
+          <TaskListHeader>
+            <h1>No Tasks</h1>
+            <p>Click the button below to add a task to this project</p>
+          </TaskListHeader>
+        ) : (
+          tasks.map((task) => (
+            <ListItem key={task._id}>
+              <Card onClick={() => setSelectedTaskId(task._id)}>
+                <TaskContent task={task} />
+              </Card>
+            </ListItem>
+          ))
+        )}
         {draftTask ? (
           <ListItem>
             <Card>
@@ -123,7 +138,8 @@ function TaskList({ currentProject }) {
         task={selectedTask}
         unselectTask={setSelectedTaskId}
       />
-    </>)
+    </>
+  );
 }
 
 const List = styled.ul`
@@ -135,4 +151,11 @@ const ListItem = styled.li`
   :not(:first-of-type) {
     margin-top: 8px;
   }
+`;
+
+const TaskListHeader = styled.div`
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-align: center;
+  font-size: 16px;
 `;
