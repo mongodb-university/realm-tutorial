@@ -55,7 +55,7 @@ exports.createTask = async () => {
     realm.write(() => {
       result = realm.create("Task", {
         _id: new bson.ObjectID(),
-        _partition: "myPartition",
+        _partition: "My Project",
         name: task.name,
         status: task.status,
       });
