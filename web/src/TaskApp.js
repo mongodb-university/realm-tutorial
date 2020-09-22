@@ -8,6 +8,7 @@ import Sidebar from "./components/Sidebar";
 export default function TaskApp() {
   const app = useRealmApp();
   const [currentProject, setCurrentProject] = React.useState(
+    // set the current project as  "My Project"
     app.currentUser.customData.memberOf[0]
   );
   const [isEditingPermissions, setIsEditingPermissions] = React.useState(false);
