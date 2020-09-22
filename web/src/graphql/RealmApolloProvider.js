@@ -24,10 +24,10 @@ const createRealmApolloClient = (app) => {
       return fetch(uri, options);
     },
   });
-  
-  // 
+
+  //
   const cache = new InMemoryCache();
-  
+
   return new ApolloClient({ link, cache });
 };
 
@@ -38,4 +38,4 @@ export default function RealmApolloProvider({ children }) {
     setClient(createRealmApolloClient(app));
   }, [app]);
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
-};
+}

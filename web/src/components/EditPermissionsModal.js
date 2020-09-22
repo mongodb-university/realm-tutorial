@@ -22,7 +22,7 @@ function useTeamMembers() {
   };
   /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
-     // display team members on load
+    // display team members on load
     updateTeamMembers();
   }, []);
   /* eslint-enable react-hooks/exhaustive-deps */
@@ -31,9 +31,9 @@ function useTeamMembers() {
     errorMessage: newUserEmailError,
     addTeamMember: async (email) => {
       const { error } = await addTeamMember(email);
-      if(error) {
-        setNewUserEmailError(error)
-        return { error }
+      if (error) {
+        setNewUserEmailError(error);
+        return { error };
       } else {
         updateTeamMembers();
       }
@@ -49,7 +49,12 @@ export default function EditPermissionsModal({
   isEditingPermissions,
   setIsEditingPermissions,
 }) {
-  const { teamMembers, errorMessage, addTeamMember, removeTeamMember } = useTeamMembers();
+  const {
+    teamMembers,
+    errorMessage,
+    addTeamMember,
+    removeTeamMember,
+  } = useTeamMembers();
   return (
     <Modal
       open={isEditingPermissions}
@@ -62,9 +67,12 @@ export default function EditPermissionsModal({
           These users can add, read, modify, and delete tasks in your project
         </ModalText>
         <ModalText>Add a new user by email:</ModalText>
-        <AddTeamMemberInput addTeamMember={addTeamMember} errorMessage={errorMessage} />
+        <AddTeamMemberInput
+          addTeamMember={addTeamMember}
+          errorMessage={errorMessage}
+        />
         <List>
-          {teamMembers?.length ?
+          {teamMembers?.length ? (
             teamMembers.map((teamMember) => {
               return (
                 <ListItem key={teamMember._id}>
@@ -74,7 +82,7 @@ export default function EditPermissionsModal({
                       aria-label="remove-team-member-button"
                       className="remove-team-member-button"
                       onClick={async () => {
-                        await removeTeamMember(teamMember.name)
+                        await removeTeamMember(teamMember.name);
                       }}
                     >
                       <XIcon />
@@ -82,10 +90,10 @@ export default function EditPermissionsModal({
                   </TeamMemberContainer>
                 </ListItem>
               );
-            }) : 
-            <ModalText>
-              No team members
-            </ModalText>}
+            })
+          ) : (
+            <ModalText>No team members</ModalText>
+          )}
         </List>
       </ContentContainer>
     </Modal>
@@ -113,7 +121,7 @@ function AddTeamMemberInput({ addTeamMember, errorMessage }) {
         disabled={!inputValue}
         onClick={async () => {
           const result = await addTeamMember(inputValue);
-          if(!result?.error) {
+          if (!result?.error) {
             setInputValue("");
           }
         }}

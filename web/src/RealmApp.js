@@ -18,7 +18,7 @@ export const RealmAppProvider = ({ appId, children }) => {
   React.useEffect(() => {
     setApp(new Realm.App(appId));
   }, [appId]);
-  // Define count and refresh to hack around 
+  // Define count and refresh to hack around
   const [currentUser, setCurrentUser] = React.useState(app.currentUser);
 
   async function logIn(credentials) {
@@ -29,9 +29,11 @@ export const RealmAppProvider = ({ appId, children }) => {
     await app.currentUser?.logOut();
     setCurrentUser(app.currentUser);
   }
-  
-  const wrapped = { ...app, currentUser, logIn, logOut }
+
+  const wrapped = { ...app, currentUser, logIn, logOut };
   return (
-    <RealmAppContext.Provider value={wrapped}>{children}</RealmAppContext.Provider>
+    <RealmAppContext.Provider value={wrapped}>
+      {children}
+    </RealmAppContext.Provider>
   );
 };

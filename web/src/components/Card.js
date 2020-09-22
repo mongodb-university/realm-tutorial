@@ -13,9 +13,7 @@ const Layout = styled.div`
 export default function Card({ children, ...props }) {
   return (
     <LGCard {...props}>
-      <Layout>
-        {children}
-      </Layout>
+      <Layout>{children}</Layout>
     </LGCard>
-  )
+  );
 }

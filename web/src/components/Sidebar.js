@@ -6,9 +6,11 @@ import useProjects from "../graphql/useProjects";
 import Card from "./Card";
 import { uiColors } from "@leafygreen-ui/palette";
 
-
-
-export default function Sidebar({ currentProject, setCurrentProject, setIsEditingPermissions }) {
+export default function Sidebar({
+  currentProject,
+  setCurrentProject,
+  setIsEditingPermissions,
+}) {
   const projects = useProjects();
   const app = useRealmApp();
   return (
@@ -28,9 +30,11 @@ export default function Sidebar({ currentProject, setCurrentProject, setIsEditin
         </SectionList>
         <UserDetails
           user={app.currentUser}
-          handleLogout={() => { app.logOut() }}
+          handleLogout={() => {
+            app.logOut();
+          }}
           handleEditPermissions={() => {
-            setIsEditingPermissions(true)
+            setIsEditingPermissions(true);
           }}
         />
       </Card>
@@ -79,7 +83,7 @@ const UserDetailsContainer = styled.div`
   padding: 8px 0;
   display: flex;
   flex-direction: column;
-`
+`;
 
 const Username = styled.div`
   font-weight: bold;

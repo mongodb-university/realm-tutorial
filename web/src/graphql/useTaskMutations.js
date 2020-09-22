@@ -50,7 +50,7 @@ const TaskFieldsFragment = gql`
     status
     name
   }
-`
+`;
 
 function useAddTask(project) {
   const [addTaskMutation] = useMutation(AddTaskMutation, {
@@ -70,7 +70,7 @@ function useAddTask(project) {
       });
     },
   });
-  
+
   const addTask = async (task) => {
     const { addedTask } = await addTaskMutation({
       variables: {
