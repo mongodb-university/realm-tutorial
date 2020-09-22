@@ -112,8 +112,8 @@ function AddTeamMemberInput({ addTeamMember, errorMessage }) {
       <Button
         disabled={!inputValue}
         onClick={async () => {
-          const { error } = await addTeamMember(inputValue);
-          if(!error) {
+          const result = await addTeamMember(inputValue);
+          if(!result?.error) {
             setInputValue("");
           }
         }}
