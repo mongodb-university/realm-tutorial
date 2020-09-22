@@ -22,6 +22,7 @@ function useTeamMembers() {
   };
   /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
+     // display team members on load
     updateTeamMembers();
   }, []);
   /* eslint-enable react-hooks/exhaustive-deps */
