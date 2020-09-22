@@ -7,7 +7,7 @@ export default function useTaskMutations(project) {
     addTask: useAddTask(project),
     updateTask: useUpdateTask(project),
     deleteTask: useDeleteTask(project),
-  }
+  };
 }
 
 const AddTaskMutation = gql`
@@ -30,7 +30,7 @@ const UpdateTaskMutation = gql`
       status
     }
   }
-`
+`;
 
 const DeleteTaskMutation = gql`
   mutation DeleteTask($taskId: ObjectId!) {
@@ -41,32 +41,34 @@ const DeleteTaskMutation = gql`
       status
     }
   }
-`
+`;
 
-const cacheAddedTask = (cache, { data: { addedTask } }) => {
-  cache.modify({
-    fields: {
-      tasks: (existingTasks = []) => [
-        ...existingTasks,
-        cache.writeFragment({
-          data: addedTask,
-          fragment: gql`
-            fragment AddedTask on Task {
-              _id
-              _partition
-              status
-              name
-            }
-          `,
-        }),
-      ],
-    },
-  });
-};
+const TaskFieldsFragment = gql`
+  fragment TaskFields on Task {
+    _id
+    _partition
+    status
+    name
+  }
+`
 
 function useAddTask(project) {
   const [addTaskMutation] = useMutation(AddTaskMutation, {
-    update: cacheAddedTask,
+    // Manually save added Tasks into the Apollo cache so that Task queries automatically update
+    // For details, refer to https://www.apollographql.com/docs/react/data/mutations/#making-all-other-cache-updates
+    update: (cache, { data: { addedTask } }) => {
+      cache.modify({
+        fields: {
+          tasks: (existingTasks = []) => [
+            ...existingTasks,
+            cache.writeFragment({
+              data: addedTask,
+              fragment: TaskFieldsFragment,
+            }),
+          ],
+        },
+      });
+    },
   });
   
   const addTask = async (task) => {
@@ -84,7 +86,7 @@ function useAddTask(project) {
   };
 
   return addTask;
-};
+}
 
 function useUpdateTask(project) {
   const [updateTaskMutation] = useMutation(UpdateTaskMutation);
@@ -95,9 +97,9 @@ function useUpdateTask(project) {
     });
     return updatedTask;
   };
-  
+
   return updateTask;
-};
+}
 
 function useDeleteTask(project) {
   const [deleteTaskMutation] = useMutation(DeleteTaskMutation);
@@ -108,6 +110,6 @@ function useDeleteTask(project) {
     });
     return deletedTask;
   };
-  
+
   return deleteTask;
-};
+}

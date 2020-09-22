@@ -8,8 +8,12 @@ import useTaskMutations from "../graphql/useTaskMutations";
 
 export default function TaskDetailModal({ project, task, unselectTask }) {
   const TaskStatusButton = useTaskStatusButton(project);
+  
   return (
-    <Modal open={Boolean(task)} setOpen={unselectTask}>
+    <Modal
+      open={Boolean(task)} // Show the modal if we passed a Task into the task prop.
+      setOpen={unselectTask} // When the user tries to close the modal, unset the Task to stop showing the modal
+    >
       {task && (
         <ButtonGroup>
           <TaskContent task={task} />
