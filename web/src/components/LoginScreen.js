@@ -35,7 +35,6 @@ export default function LoginScreen() {
     try {
       await app.logIn(Realm.Credentials.emailPassword(email, password));
     } catch (err) {
-      // setIsLoggingIn(false);
       handleAuthenticationError(err, setError);
     }
   };
