@@ -59,7 +59,7 @@ export default function EditPermissionsModal({
       <ContentContainer>
         <ModalHeading>Team Members</ModalHeading>
         <ModalText>
-          These users can access your project and read any of your tasks
+          These users can add, read, modify, and delete tasks in your project
         </ModalText>
         <ModalText>Add a new user by email:</ModalText>
         <AddTeamMemberInput addTeamMember={addTeamMember} errorMessage={errorMessage} />
