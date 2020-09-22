@@ -166,14 +166,6 @@ const ListItem = styled.li(
 const TeamMemberContainer = styled.div`
   display: flex;
   align-items: center;
-  > .remove-team-member-button {
-    display: none;
-  }
-  :hover {
-    > .remove-team-member-button {
-      display: initial;
-    }
-  }
 `;
 const TeamMemberName = styled.div`
   flex-grow: 1;
