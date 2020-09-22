@@ -1,54 +1,59 @@
 import React from "react";
 import TaskContent from "./TaskContent";
-import Button from "@leafygreen-ui/button";
 import Modal from "@leafygreen-ui/modal";
 import ButtonGroup from "./ButtonGroup";
-
-import useTaskMutations from "../graphql/useTaskMutations";
+import useChangeTaskStatusButton from "./useChangeTaskStatusButton";
 
 export default function TaskDetailModal({ project, task, unselectTask }) {
-  const TaskStatusButton = useTaskStatusButton(project);
-  
+  const ChangeTaskStatusButton = useChangeTaskStatusButton(project);
   return (
     <Modal
       open={Boolean(task)} // Show the modal if we passed a Task into the task prop.
       setOpen={unselectTask} // When the user tries to close the modal, unset the Task to stop showing the modal
     >
       {task && (
-        <ButtonGroup>
+        <>
           <TaskContent task={task} />
-          {task.status === "Open" && (
-            <TaskStatusButton task={task} status="InProgress">
-              Start Progress
-            </TaskStatusButton>
-          )}
-          {task.status === "InProgress" && (
-            <>
-              <TaskStatusButton task={task} status="Open">
-                Stop Progress
-              </TaskStatusButton>
-              <TaskStatusButton task={task} status="Complete">
-                Complete
-              </TaskStatusButton>
-            </>
-          )}
-          {task.status === "Complete" && (
-            <TaskStatusButton task={task} status="InProgress">
-              Resume Task
-            </TaskStatusButton>
-          )}
-        </ButtonGroup>
+          <ButtonGroup direction="row">
+            {task.status === "Open" && (
+              <ChangeTaskStatusButton
+                task={task}
+                fromStatus="Open"
+                toStatus="InProgress"
+              >
+                Start Progress
+              </ChangeTaskStatusButton>
+            )}
+            {task.status === "InProgress" && (
+              <>
+                <ChangeTaskStatusButton
+                  task={task}
+                  fromStatus="InProgress"
+                  toStatus="Open"
+                >
+                  Stop Progress
+                </ChangeTaskStatusButton>
+                <ChangeTaskStatusButton
+                  task={task}
+                  fromStatus="InProgress"
+                  toStatus="Complete"
+                >
+                  Complete Task
+                </ChangeTaskStatusButton>
+              </>
+            )}
+            {task.status === "Complete" && (
+              <ChangeTaskStatusButton
+                task={task}
+                fromStatus="Complete"
+                toStatus="InProgress"
+              >
+                Resume Task
+              </ChangeTaskStatusButton>
+            )}
+          </ButtonGroup>
+        </>
       )}
     </Modal>
   );
 }
-
-function useTaskStatusButton(project) {
-  const { updateTask } = useTaskMutations(project);
-  const TaskStatusButton = ({ task, status, children }) => {
-    return (
-      <Button onClick={() => updateTask(task, { status })}>{children}</Button>
-    );
-  };
-  return TaskStatusButton;
-};
