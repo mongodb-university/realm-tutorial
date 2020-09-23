@@ -3,16 +3,25 @@ const inquirer = require("inquirer");
 const users = require("./users");
 const schemas = require("./schemas");
 const output = require("./output");
+const config = require("./config");
 
 /*  Change the logLevel to increase or decrease the 
     amount of messages you see in the console.
     Valid options are:
     fatal, error, warn, info, detail, debug, and trace
 */
-Realm.Sync.setLogLevel("error");
+const REALM_APP_ID = config.realmAppId;
+const appConfig = {
+  id: REALM_APP_ID,
+  timeout: 10000,
+};
+
+const app = new Realm.App(appConfig);
+Realm.App.Sync.setLogLevel(app, "error");
 
 let realm;
 async function openRealm() {
+  try{
   const config = {
     schema: [schemas.TaskSchema, schemas.UserSchema, schemas.ProjectSchema],
     sync: {
@@ -21,8 +30,10 @@ async function openRealm() {
     },
     path: "localRealmDb/tracker",
   };
-
-  realm = new Realm(config);
+  realm = Realm.open(config);
+} catch(e) {
+    output.error(e);
+  }
 }
 
 output.intro();
@@ -32,6 +43,9 @@ async function run() {
   output.header(
     "Please log in to your Realm account or register as a new user."
   );
+
+
+
 
   let choice = await inquirer.prompt([
     {
@@ -69,3 +83,4 @@ async function closeRealm() {
 exports.getRealm = getRealm;
 exports.closeRealm = closeRealm;
 exports.run = run;
+exports.app = app;
