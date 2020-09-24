@@ -1,4 +1,5 @@
 realm-object-server/
+mongodb-realm/
 localRealmDb/
 
 # Logs

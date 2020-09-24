@@ -1,19 +1,14 @@
 const inquirer = require("inquirer");
 const Realm = require("realm");
 const index = require("./index");
-const config = require("./config");
 const main = require("./main");
 const output = require("./output");
 
-const REALM_APP_ID = config.realmAppId;
-const appConfig = {
-  id: REALM_APP_ID,
-  timeout: 10000,
-};
-
-const app = new Realm.App(appConfig);
-
 async function logIn() {
+  if (index.app.currentUser != undefined) {
+    output.result("You are already logged in as " + index.app.currentUser.id);
+    return main.mainMenu();
+  }
   const input = await inquirer.prompt([
     {
       type: "input",
@@ -33,9 +28,9 @@ async function logIn() {
       input.email,
       input.password
     );
-    const user = await app.logIn(credentials);
+    const user = await index.app.logIn(credentials);
     if (user) {
-      output.result("You have successfully logged in as " + app.currentUser.id);
+      output.result("You have successfully logged in as " + index.app.currentUser.id);
       return main.mainMenu();
     } else {
       output.error("There was an error logging you in");
@@ -64,7 +59,7 @@ async function registerUser() {
   ]);
 
   try {
-    const result = await app.emailPasswordAuth.registerUser(
+    const result = await index.app.emailPasswordAuth.registerUser(
       input.email,
       input.password
     );
@@ -72,7 +67,7 @@ async function registerUser() {
       input.email,
       input.password
     );
-    const user = await app.logIn(credentials);
+    const user = await index.app.logIn(credentials);
     if (user) {
       output.result(
         "You have successfully created a new Realm user and are now logged in."
@@ -89,14 +84,14 @@ async function registerUser() {
 }
 
 async function logOut() {
-  user = app.currentUser;
+  user = index.app.currentUser;
   await user.logOut();
   await index.closeRealm();
   return !user.isLoggedIn;
 }
 
 function getAuthedUser() {
-  return app.currentUser;
+  return index.app.currentUser;
 }
 
 exports.getAuthedUser = getAuthedUser;
