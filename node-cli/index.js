@@ -21,17 +21,17 @@ Realm.App.Sync.setLogLevel(app, "error");
 
 let realm;
 async function openRealm() {
-  try{
-  const config = {
-    schema: [schemas.TaskSchema, schemas.UserSchema, schemas.ProjectSchema],
-    sync: {
-      user: users.getAuthedUser(),
-      partitionValue: "My Project",
-    },
-    path: "localRealmDb/tracker",
-  };
-  realm = Realm.open(config);
-} catch(e) {
+  try {
+    const config = {
+      schema: [schemas.TaskSchema, schemas.UserSchema, schemas.ProjectSchema],
+      sync: {
+        user: users.getAuthedUser(),
+        partitionValue: "My Project",
+      },
+      path: "localRealmDb/tracker",
+    };
+    realm = Realm.open(config);
+  } catch (e) {
     output.error(e);
   }
 }
@@ -43,9 +43,6 @@ async function run() {
   output.header(
     "Please log in to your Realm account or register as a new user."
   );
-
-
-
 
   let choice = await inquirer.prompt([
     {

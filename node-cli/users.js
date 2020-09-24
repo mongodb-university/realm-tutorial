@@ -30,7 +30,9 @@ async function logIn() {
     );
     const user = await index.app.logIn(credentials);
     if (user) {
-      output.result("You have successfully logged in as " + index.app.currentUser.id);
+      output.result(
+        "You have successfully logged in as " + index.app.currentUser.id
+      );
       return main.mainMenu();
     } else {
       output.error("There was an error logging you in");
