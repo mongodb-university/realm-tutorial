@@ -16,6 +16,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     let tasks: Results<Task>
     let tableView = UITableView()
     var notificationToken: NotificationToken?
+    let refreshControl = UIRefreshControl()
 
     required init(projectRealm: Realm) {
         // Ensure the realm was opened with sync.
@@ -82,6 +83,9 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         view.addSubview(tableView)
         tableView.frame = self.view.frame
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonDidClick))
+        refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
+        tableView.addSubview(refreshControl) // not required when using UITableViewController
+
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -207,5 +211,10 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(alertController, animated: true)
+    }
+    
+    @objc func refresh(_ sender: AnyObject) {
+        self.tableView.reloadData()
+        self.refreshControl.endRefreshing()
     }
 }
