@@ -84,7 +84,7 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.frame = self.view.frame
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonDidClick))
         refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
-        tableView.addSubview(refreshControl) // not required when using UITableViewController        tableView.addSu
+        tableView.addSubview(refreshControl) // not required when using UITableViewController
 
     }
 
