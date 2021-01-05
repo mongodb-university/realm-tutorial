@@ -1,3 +1,17 @@
+# ⚠️ Deprecated
+
+This repository is no longer maintained. Please follow along with the tutorial at https://docs.mongodb.com/realm/tutorial
+
+See specific client repos at:
+
+- https://github.com/mongodb-university/realm-tutorial-android-kotlin
+- https://github.com/mongodb-university/realm-tutorial-ios-swift
+- https://github.com/mongodb-university/realm-tutorial-react-native
+- https://github.com/mongodb-university/realm-tutorial-web
+- etc.
+
+Original README continues below.
+
 # Task Tracker Tutorial
 
 The Task Tracker is a collaborative project management tool.
